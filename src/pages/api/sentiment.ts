@@ -53,6 +53,15 @@ export const POST: APIRoute = async ({ request }) => {
 };
 
 /**
+ * Helper to extract JSON object from GPT output (even with code fencing/markdown)
+ */
+function extractJSON(str: string): string {
+  const match = str.match(/{[\s\S]*}/);
+  if (match) return match[0];
+  throw new Error("No JSON object found in OpenAI response");
+}
+
+/**
  * Analyze sentiment using OpenAI GPT-4o
  */
 async function analyzeSentiment(comments: string[], apiKey: string) {
@@ -61,7 +70,9 @@ async function analyzeSentiment(comments: string[], apiKey: string) {
 Comments to analyze:
 ${comments.map((comment, index) => `${index + 1}. ${comment}`).join('\n')}
 
-Please respond with a JSON object containing:
+Respond ONLY with a valid JSON object. Do NOT use markdown, do NOT include code fencing, do NOT add any explanation or text—just output valid JSON.
+
+Your JSON object should include:
 1. "positive": percentage of positive comments (number)
 2. "neutral": percentage of neutral comments (number)  
 3. "negative": percentage of negative comments (number)
@@ -71,7 +82,7 @@ Please respond with a JSON object containing:
    - "neutral": array of neutral comment examples
    - "negative": array of negative comment examples
 
-Make sure percentages add up to 100. Only respond with valid JSON, no additional text.`;
+Make sure percentages add up to 100.`;
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -114,25 +125,38 @@ Make sure percentages add up to 100. Only respond with valid JSON, no additional
       throw new Error('No response from OpenAI');
     }
 
-    // Parse the JSON response
+    // Log raw GPT output for debugging
+    console.log("Raw GPT Output:", content);
+
+    // Extract and parse only the JSON portion, even if GPT returns code fencing
+    let cleanJSON: string;
     try {
-      const sentimentData = JSON.parse(content);
-      
-      // Validate the response structure
-      if (typeof sentimentData.positive !== 'number' || 
-          typeof sentimentData.neutral !== 'number' || 
-          typeof sentimentData.negative !== 'number' ||
-          typeof sentimentData.summary !== 'string' ||
-          !sentimentData.sampleComments) {
-        throw new Error('Invalid response format from OpenAI');
-      }
-
-      return sentimentData;
-
-    } catch (parseError) {
-      console.error('Error parsing OpenAI response:', parseError);
-      throw new Error('Invalid JSON response from OpenAI');
+      cleanJSON = extractJSON(content);
+    } catch (extractErr) {
+      console.error("Failed to extract JSON from OpenAI response:", content);
+      throw new Error("Invalid JSON response from OpenAI");
     }
+
+    let sentimentData;
+    try {
+      sentimentData = JSON.parse(cleanJSON);
+    } catch (parseErr) {
+      console.error("Failed to parse extracted JSON:", cleanJSON);
+      throw new Error("Invalid JSON response from OpenAI");
+    }
+
+    // Validate the response structure
+    if (
+      typeof sentimentData.positive !== 'number' ||
+      typeof sentimentData.neutral !== 'number' ||
+      typeof sentimentData.negative !== 'number' ||
+      typeof sentimentData.summary !== 'string' ||
+      !sentimentData.sampleComments
+    ) {
+      throw new Error('Invalid response format from OpenAI');
+    }
+
+    return sentimentData;
 
   } catch (error) {
     console.error('Error calling OpenAI API:', error);
