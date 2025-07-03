@@ -187,20 +187,20 @@ import '../styles/global.css';
 		if (!cookieChoice) {
 			// Show cookie notice after a short delay
 			setTimeout(() => {
-				cookieNotice.classList.remove('translate-y-full');
+				cookieNotice?.classList.remove('translate-y-full');
 			}, 1000);
 		}
 
 		// Handle accept cookies
-		acceptCookies.addEventListener('click', () => {
+		acceptCookies?.addEventListener('click', () => {
 			localStorage.setItem('cookieChoice', 'accepted');
-			cookieNotice.classList.add('translate-y-full');
+			cookieNotice?.classList.add('translate-y-full');
 		});
 
 		// Handle decline cookies
-		declineCookies.addEventListener('click', () => {
+		declineCookies?.addEventListener('click', () => {
 			localStorage.setItem('cookieChoice', 'declined');
-			cookieNotice.classList.add('translate-y-full');
+			cookieNotice?.classList.add('translate-y-full');
 		});
 	</script>
 </body>

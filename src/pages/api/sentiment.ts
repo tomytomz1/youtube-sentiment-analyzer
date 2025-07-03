@@ -1,53 +1,54 @@
 import type { APIRoute } from 'astro';
 
+// Optionally extend allowed fields if you pass meta info in the future
+interface SentimentMeta {
+  analyzedCount?: number;
+  totalComments?: number;
+  mostLiked?: { text: string; likeCount: number };
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // Parse the request body
     const body = await request.json();
-    const { comments } = body;
+    const { comments, analyzedCount, totalComments, mostLiked }: { comments: string[] } & SentimentMeta = body;
 
     // Validate input
     if (!comments || !Array.isArray(comments) || comments.length === 0) {
       return new Response(
         JSON.stringify({ error: 'Invalid comments array provided' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Get OpenAI API key from environment variables
     const apiKey = import.meta.env.OPENAI_API_KEY;
     if (!apiKey) {
       return new Response(
         JSON.stringify({ error: 'OpenAI API key not configured' }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Analyze sentiment using OpenAI
+    // Sentiment analysis
     const sentimentAnalysis = await analyzeSentiment(comments, apiKey);
 
-    return new Response(
-      JSON.stringify(sentimentAnalysis),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    // Pass through any meta fields you might have sent (optional, doesn’t break anything)
+    const result = {
+      ...sentimentAnalysis,
+      ...(analyzedCount !== undefined && { analyzedCount }),
+      ...(totalComments !== undefined && { totalComments }),
+      ...(mostLiked !== undefined && { mostLiked }),
+    };
+
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
 
   } catch (error) {
     console.error('Error analyzing sentiment:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 };
@@ -74,7 +75,7 @@ Respond ONLY with a valid JSON object. Do NOT use markdown, do NOT include code 
 
 Your JSON object should include:
 1. "positive": percentage of positive comments (number)
-2. "neutral": percentage of neutral comments (number)  
+2. "neutral": percentage of neutral comments (number)
 3. "negative": percentage of negative comments (number)
 4. "summary": a one-sentence summary of the overall sentiment
 5. "sampleComments": an object with arrays of 3-5 example comments for each sentiment:
@@ -125,8 +126,7 @@ Make sure percentages add up to 100.`;
       throw new Error('No response from OpenAI');
     }
 
-    // Log raw GPT output for debugging
-    console.log("Raw GPT Output:", content);
+    // Extract and parse only the JSON portion, even if GPT returns code fencing
 
     // Extract and parse only the JSON portion, even if GPT returns code fencing
     let cleanJSON: string;
