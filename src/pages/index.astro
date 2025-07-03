@@ -51,6 +51,7 @@ const description = "Paste any YouTube video link and get an instant summary of 
 </Layout>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
 	// Get DOM elements
 	const form = document.getElementById('analysis-form') as HTMLFormElement;
 	const urlInput = document.getElementById('youtube-url') as HTMLInputElement;
@@ -210,4 +211,5 @@ const description = "Paste any YouTube video link and get an instant summary of 
 	});
 
 	// ...cookie notice JS unchanged...
+});
 </script>
