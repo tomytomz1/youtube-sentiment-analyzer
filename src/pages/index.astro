@@ -29,6 +29,11 @@ const image = "/og-image.svg";
     <link rel="canonical" href={url} />
   </head>
 
+  <!-- Skip Link for Accessibility -->
+  <a href="#analysis-form" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
+    Skip to analyzer
+  </a>
+
   <main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
     <div class="max-w-4xl w-full mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
@@ -40,6 +45,12 @@ const image = "/og-image.svg";
             Paste any YouTube video link below to get instant sentiment analysis of the comments.
             Discover what viewers really think about the content with AI-powered insights.
           </p>
+        </div>
+
+        <!-- Recent History -->
+        <div id="history-container" class="hidden mb-6">
+          <h3 class="text-sm font-medium text-gray-700 mb-2">Recently Analyzed</h3>
+          <div id="history-list" class="flex flex-wrap gap-2"></div>
         </div>
 
         <form id="analysis-form" class="space-y-6">
@@ -54,7 +65,9 @@ const image = "/og-image.svg";
               placeholder="https://www.youtube.com/watch?v=..."
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
               required
+              aria-describedby="url-error"
             />
+            <span id="url-error" class="hidden text-red-600 text-sm mt-1" role="alert"></span>
           </div>
           <button
             type="submit"
@@ -66,34 +79,40 @@ const image = "/og-image.svg";
         </form>
 
         <!-- Loading State -->
-        <div id="loading-state" class="hidden mt-8 text-center">
+        <div id="loading-state" class="hidden mt-8 text-center" role="status" aria-live="polite">
           <div class="inline-flex items-center space-x-2">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" aria-hidden="true"></div>
             <span class="text-gray-600" id="loading-text">Fetching comments...</span>
+          </div>
+          <div id="progress-bar" class="mt-4 w-full bg-gray-200 rounded-full h-2 hidden">
+            <div id="progress-fill" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
           </div>
         </div>
 
         <!-- Error State -->
-        <div id="error-state" class="hidden mt-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <div id="error-state" class="hidden mt-8 p-4 bg-red-50 border border-red-200 rounded-lg" role="alert" aria-live="assertive">
           <div class="flex items-center">
-            <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
             </svg>
             <span class="text-red-800 font-medium">Error:</span>
             <span class="text-red-700 ml-1" id="error-message"></span>
           </div>
+          <div id="error-suggestions" class="mt-2 text-sm text-red-600"></div>
         </div>
 
         <!-- Video & Channel Info Card -->
         <div id="video-info" class="mb-8 flex items-center space-x-4 hidden">
-          <img id="video-thumb" class="w-20 h-20 rounded shadow object-cover" alt="Video thumbnail">
-          <div>
+          <div class="w-40 aspect-video rounded shadow overflow-hidden">
+            <img id="video-thumb" class="object-cover w-full h-full" alt="Video thumbnail" loading="lazy" />
+          </div>
+          <div class="flex-1">
             <h2 id="video-title" class="font-semibold text-lg"></h2>
             <a id="channel-link" href="#" class="text-blue-600 font-medium flex items-center" target="_blank" rel="noopener">
-              <img id="channel-thumb" class="w-8 h-8 rounded-full mr-2 object-cover" alt="Channel thumbnail">
+              <img id="channel-thumb" class="w-8 h-8 rounded-full mr-2 object-cover" alt="Channel thumbnail" loading="lazy">
               <span id="channel-title"></span>
             </a>
-            <p id="channel-desc" class="text-gray-500 text-xs mt-1"></p>
+            <p id="channel-desc" class="text-gray-500 text-xs mt-1 line-clamp-2"></p>
           </div>
         </div>
 
@@ -140,7 +159,7 @@ const image = "/og-image.svg";
           <div class="grid md:grid-cols-3 gap-6">
             <div class="bg-green-50 rounded-lg p-4">
               <h4 class="text-lg font-semibold text-green-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                 </svg>
                 Positive
@@ -149,7 +168,7 @@ const image = "/og-image.svg";
             </div>
             <div class="bg-gray-50 rounded-lg p-4">
               <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-9a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>
                 Neutral
@@ -158,13 +177,25 @@ const image = "/og-image.svg";
             </div>
             <div class="bg-red-50 rounded-lg p-4">
               <h4 class="text-lg font-semibold text-red-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
                 </svg>
                 Negative
               </h4>
               <div id="negative-comments" class="space-y-2"></div>
             </div>
+          </div>
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-6">
+            <button id="analyze-another" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+              Analyze Another Video
+            </button>
+            <button id="share-results" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.632 4.316C18.114 15.062 18 14.518 18 14c0-.482.114-.938.316-1.342m0 2.684a3 3 0 110-2.684M9 10a1 1 0 100-2 1 1 0 000 2zm6 12a1 1 0 100-2 1 1 0 000 2zM9 21a1 1 0 100-2 1 1 0 000 2z"></path>
+              </svg>
+              Share Results
+            </button>
           </div>
         </div>
         <div class="mt-8 text-center">
@@ -323,133 +354,291 @@ const image = "/og-image.svg";
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Get DOM elements
-    const form = document.getElementById('analysis-form');
-    const urlInput = document.getElementById('youtube-url');
-    const analyzeButton = document.getElementById('analyze-button');
-    const loadingState = document.getElementById('loading-state');
-    const loadingText = document.getElementById('loading-text');
-    const errorState = document.getElementById('error-state');
-    const errorMessage = document.getElementById('error-message');
-    const resultsContainer = document.getElementById('results-container');
-    const positivePercentage = document.getElementById('positive-percentage');
-    const neutralPercentage = document.getElementById('neutral-percentage');
-    const negativePercentage = document.getElementById('negative-percentage');
-    const positiveBar = document.getElementById('positive-bar');
-    const neutralBar = document.getElementById('neutral-bar');
-    const negativeBar = document.getElementById('negative-bar');
-    const sentimentSummary = document.getElementById('sentiment-summary');
-    const positiveComments = document.getElementById('positive-comments');
-    const neutralComments = document.getElementById('neutral-comments');
-    const negativeComments = document.getElementById('negative-comments');
-    const sampleInfo = document.getElementById('sample-info');
-    const mostLikedCallout = document.getElementById('most-liked-callout');
-    const mostLikedLabel = document.getElementById('most-liked-label');
-    const mostLikedText = document.getElementById('most-liked-text');
-    // Video Info Card elements
-    const videoInfoCard = document.getElementById('video-info');
-    const videoThumb = document.getElementById('video-thumb');
-    const videoTitle = document.getElementById('video-title');
-    const channelLink = document.getElementById('channel-link');
-    const channelThumb = document.getElementById('channel-thumb');
-    const channelTitle = document.getElementById('channel-title');
-    const channelDesc = document.getElementById('channel-desc');
+    // Cache all DOM elements
+    const elements = {
+      form: document.getElementById('analysis-form'),
+      urlInput: document.getElementById('youtube-url'),
+      urlError: document.getElementById('url-error'),
+      analyzeButton: document.getElementById('analyze-button'),
+      loadingState: document.getElementById('loading-state'),
+      loadingText: document.getElementById('loading-text'),
+      progressBar: document.getElementById('progress-bar'),
+      progressFill: document.getElementById('progress-fill'),
+      errorState: document.getElementById('error-state'),
+      errorMessage: document.getElementById('error-message'),
+      errorSuggestions: document.getElementById('error-suggestions'),
+      resultsContainer: document.getElementById('results-container'),
+      positivePercentage: document.getElementById('positive-percentage'),
+      neutralPercentage: document.getElementById('neutral-percentage'),
+      negativePercentage: document.getElementById('negative-percentage'),
+      positiveBar: document.getElementById('positive-bar'),
+      neutralBar: document.getElementById('neutral-bar'),
+      negativeBar: document.getElementById('negative-bar'),
+      sentimentSummary: document.getElementById('sentiment-summary'),
+      positiveComments: document.getElementById('positive-comments'),
+      neutralComments: document.getElementById('neutral-comments'),
+      negativeComments: document.getElementById('negative-comments'),
+      sampleInfo: document.getElementById('sample-info'),
+      mostLikedCallout: document.getElementById('most-liked-callout'),
+      mostLikedLabel: document.getElementById('most-liked-label'),
+      mostLikedText: document.getElementById('most-liked-text'),
+      videoInfoCard: document.getElementById('video-info'),
+      videoThumb: document.getElementById('video-thumb'),
+      videoTitle: document.getElementById('video-title'),
+      channelLink: document.getElementById('channel-link'),
+      channelThumb: document.getElementById('channel-thumb'),
+      channelTitle: document.getElementById('channel-title'),
+      channelDesc: document.getElementById('channel-desc'),
+      analyzeAnother: document.getElementById('analyze-another'),
+      shareResults: document.getElementById('share-results'),
+      historyContainer: document.getElementById('history-container'),
+      historyList: document.getElementById('history-list'),
+      cookieNotice: document.getElementById('cookie-notice'),
+      acceptCookies: document.getElementById('accept-cookies'),
+      declineCookies: document.getElementById('decline-cookies')
+    };
+
+    // State management
+    let isAnalyzing = false;
+    let lastAnalyzedUrl = '';
+    let currentVideoUrl = '';
+    let currentSummary = '';
+    
+    // Results cache
+    const analysisCache = new Map();
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+    // Progress messages
+    const progressMessages = [
+      'Connecting to YouTube...',
+      'Fetching comments...',
+      'Preparing for analysis...',
+      'Analyzing sentiment with AI...',
+      'Generating results...'
+    ];
+    let progressStage = 0;
+    let progressInterval = null;
+
+    // Error messages
+    const errorMessages = {
+      // Exact matches from backend
+      'Invalid YouTube URL provided': 'Please enter a valid YouTube URL.',
+      'Could not extract video ID from URL. Please check the format and try again.': 'Invalid YouTube URL format. Please check the URL.',
+      'YouTube API key not configured on server.': 'Server configuration error. Please contact support.',
+      'Could not fetch video info.': 'Unable to fetch video information. The video might be private.',
+      'No comments found for this video (comments may be disabled or unavailable).': 'No comments available. They may be disabled for this video.',
+      'YouTube API quota exceeded or invalid API key. Please try again later.': 'API limit reached. Please try again in a few minutes.',
+      'Video not found or comments are disabled.': 'Video not found or comments are disabled.',
+      // Sentiment API errors
+      'Invalid comments array provided': 'Invalid data received. Please try again.',
+      'OpenAI API key not configured': 'AI service not configured. Please contact support.',
+      'Internal server error': 'An unexpected error occurred. Please try again.',
+      // Frontend-generated errors
+      'Failed to fetch comments': 'Unable to connect to the server. Please check your connection.',
+      'Failed to analyze sentiment': 'Unable to analyze comments. Please try again.',
+      'No comments found for this video': 'This video has no comments to analyze.'
+    };
+
+    // Utility functions
+    function extractVideoId(url) {
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&\n?#]+)/,
+        /youtube\.com\/watch\?.*&v=([^&\n?#]+)/,
+        /youtube\.com\/shorts\/([^&\n?#]+)/
+      ];
+      
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1].length === 11) return match[1];
+      }
+      
+      return null;
+    }
+
+    function isValidYouTubeUrl(url) {
+      try {
+        const videoId = extractVideoId(url);
+        return videoId !== null;
+      } catch {
+        return false;
+      }
+    }
+
+    function isValidImageUrl(url) {
+      try {
+        const parsed = new URL(url);
+        return ['https:', 'http:'].includes(parsed.protocol) && 
+               (parsed.hostname.endsWith('.youtube.com') || 
+                parsed.hostname.endsWith('.ytimg.com') ||
+                parsed.hostname.endsWith('.ggpht.com') ||
+                parsed.hostname.endsWith('.googleusercontent.com'));
+      } catch {
+        return false;
+      }
+    }
 
     function hideAllStates() {
-      loadingState?.classList.add('hidden');
-      errorState?.classList.add('hidden');
-      resultsContainer?.classList.add('hidden');
-      sampleInfo?.classList.add('hidden');
-      mostLikedCallout?.classList.add('hidden');
-      videoInfoCard?.classList.add('hidden');
+      elements.loadingState?.classList.add('hidden');
+      elements.errorState?.classList.add('hidden');
+      elements.resultsContainer?.classList.add('hidden');
+      elements.sampleInfo?.classList.add('hidden');
+      elements.mostLikedCallout?.classList.add('hidden');
+      elements.videoInfoCard?.classList.add('hidden');
+      elements.progressBar?.classList.add('hidden');
+      elements.urlError?.classList.add('hidden');
+      clearProgress();
     }
 
     function showLoading(message) {
       hideAllStates();
-      loadingText.textContent = message;
-      loadingState?.classList.remove('hidden');
-      analyzeButton.disabled = true;
+      elements.loadingText.textContent = message;
+      elements.loadingState?.classList.remove('hidden');
+      elements.progressBar?.classList.remove('hidden');
+      elements.analyzeButton.disabled = true;
+      startProgress();
     }
 
     function showError(message) {
       hideAllStates();
-      errorMessage.textContent = message;
-      errorState?.classList.remove('hidden');
-      analyzeButton.disabled = false;
+      
+      // Try exact match first
+      let displayMessage = errorMessages[message] || message;
+      
+      // If the message contains line breaks or is very long, it might be a detailed error
+      // In that case, try to find a partial match
+      if (displayMessage === message && message.length > 50) {
+        for (const [key, value] of Object.entries(errorMessages)) {
+          if (message.includes(key.substring(0, 20))) {
+            displayMessage = value;
+            break;
+          }
+        }
+      }
+      
+      elements.errorMessage.textContent = displayMessage;
+      elements.errorState?.classList.remove('hidden');
+      elements.analyzeButton.disabled = false;
+      
+      // Add contextual suggestions
+      elements.errorSuggestions.textContent = '';
+      
+      if (message.toLowerCase().includes('url') || message.toLowerCase().includes('video id')) {
+        elements.errorSuggestions.textContent = 'Tip: Copy the complete URL from your browser\'s address bar.';
+      } else if (message.toLowerCase().includes('comments') || message.toLowerCase().includes('disabled')) {
+        elements.errorSuggestions.textContent = 'Tip: Make sure the video is public and allows comments.';
+      } else if (message.toLowerCase().includes('quota') || message.toLowerCase().includes('limit')) {
+        elements.errorSuggestions.textContent = 'Tip: Wait 5-10 minutes before trying again.';
+      } else if (message.toLowerCase().includes('api key') || message.toLowerCase().includes('configured')) {
+        elements.errorSuggestions.textContent = 'This is a server configuration issue. Please contact support.';
+      } else if (message.toLowerCase().includes('network') || message.toLowerCase().includes('fetch')) {
+        elements.errorSuggestions.textContent = 'Tip: Check your internet connection and try again.';
+      }
+    }
+
+    function startProgress() {
+      progressStage = 0;
+      elements.progressFill.style.width = '0%';
+      updateProgress();
+      progressInterval = setInterval(updateProgress, 800);
+    }
+
+    function updateProgress() {
+      if (progressStage < progressMessages.length) {
+        elements.loadingText.textContent = progressMessages[progressStage];
+        const progress = ((progressStage + 1) / progressMessages.length) * 90;
+        elements.progressFill.style.width = `${progress}%`;
+        progressStage++;
+      }
+    }
+
+    function clearProgress() {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+      }
+      progressStage = 0;
     }
 
     function showResults(data, meta = {}) {
       hideAllStates();
+      elements.progressFill.style.width = '100%';
 
       // VIDEO & CHANNEL INFO CARD
       if (meta.videoInfo && meta.channelInfo) {
-        // Video thumbnail
-        if (meta.videoInfo.title && meta.videoInfo.channelId) {
-          const videoIdMatch = urlInput.value.match(/(?:v=|be\/|embed\/|v\/)([a-zA-Z0-9_-]{11})/);
-          const videoId = videoIdMatch ? videoIdMatch[1] : null;
-          if (videoId) {
-            videoThumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-            videoThumb.alt = meta.videoInfo.title;
-          }
+        const videoId = extractVideoId(currentVideoUrl);
+        if (videoId) {
+          const thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+          elements.videoThumb.src = thumbUrl;
+          elements.videoThumb.alt = meta.videoInfo.title || 'Video thumbnail';
         }
-        videoTitle.textContent = meta.videoInfo.title || '';
+        
+        elements.videoTitle.textContent = meta.videoInfo.title || '';
+        
         if (meta.channelInfo.channelCustomUrl) {
-          channelLink.href = `https://www.youtube.com/${meta.channelInfo.channelCustomUrl}`;
+          elements.channelLink.href = `https://www.youtube.com/${meta.channelInfo.channelCustomUrl}`;
         } else if (meta.videoInfo.channelId) {
-          channelLink.href = `https://www.youtube.com/channel/${meta.videoInfo.channelId}`;
+          elements.channelLink.href = `https://www.youtube.com/channel/${meta.videoInfo.channelId}`;
         } else {
-          channelLink.href = "#";
+          elements.channelLink.href = "#";
         }
+        
         let thumbUrl = meta.channelInfo.channelThumbnails?.high?.url
           || meta.channelInfo.channelThumbnails?.default?.url
           || meta.channelInfo.channelThumbnails?.medium?.url
           || '';
-        if (thumbUrl) {
-          channelThumb.src = thumbUrl;
+          
+        if (thumbUrl && isValidImageUrl(thumbUrl)) {
+          elements.channelThumb.src = thumbUrl;
         } else {
-          channelThumb.removeAttribute('src');
+          elements.channelThumb.style.display = 'none';
         }
-        channelTitle.textContent = meta.channelInfo.channelTitle || '';
-        channelDesc.textContent = meta.channelInfo.channelDescription || '';
-        videoInfoCard.classList.remove('hidden');
-      } else {
-        videoInfoCard.classList.add('hidden');
+        
+        elements.channelTitle.textContent = meta.channelInfo.channelTitle || '';
+        elements.channelDesc.textContent = meta.channelInfo.channelDescription || '';
+        elements.videoInfoCard.classList.remove('hidden');
       }
 
       // Sample Size & Most Liked Comment
       if (meta.analyzedCount && meta.totalComments) {
         if (meta.totalComments <= meta.analyzedCount) {
-          sampleInfo.textContent = `Analyzed all ${meta.analyzedCount} comments for this video.`;
+          elements.sampleInfo.textContent = `Analyzed all ${meta.analyzedCount} comments for this video.`;
         } else {
-          sampleInfo.textContent = `Analyzed a randomized sample of ${meta.analyzedCount} out of ${meta.totalComments} comments.`;
+          elements.sampleInfo.textContent = `Analyzed a randomized sample of ${meta.analyzedCount} out of ${meta.totalComments} comments.`;
         }
-        sampleInfo.classList.remove('hidden');
-      } else {
-        sampleInfo.classList.add('hidden');
+        elements.sampleInfo.classList.remove('hidden');
       }
+      
       if (meta.mostLiked && meta.mostLiked.text && typeof meta.mostLiked.likeCount === 'number') {
-        mostLikedLabel.textContent = `Most liked comment (${meta.mostLiked.likeCount} likes):`;
-        mostLikedText.textContent = `"${meta.mostLiked.text}"`;
-        mostLikedCallout.classList.remove('hidden');
-      } else {
-        mostLikedCallout.classList.add('hidden');
+        elements.mostLikedLabel.textContent = `Most liked comment (${meta.mostLiked.likeCount} likes):`;
+        elements.mostLikedText.textContent = `"${meta.mostLiked.text}"`;
+        elements.mostLikedCallout.classList.remove('hidden');
       }
 
-      positivePercentage.textContent = `${data.positive}%`;
-      neutralPercentage.textContent = `${data.neutral}%`;
-      negativePercentage.textContent = `${data.negative}%`;
+      // Update sentiment percentages and bars
+      elements.positivePercentage.textContent = `${data.positive}%`;
+      elements.neutralPercentage.textContent = `${data.neutral}%`;
+      elements.negativePercentage.textContent = `${data.negative}%`;
+      
       setTimeout(() => {
-        positiveBar.style.width = `${data.positive}%`;
-        neutralBar.style.width = `${data.neutral}%`;
-        negativeBar.style.width = `${data.negative}%`;
+        elements.positiveBar.style.width = `${data.positive}%`;
+        elements.neutralBar.style.width = `${data.neutral}%`;
+        elements.negativeBar.style.width = `${data.negative}%`;
       }, 100);
-      sentimentSummary.textContent = data.summary;
-      updateComments(positiveComments, data.sampleComments.positive, 'text-green-700');
-      updateComments(neutralComments, data.sampleComments.neutral, 'text-gray-700');
-      updateComments(negativeComments, data.sampleComments.negative, 'text-red-700');
+      
+      elements.sentimentSummary.textContent = data.summary;
+      currentSummary = data.summary; // Store for sharing
+      
+      updateComments(elements.positiveComments, data.sampleComments.positive, 'text-green-700');
+      updateComments(elements.neutralComments, data.sampleComments.neutral, 'text-gray-700');
+      updateComments(elements.negativeComments, data.sampleComments.negative, 'text-red-700');
 
-      resultsContainer.classList.remove('hidden');
-      analyzeButton.disabled = false;
+      elements.resultsContainer.classList.remove('hidden');
+      elements.analyzeButton.disabled = false;
+      
+      // Add to history
+      if (meta.videoInfo && meta.videoInfo.title) {
+        addToHistory(currentVideoUrl, meta.videoInfo.title);
+      }
     }
 
     function updateComments(container, comments, textColor) {
@@ -462,31 +651,338 @@ const image = "/og-image.svg";
       });
     }
 
-    form.addEventListener('submit', async (e) => {
+    // History management
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('analyzedVideos') || '[]');
+      if (history.length > 0) {
+        elements.historyContainer.classList.remove('hidden');
+        elements.historyList.innerHTML = '';
+        
+        history.slice(0, 5).forEach(item => {
+          const button = document.createElement('button');
+          button.className = 'text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-gray-700 truncate max-w-xs';
+          button.textContent = item.title;
+          button.title = item.url;
+          button.onclick = () => {
+            elements.urlInput.value = item.url;
+            elements.form.dispatchEvent(new Event('submit'));
+          };
+          elements.historyList.appendChild(button);
+        });
+      }
+    }
+
+    function addToHistory(url, title) {
+      const history = JSON.parse(localStorage.getItem('analyzedVideos') || '[]');
+      const existing = history.findIndex(item => item.url === url);
+      
+      if (existing !== -1) {
+        history.splice(existing, 1);
+      }
+      
+      history.unshift({ url, title, date: Date.now() });
+      localStorage.setItem('analyzedVideos', JSON.stringify(history.slice(0, 10)));
+      loadHistory();
+    }
+
+    // Share functionality
+    // Replace the existing shareResults function and add these new functions
+
+// Enhanced share functionality with social media options
+function createShareModal() {
+  // Remove any existing modal
+  const existingModal = document.getElementById('share-modal');
+  if (existingModal) existingModal.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'share-modal';
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+  modal.innerHTML = `
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 relative animate-fade-in">
+      <button id="close-share-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <h3 class="text-xl font-bold text-gray-800 mb-6">Share Results</h3>
+      
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <!-- Twitter/X -->
+        <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="twitter">
+          <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-700">X (Twitter)</span>
+        </button>
+        
+        <!-- Facebook -->
+        <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="facebook">
+          <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-700">Facebook</span>
+        </button>
+        
+        <!-- LinkedIn -->
+        <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="linkedin">
+          <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-700">LinkedIn</span>
+        </button>
+        
+        <!-- WhatsApp -->
+        <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="whatsapp">
+          <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-700">WhatsApp</span>
+        </button>
+        
+        <!-- Reddit -->
+        <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="reddit">
+          <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-700">Reddit</span>
+        </button>
+        
+        <!-- Copy Link -->
+        <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="copy">
+          <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-700">Copy Link</span>
+        </button>
+      </div>
+      
+      <div class="border-t pt-4">
+        <p class="text-xs text-gray-500 text-center">Share your YouTube sentiment analysis results</p>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  
+  // Add styles for animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.2s ease-out;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Event listeners
+  document.getElementById('close-share-modal').addEventListener('click', () => modal.remove());
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+
+  // Share button handlers
+  modal.querySelectorAll('.share-option').forEach(button => {
+    button.addEventListener('click', () => handleShare(button.dataset.platform));
+  });
+}
+
+function handleShare(platform) {
+  const videoId = extractVideoId(currentVideoUrl);
+  const videoTitle = elements.videoTitle?.textContent || 'this video';
+  
+  // Get sentiment percentages
+  const positive = elements.positivePercentage?.textContent || '0%';
+  const neutral = elements.neutralPercentage?.textContent || '0%';
+  const negative = elements.negativePercentage?.textContent || '0%';
+  
+  // Create share content
+  const shareUrl = `${window.location.origin}?video=${encodeURIComponent(currentVideoUrl)}`;
+  const hashtags = 'YouTubeSentiment,SentimentAnalysis,YouTube';
+  
+  // Create engaging share text
+  let sentiment = 'mixed';
+  if (parseInt(positive) > 60) sentiment = 'positive';
+  else if (parseInt(negative) > 40) sentiment = 'negative';
+  
+  const shareText = `🎥 Just analyzed "${videoTitle}" - ${positive} positive, ${neutral} neutral, ${negative} negative comments! ${sentiment === 'positive' ? '✨' : sentiment === 'negative' ? '😬' : '🤔'}\n\nCheck out the full analysis:`;
+
+  const shareMessages = {
+    twitter: `🎥 "${videoTitle}" sentiment analysis:\n✅ ${positive} positive\n➖ ${neutral} neutral\n❌ ${negative} negative\n\nAnalyze any YouTube video instantly! 🚀`,
+    facebook: `I just analyzed the sentiment of "${videoTitle}" on YouTube!\n\n📊 Results:\n• Positive: ${positive}\n• Neutral: ${neutral}\n• Negative: ${negative}\n\nTry it yourself with any YouTube video!`,
+    linkedin: `Interesting sentiment analysis of "${videoTitle}":\n\n📈 ${positive} positive comments\n➖ ${neutral} neutral comments\n📉 ${negative} negative comments\n\nGreat tool for content creators and marketers to understand audience sentiment!`,
+    whatsapp: `Check out this YouTube sentiment analysis!\n\n"${videoTitle}"\n✅ Positive: ${positive}\n➖ Neutral: ${neutral}\n❌ Negative: ${negative}\n\nTry it yourself:`,
+    reddit: `[Tool] I analyzed the sentiment of "${videoTitle}" - ${positive} positive, ${neutral} neutral, ${negative} negative comments`
+  };
+
+  switch(platform) {
+    case 'twitter':
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessages.twitter)}&url=${encodeURIComponent(shareUrl)}&hashtags=${hashtags}`,
+        '_blank',
+        'width=550,height=420'
+      );
+      break;
+      
+    case 'facebook':
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareMessages.facebook)}`,
+        '_blank',
+        'width=550,height=420'
+      );
+      break;
+      
+    case 'linkedin':
+      window.open(
+        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&summary=${encodeURIComponent(shareMessages.linkedin)}`,
+        '_blank',
+        'width=550,height=520'
+      );
+      break;
+      
+    case 'whatsapp':
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent(shareMessages.whatsapp + ' ' + shareUrl)}`,
+        '_blank'
+      );
+      break;
+      
+    case 'reddit':
+      window.open(
+        `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareMessages.reddit)}`,
+        '_blank',
+        'width=850,height=550'
+      );
+      break;
+      
+    case 'copy':
+      copyToClipboard(shareUrl);
+      // Update button to show success
+      const copyButton = document.querySelector('[data-platform="copy"]');
+      const originalHTML = copyButton.innerHTML;
+      copyButton.innerHTML = `
+        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <span class="text-sm text-gray-700">Copied!</span>
+      `;
+      setTimeout(() => {
+        copyButton.innerHTML = originalHTML;
+      }, 2000);
+      break;
+      
+    default:
+      // Fallback to native share
+      if (navigator.share) {
+        navigator.share({
+          title: `Sentiment Analysis: ${videoTitle}`,
+          text: shareText,
+          url: shareUrl
+        });
+      }
+  }
+  
+  // Close modal after sharing (except for copy)
+  if (platform !== 'copy') {
+    setTimeout(() => {
+      document.getElementById('share-modal')?.remove();
+    }, 500);
+  }
+}
+
+// Replace the existing shareResults function with this:
+function shareResults() {
+  createShareModal();
+}
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = elements.shareResults.innerHTML;
+        elements.shareResults.innerHTML = '<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Copied!';
+        setTimeout(() => {
+          elements.shareResults.innerHTML = originalText;
+        }, 2000);
+      });
+    }
+
+    // Main form submission handler
+    elements.form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const youtubeUrl = urlInput.value.trim();
+      
+      if (isAnalyzing) return;
+      
+      const youtubeUrl = elements.urlInput.value.trim();
+      currentVideoUrl = youtubeUrl;
+      
+      // Validation
       if (!youtubeUrl) {
-        showError('Please enter a YouTube URL');
+        elements.urlError.textContent = 'Please enter a YouTube URL';
+        elements.urlError.classList.remove('hidden');
         return;
       }
+      
+      if (!isValidYouTubeUrl(youtubeUrl)) {
+        elements.urlError.textContent = 'Please enter a valid YouTube URL';
+        elements.urlError.classList.remove('hidden');
+        return;
+      }
+      
+      elements.urlError.classList.add('hidden');
+      
+      // Check if we're re-analyzing the same URL
+      if (youtubeUrl === lastAnalyzedUrl && !elements.resultsContainer.classList.contains('hidden')) {
+        return;
+      }
+      
+      // Check cache
+      const cached = analysisCache.get(youtubeUrl);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        showResults(cached.data.sentiment, cached.data.meta);
+        return;
+      }
+      
+      isAnalyzing = true;
+      lastAnalyzedUrl = youtubeUrl;
 
       try {
         showLoading('Fetching comments...');
+        
         const commentsResponse = await fetch('/api/comments', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ youtubeUrl }),
         });
+        
         if (!commentsResponse.ok) {
           const errorData = await commentsResponse.json();
           throw new Error(errorData.error || 'Failed to fetch comments');
         }
+        
         const commentsData = await commentsResponse.json();
+        
         if (!commentsData.comments || commentsData.comments.length === 0) {
           throw new Error('No comments found for this video');
         }
 
         showLoading('Analyzing sentiment...');
+        
         const sentimentResponse = await fetch('/api/sentiment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -499,43 +995,96 @@ const image = "/og-image.svg";
             channelInfo: commentsData.channelInfo,
           }),
         });
+        
         if (!sentimentResponse.ok) {
           const errorData = await sentimentResponse.json();
           throw new Error(errorData.error || 'Failed to analyze sentiment');
         }
+        
         const sentimentData = await sentimentResponse.json();
-
-        showResults(sentimentData, {
+        
+        const meta = {
           analyzedCount: commentsData.analyzedCount,
           totalComments: commentsData.totalComments,
           mostLiked: commentsData.mostLiked,
           videoInfo: sentimentData.videoInfo,
           channelInfo: sentimentData.channelInfo,
+        };
+        
+        // Cache the results
+        analysisCache.set(youtubeUrl, {
+          data: { sentiment: sentimentData, meta },
+          timestamp: Date.now()
         });
+        
+        showResults(sentimentData, meta);
+        
       } catch (error) {
         console.error('Analysis error:', error);
         showError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      } finally {
+        isAnalyzing = false;
+      }
+    });
+
+    // Analyze Another button
+    if (elements.analyzeAnother) {
+      elements.analyzeAnother.addEventListener('click', () => {
+        elements.urlInput.value = '';
+        hideAllStates();
+        elements.urlInput.focus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Share Results button
+    if (elements.shareResults) {
+      elements.shareResults.addEventListener('click', shareResults);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Ctrl/Cmd + Enter to analyze
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && document.activeElement === elements.urlInput) {
+        elements.form.dispatchEvent(new Event('submit'));
+      }
+      
+      // Escape to clear results
+      if (e.key === 'Escape' && !elements.resultsContainer.classList.contains('hidden')) {
+        hideAllStates();
+        elements.urlInput.value = '';
+        elements.urlInput.focus();
       }
     });
 
     // Cookie Notice
-    const cookieNotice = document.getElementById('cookie-notice');
-    const acceptCookies = document.getElementById('accept-cookies');
-    const declineCookies = document.getElementById('decline-cookies');
     const cookieChoice = localStorage.getItem('cookieChoice');
     if (!cookieChoice) {
       setTimeout(() => {
-        cookieNotice.classList.remove('translate-y-full');
+        elements.cookieNotice.classList.remove('translate-y-full');
       }, 1000);
     }
-    acceptCookies.addEventListener('click', () => {
+    
+    elements.acceptCookies.addEventListener('click', () => {
       localStorage.setItem('cookieChoice', 'accepted');
-      cookieNotice.classList.add('translate-y-full');
+      elements.cookieNotice.classList.add('translate-y-full');
     });
-    declineCookies.addEventListener('click', () => {
+    
+    elements.declineCookies.addEventListener('click', () => {
       localStorage.setItem('cookieChoice', 'declined');
-      cookieNotice.classList.add('translate-y-full');
+      elements.cookieNotice.classList.add('translate-y-full');
     });
+
+    // Check URL params for shared videos
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedVideo = urlParams.get('video');
+    if (sharedVideo) {
+      elements.urlInput.value = sharedVideo;
+      elements.form.dispatchEvent(new Event('submit'));
+    }
+
+    // Load history on startup
+    loadHistory();
   });
   </script>
 </Layout>

@@ -1,16 +1,36 @@
 import type { APIRoute } from 'astro';
 
-// Optionally extend allowed fields if you pass meta info in the future
 interface SentimentMeta {
   analyzedCount?: number;
   totalComments?: number;
   mostLiked?: { text: string; likeCount: number };
+  videoInfo?: {
+    title?: string;
+    description?: string;
+    channelId?: string;
+    channelTitle?: string;
+  };
+  channelInfo?: {
+    channelTitle?: string;
+    channelDescription?: string;
+    channelPublishedAt?: string;
+    channelThumbnails?: any;
+    channelCustomUrl?: string;
+    channelTopics?: string[];
+  };
 }
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { comments, analyzedCount, totalComments, mostLiked }: { comments: string[] } & SentimentMeta = body;
+    const {
+      comments,
+      analyzedCount,
+      totalComments,
+      mostLiked,
+      videoInfo,
+      channelInfo,
+    }: { comments: string[] } & SentimentMeta = body;
 
     // Validate input
     if (!comments || !Array.isArray(comments) || comments.length === 0) {
@@ -28,15 +48,29 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Sentiment analysis
-    const sentimentAnalysis = await analyzeSentiment(comments, apiKey);
+    // ---- Prepare context for summary style ----
+    const channelNiche = detectChannelNiche(channelInfo);
 
-    // Pass through any meta fields you might have sent (optional, doesn’t break anything)
+    // Sentiment analysis
+    const sentimentAnalysis = await analyzeSentiment(
+      comments,
+      apiKey,
+      {
+        videoInfo,
+        channelInfo,
+        channelNiche,
+      }
+    );
+
+    // Pass through all meta fields
     const result = {
       ...sentimentAnalysis,
       ...(analyzedCount !== undefined && { analyzedCount }),
       ...(totalComments !== undefined && { totalComments }),
       ...(mostLiked !== undefined && { mostLiked }),
+      ...(videoInfo !== undefined && { videoInfo }),
+      ...(channelInfo !== undefined && { channelInfo }),
+      ...(channelNiche !== undefined && { channelNiche }),
     };
 
     return new Response(JSON.stringify(result), {
@@ -54,7 +88,7 @@ export const POST: APIRoute = async ({ request }) => {
 };
 
 /**
- * Helper to extract JSON object from GPT output (even with code fencing/markdown)
+ * Helper: Extract JSON object from GPT output
  */
 function extractJSON(str: string): string {
   const match = str.match(/{[\s\S]*}/);
@@ -63,27 +97,79 @@ function extractJSON(str: string): string {
 }
 
 /**
- * Analyze sentiment using OpenAI GPT-4o
+ * Detects the niche/topic from channelInfo or videoInfo
  */
-async function analyzeSentiment(comments: string[], apiKey: string) {
-  const prompt = `Please analyze the sentiment of these YouTube comments and provide a structured response.
+function detectChannelNiche(channelInfo?: SentimentMeta["channelInfo"]): string | undefined {
+  if (!channelInfo) return undefined;
+  if (Array.isArray(channelInfo.channelTopics) && channelInfo.channelTopics.length > 0) {
+    // YouTube topic categories are full URLs, try to extract last part or keyword
+    return channelInfo.channelTopics
+      .map((topic: string) => {
+        try {
+          // E.g. http://www.youtube.com/topic/UC2R-7eYkD0GfjI_n9vIm_HA or http://en.wikipedia.org/wiki/Music
+          return decodeURIComponent(topic.split('/').pop() ?? topic);
+        } catch {
+          return topic;
+        }
+      })
+      .filter(Boolean)
+      .join(', ');
+  }
+  // Fallback: try to infer from channel description
+  if (channelInfo.channelDescription) {
+    // crude guess: extract most common non-stopword noun/adjective
+    // or just return first 10 words as a teaser
+    return channelInfo.channelDescription.split(/\s+/).slice(0, 10).join(' ');
+  }
+  return undefined;
+}
+
+/**
+ * Analyze sentiment using OpenAI GPT-4o with newsroom-level summary prompt
+ */
+async function analyzeSentiment(
+  comments: string[],
+  apiKey: string,
+  meta: {
+    videoInfo?: SentimentMeta["videoInfo"],
+    channelInfo?: SentimentMeta["channelInfo"],
+    channelNiche?: string,
+  }
+) {
+  // Prepare context for the prompt
+  const videoTitle = meta.videoInfo?.title || 'N/A';
+  const channelTitle = meta.channelInfo?.channelTitle || 'N/A';
+  const channelDesc = meta.channelInfo?.channelDescription || 'N/A';
+  const channelNiche = meta.channelNiche || 'N/A';
+
+  // Improved prompt for newsroom-quality summary
+  const prompt = `
+You are an expert media analyst for a leading news publication.
+
+Analyze the sentiment of the following YouTube comments and provide a newsroom-quality, highly detailed summary of the overall sentiment. Your summary should be written in the objective, insightful, and context-aware style of a professional news outlet, referencing the video and channel context as appropriate.
+
+Video Title: "${videoTitle}"
+Channel Name: "${channelTitle}"
+Channel Description: "${channelDesc}"
+Channel Niche: "${channelNiche}"
 
 Comments to analyze:
 ${comments.map((comment, index) => `${index + 1}. ${comment}`).join('\n')}
 
 Respond ONLY with a valid JSON object. Do NOT use markdown, do NOT include code fencing, do NOT add any explanation or text—just output valid JSON.
 
-Your JSON object should include:
+Your JSON object must include:
 1. "positive": percentage of positive comments (number)
 2. "neutral": percentage of neutral comments (number)
 3. "negative": percentage of negative comments (number)
-4. "summary": a one-sentence summary of the overall sentiment
+4. "summary": a thorough, newsroom-quality, multi-sentence summary that contextualizes the sentiment in relation to the video's topic, channel style, and its audience (at least 3-4 sentences, news style, with details on trends, controversies, or engagement patterns if present). Use a professional, neutral tone and, if appropriate, separate paragraphs with double line breaks (\\n\\n).
 5. "sampleComments": an object with arrays of 3-5 example comments for each sentiment:
    - "positive": array of positive comment examples
    - "neutral": array of neutral comment examples
    - "negative": array of negative comment examples
 
-Make sure percentages add up to 100.`;
+Make sure percentages add up to 100.
+`;
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -104,8 +190,8 @@ Make sure percentages add up to 100.`;
             content: prompt
           }
         ],
-        max_tokens: 1000,
-        temperature: 0.3,
+        max_tokens: 1500,
+        temperature: 0.2,
       }),
     });
 
@@ -126,9 +212,6 @@ Make sure percentages add up to 100.`;
       throw new Error('No response from OpenAI');
     }
 
-    // Extract and parse only the JSON portion, even if GPT returns code fencing
-
-    // Extract and parse only the JSON portion, even if GPT returns code fencing
     let cleanJSON: string;
     try {
       cleanJSON = extractJSON(content);
