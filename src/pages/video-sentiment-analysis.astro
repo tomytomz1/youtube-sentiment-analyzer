@@ -1,0 +1,565 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "Video Sentiment Analysis - Free AI Tool to Analyze YouTube Video Sentiment";
+const description = "Analyze sentiment of any YouTube video instantly with AI. Get detailed insights into viewer emotions, engagement patterns, and content performance metrics for free.";
+const url = "https://www.senti-meter.com/video-sentiment-analysis";
+const image = "/og-image.svg";
+---
+<Layout>
+  <head>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Video Sentiment Analysis Tool" />
+    <meta name="keywords" content="video sentiment analysis, youtube sentiment, video analytics, content sentiment, ai video analysis, youtube video metrics" />
+    <link rel="canonical" href={url} />
+  </head>
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#video-sentiment-tool" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
+    Skip to video sentiment analyzer
+  </a>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-purple-50 to-blue-100 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        Video Sentiment Analysis Tool
+      </h1>
+      <p class="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
+        Unlock the emotional pulse of any YouTube video with our advanced AI-powered sentiment analysis. Discover how viewers truly feel about video content, track engagement patterns, and optimize your content strategy with data-driven insights.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#video-sentiment-tool" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+          Analyze Video Sentiment
+        </a>
+        <a href="#sentiment-insights" class="border border-purple-600 text-purple-600 hover:bg-purple-50 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          View Sample Analysis
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Benefits -->
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Advanced Video Sentiment Analysis</h2>
+        <p class="text-lg text-gray-600">Comprehensive insights beyond basic comment analysis</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Benefit 1 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Comprehensive Video Analysis</h3>
+          <p class="text-gray-600">Analyze sentiment across entire video ecosystems including comments, engagement patterns, and viewer response trends.</p>
+        </div>
+        <!-- Benefit 2 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Real-Time Insights</h3>
+          <p class="text-gray-600">Get instant sentiment analysis results with detailed breakdowns of positive, neutral, and negative viewer responses.</p>
+        </div>
+        <!-- Benefit 3 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Performance Metrics</h3>
+          <p class="text-gray-600">Track video performance through sentiment trends, engagement correlation, and audience emotional response patterns.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Integration -->
+  <section id="video-sentiment-tool" class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Analyze Video Sentiment</h2>
+          <p class="text-lg text-gray-600">Enter any YouTube video URL to get comprehensive sentiment analysis</p>
+        </div>
+        
+        <!-- Tool Form -->
+        <form id="video-sentiment-form" class="space-y-6">
+          <div>
+            <label for="video-url-input" class="block text-sm font-medium text-gray-700 mb-2">
+              YouTube Video URL
+            </label>
+            <input
+              type="url"
+              id="video-url-input"
+              name="video-url"
+              placeholder="https://www.youtube.com/watch?v=..."
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            id="analyze-video-button"
+            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none"
+          >
+            Analyze Video Sentiment
+          </button>
+        </form>
+
+        <!-- Sample Results Preview -->
+        <div class="mt-12 p-6 bg-gray-50 rounded-xl">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Sample Analysis Preview</h3>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="text-center p-4 bg-green-100 rounded-lg">
+              <div class="text-2xl font-bold text-green-700">68%</div>
+              <div class="text-sm text-green-600">Positive Sentiment</div>
+            </div>
+            <div class="text-center p-4 bg-gray-100 rounded-lg">
+              <div class="text-2xl font-bold text-gray-700">22%</div>
+              <div class="text-sm text-gray-600">Neutral Sentiment</div>
+            </div>
+            <div class="text-center p-4 bg-red-100 rounded-lg">
+              <div class="text-2xl font-bold text-red-700">10%</div>
+              <div class="text-sm text-red-600">Negative Sentiment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sentiment Insights -->
+  <section id="sentiment-insights" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">What Video Sentiment Analysis Reveals</h2>
+        <p class="text-lg text-gray-600">Discover insights that go beyond surface-level metrics</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <!-- Insights List -->
+        <div class="space-y-6">
+          <div class="flex items-start space-x-4">
+            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Emotional Engagement Patterns</h3>
+              <p class="text-gray-600">Understand how viewers emotionally respond to different segments of your video content and identify the most engaging moments.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Audience Reception Quality</h3>
+              <p class="text-gray-600">Measure not just view counts, but how positively or negatively your audience perceives your video content quality and messaging.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Content Optimization Opportunities</h3>
+              <p class="text-gray-600">Identify specific elements that drive positive or negative sentiment to optimize future video content and improve audience satisfaction.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Competitive Performance Insights</h3>
+              <p class="text-gray-600">Compare sentiment scores across similar videos to understand your competitive position and identify market opportunities.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Visual Representation -->
+        <div class="bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl p-8">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6 text-center">Sentiment Analysis Dashboard</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-green-700">Positive Reactions</span>
+                <span class="text-sm font-bold text-green-700">65%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-green-500 h-3 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700">Neutral Reactions</span>
+                <span class="text-sm font-bold text-gray-700">25%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gray-500 h-3 rounded-full" style="width: 25%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-red-700">Negative Reactions</span>
+                <span class="text-sm font-bold text-red-700">10%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-red-500 h-3 rounded-full" style="width: 10%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Analysis Process -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Video Sentiment Analysis Works</h2>
+        <p class="text-lg text-gray-600">AI-powered analysis process from video URL to actionable insights</p>
+      </div>
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Video Data Extraction</h3>
+          <p class="text-gray-600">Extract video metadata, engagement metrics, and public viewer feedback from YouTube's comprehensive data sources.</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">AI Processing</h3>
+          <p class="text-gray-600">Advanced GPT-4o AI analyzes comment sentiment, engagement patterns, and emotional indicators with human-level accuracy.</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Sentiment Classification</h3>
+          <p class="text-gray-600">Categorize viewer responses into positive, neutral, and negative sentiment with contextual understanding of sarcasm and nuance.</p>
+        </div>
+        <!-- Step 4 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">4</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Insights Generation</h3>
+          <p class="text-gray-600">Generate comprehensive reports with actionable insights, trend analysis, and optimization recommendations for content creators.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases for Video Creators -->
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Video Sentiment Analysis Use Cases</h2>
+        <p class="text-lg text-gray-600">Discover how different professionals leverage video sentiment data</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Use Case 1 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🎬 Content Creators</h3>
+          <p class="text-gray-600 mb-4">Optimize video content by understanding which topics, formats, and presentation styles generate the most positive audience reactions.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Track audience sentiment across video series</li>
+            <li>• Identify content elements that drive engagement</li>
+            <li>• Optimize video thumbnails and titles based on sentiment data</li>
+          </ul>
+        </div>
+        <!-- Use Case 2 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📊 Digital Marketers</h3>
+          <p class="text-gray-600 mb-4">Measure campaign effectiveness and brand perception through video sentiment analysis across marketing campaigns and competitor content.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Analyze competitor video sentiment</li>
+            <li>• Measure ad campaign emotional impact</li>
+            <li>• Track brand sentiment over time</li>
+          </ul>
+        </div>
+        <!-- Use Case 3 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🏢 Enterprise Brands</h3>
+          <p class="text-gray-600 mb-4">Monitor brand reputation and customer satisfaction through sentiment analysis of product videos, announcements, and corporate communications.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Product launch sentiment tracking</li>
+            <li>• Crisis communication effectiveness</li>
+            <li>• Customer satisfaction measurement</li>
+          </ul>
+        </div>
+        <!-- Use Case 4 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📚 Educational Institutions</h3>
+          <p class="text-gray-600 mb-4">Improve online learning experiences by analyzing student sentiment towards educational videos and course content.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Course content effectiveness measurement</li>
+            <li>• Student engagement optimization</li>
+            <li>• Instructional design improvements</li>
+          </ul>
+        </div>
+        <!-- Use Case 5 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🔬 Market Researchers</h3>
+          <p class="text-gray-600 mb-4">Conduct comprehensive market research using video sentiment data to understand consumer opinions and market trends.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Consumer opinion analysis</li>
+            <li>• Market trend identification</li>
+            <li>• Product perception studies</li>
+          </ul>
+        </div>
+        <!-- Use Case 6 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🎯 Social Media Managers</h3>
+          <p class="text-gray-600 mb-4">Optimize social media video strategies by understanding audience emotional responses and engagement patterns across platforms.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Video content strategy optimization</li>
+            <li>• Audience engagement measurement</li>
+            <li>• Social media ROI tracking</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Advanced Features -->
+  <section class="py-16 bg-gradient-to-br from-purple-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Advanced Video Analysis Features</h2>
+        <p class="text-lg text-gray-600">Comprehensive insights beyond basic sentiment scoring</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Multi-Dimensional Analysis</h3>
+          <p class="text-gray-600 mb-4">Analyze sentiment across multiple dimensions including emotional tone, engagement quality, and content relevance to get a complete picture of video performance.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Emotional intensity scoring</li>
+            <li>• Engagement quality metrics</li>
+            <li>• Content relevance assessment</li>
+            <li>• Audience satisfaction indicators</li>
+          </ul>
+        </div>
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Trend Pattern Recognition</h3>
+          <p class="text-gray-600 mb-4">Identify emerging sentiment trends and patterns in viewer responses to help predict content performance and optimize future video strategies.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Sentiment trend visualization</li>
+            <li>• Performance prediction insights</li>
+            <li>• Audience behavior patterns</li>
+            <li>• Optimal posting time recommendations</li>
+          </ul>
+        </div>
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Context-Aware Processing</h3>
+          <p class="text-gray-600 mb-4">Advanced AI understanding of video context, topic relevance, and cultural nuances ensures accurate sentiment interpretation across diverse content types.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Topic-specific sentiment analysis</li>
+            <li>• Cultural context recognition</li>
+            <li>• Sarcasm and irony detection</li>
+            <li>• Industry-specific insights</li>
+          </ul>
+        </div>
+        <!-- Feature 4 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Actionable Recommendations</h3>
+          <p class="text-gray-600 mb-4">Receive specific, data-driven recommendations for improving video content, engagement strategies, and audience satisfaction based on sentiment analysis results.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Content optimization suggestions</li>
+            <li>• Engagement improvement tactics</li>
+            <li>• Audience targeting recommendations</li>
+            <li>• Performance enhancement strategies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-purple-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">Start Analyzing Video Sentiment Today</h2>
+      <p class="text-xl text-purple-100 mb-8">Unlock valuable insights about your video content with AI-powered sentiment analysis</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#video-sentiment-tool" class="bg-white text-purple-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          Analyze Video Now
+        </a>
+        <a href="/youtube-comment-analyzer/" class="border border-white text-white hover:bg-purple-700 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          Comment Analysis Tool
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Video Sentiment Analysis FAQ</h2>
+        <p class="text-lg text-gray-600">Common questions about video sentiment analysis and our AI tool</p>
+      </div>
+      <div class="space-y-6">
+        <!-- FAQ Item 1 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">What is video sentiment analysis and how does it work?</h3>
+          <p class="text-gray-600">Video sentiment analysis is the process of using artificial intelligence to analyze and understand the emotional tone and opinions expressed by viewers about video content. Our tool examines viewer comments, engagement patterns, and response indicators to determine whether the overall sentiment is positive, neutral, or negative. This helps content creators, marketers, and researchers understand how their video content is being received by audiences.</p>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">How accurate is AI-powered video sentiment analysis?</h3>
+          <p class="text-gray-600">Our video sentiment analysis tool uses OpenAI's advanced GPT-4o model, which provides human-level accuracy in understanding context, sarcasm, cultural nuances, and emotional expressions. The AI has been trained on vast amounts of text data and can detect subtle sentiment indicators that basic keyword-based tools often miss. While no automated system is 100% perfect, our tool consistently delivers highly accurate results that closely match human analyst interpretations.</p>
+        </div>
+        <!-- FAQ Item 3 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">What types of videos can I analyze for sentiment?</h3>
+          <p class="text-gray-600">You can analyze sentiment for any public YouTube video that has comments enabled. Our tool works effectively across all content categories including educational videos, entertainment content, product reviews, marketing campaigns, music videos, vlogs, tutorials, and corporate communications. The AI adapts its analysis approach based on the video's context and topic to provide the most accurate sentiment assessment.</p>
+        </div>
+        <!-- FAQ Item 4 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">How is video sentiment analysis different from basic comment analysis?</h3>
+          <p class="text-gray-600">Video sentiment analysis goes beyond simple comment counting or basic keyword detection. Our advanced AI considers the overall context of the video, understands cultural references and industry-specific language, detects sarcasm and irony, analyzes engagement patterns, and provides comprehensive insights about audience emotional responses. This holistic approach gives you deeper insights into how your content truly resonates with viewers compared to surface-level metrics.</p>
+        </div>
+        <!-- FAQ Item 5 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Is video sentiment analysis useful for business and marketing purposes?</h3>
+          <p class="text-gray-600">Absolutely! Video sentiment analysis is incredibly valuable for businesses and marketers. It helps measure campaign effectiveness, understand brand perception, track competitor performance, optimize content strategy, improve customer satisfaction, and make data-driven decisions about video marketing investments. Many businesses use sentiment analysis to monitor their online reputation, improve their products based on customer feedback, and create more engaging content that resonates with their target audience.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Tools -->
+  <section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Related Analysis Tools</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <a href="/youtube-comment-analyzer/" class="block p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+          <h3 class="font-semibold text-blue-900 mb-2">YouTube Comment Analyzer</h3>
+          <p class="text-blue-700 text-sm">Specialized tool for in-depth YouTube comment sentiment analysis and viewer feedback insights</p>
+        </a>
+        <a href="/" class="block p-6 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+          <h3 class="font-semibold text-purple-900 mb-2">General Sentiment Analyzer</h3>
+          <p class="text-purple-700 text-sm">All-in-one sentiment analysis tool for any YouTube video with comprehensive insights</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Video Sentiment Analysis - Free AI Tool",
+      "description": "Analyze sentiment of any YouTube video instantly with AI. Get detailed insights into viewer emotions, engagement patterns, and content performance metrics for free.",
+      "url": "https://www.senti-meter.com/video-sentiment-analysis",
+      "mainEntity": {
+        "@type": "WebApplication",
+        "name": "Video Sentiment Analysis Tool",
+        "applicationCategory": "AnalyticsApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "AI-powered video sentiment analysis",
+          "Comprehensive viewer emotion insights",
+          "Content performance metrics",
+          "Engagement pattern analysis",
+          "Real-time sentiment processing",
+          "Multi-dimensional analysis",
+          "Trend pattern recognition",
+          "Actionable content recommendations"
+        ]
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.senti-meter.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Video Sentiment Analysis",
+            "item": "https://www.senti-meter.com/video-sentiment-analysis"
+          }
+        ]
+      }
+    }
+  </script>
+
+  <!-- JavaScript for tool functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('video-sentiment-form');
+      const urlInput = document.getElementById('video-url-input');
+      
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = urlInput?.value?.trim();
+        if (url) {
+          // Redirect to main tool with the URL pre-filled
+          window.location.href = `/?url=${encodeURIComponent(url)}`;
+        }
+      });
+    });
+  </script>
+</Layout>
