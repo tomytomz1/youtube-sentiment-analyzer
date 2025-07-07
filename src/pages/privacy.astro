@@ -1,216 +1,156 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
+<Layout>
+	<head slot="head">
 		<title>Privacy Policy - YouTube Sentiment Analyzer</title>
 		<meta name="description" content="Our privacy policy explains how we handle your data. We do not store, track, or collect any personal information." />
+		<meta name="robots" content="index, follow" />
+		<link rel="canonical" href="https://www.senti-meter.com/privacy" />
 	</head>
-	<body>
-		<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
-			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-				<!-- Header -->
-				<div class="text-center mb-12">
-					<h1 class="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
-					<p class="text-xl text-gray-600">How we protect your privacy and handle your data</p>
-				</div>
 
-				<!-- Privacy Content -->
-				<div class="bg-white rounded-lg shadow-lg p-8">
-					<div class="space-y-8">
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Overview</h2>
-							<p class="text-gray-700 mb-4">
-								At YouTube Sentiment Analyzer, we are committed to protecting your privacy and ensuring the security of your data. This Privacy Policy explains how we handle information when you use our sentiment analysis tool.
-							</p>
-							<p class="text-gray-700">
-								<strong>Important:</strong> We do not store, track, or collect any personal information from our users. All data processing is done in real-time and immediately discarded.
-							</p>
-						</section>
+	<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			<!-- Header -->
+			<div class="text-center mb-12">
+				<h1 class="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
+				<p class="text-xl text-gray-600">How we protect your privacy and handle your data</p>
+			</div>
 
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Information We Do NOT Collect</h2>
-							<div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
-								<p class="text-red-800 font-medium">We do not collect or store any of the following:</p>
-							</div>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Personal information (names, email addresses, phone numbers)</li>
-								<li>YouTube URLs you submit for analysis</li>
-								<li>YouTube comments that are analyzed</li>
-								<li>Sentiment analysis results</li>
-								<li>IP addresses or device information</li>
-								<li>Usage patterns or analytics data</li>
-								<li>Cookies or tracking data</li>
-							</ul>
-						</section>
+			<!-- Privacy Content -->
+			<div class="bg-white rounded-lg shadow-lg p-8">
+				<div class="space-y-8">
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Overview</h2>
+						<p class="text-gray-700 mb-4">
+							At YouTube Sentiment Analyzer, we are committed to protecting your privacy and ensuring the security of your data. This Privacy Policy explains how we handle information when you use our sentiment analysis tool.
+						</p>
+						<p class="text-gray-700">
+							<strong>Important:</strong> We do not store, track, or collect any personal information from our users. All data processing is done in real-time and immediately discarded.
+						</p>
+					</section>
 
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">How Our Service Works</h2>
-							<p class="text-gray-700 mb-4">
-								When you use our YouTube Sentiment Analyzer, here's what happens:
-							</p>
-							<ol class="list-decimal pl-6 text-gray-700 space-y-2">
-								<li><strong>You submit a YouTube URL:</strong> The URL is processed to extract the video ID</li>
-								<li><strong>We fetch public comments:</strong> Using YouTube's public API, we retrieve up to 100 public comments from the video</li>
-								<li><strong>Real-time analysis:</strong> Comments are sent to OpenAI's API for sentiment analysis</li>
-								<li><strong>Results are returned:</strong> Analysis results are sent back to your browser</li>
-								<li><strong>Data is discarded:</strong> All data (URL, comments, results) is immediately purged from our servers</li>
-							</ol>
-						</section>
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Information We Do NOT Collect</h2>
+						<div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+							<p class="text-red-800 font-medium">We do not collect or store any of the following:</p>
+						</div>
+						<ul class="list-disc pl-6 text-gray-700 space-y-2">
+							<li>Personal information (names, email addresses, phone numbers)</li>
+							<li>YouTube URLs you submit for analysis</li>
+							<li>YouTube comments that are analyzed</li>
+							<li>Sentiment analysis results</li>
+							<li>IP addresses or device information</li>
+							<li>Usage patterns or analytics data</li>
+							<li>Cookies or tracking data</li>
+						</ul>
+					</section>
 
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Data Processing</h2>
-							<div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
-								<p class="text-green-800 font-medium">Our privacy-first approach:</p>
-							</div>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li><strong>No Storage:</strong> We do not save any data to our servers or databases</li>
-								<li><strong>No Tracking:</strong> We do not track user behavior or create user profiles</li>
-								<li><strong>No Logs:</strong> We do not maintain logs of user activity</li>
-								<li><strong>No Cookies:</strong> We do not use cookies or similar tracking technologies</li>
-								<li><strong>Real-time Only:</strong> All processing happens in real-time and is immediately discarded</li>
-							</ul>
-						</section>
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">How Our Service Works</h2>
+						<p class="text-gray-700 mb-4">
+							When you use our YouTube Sentiment Analyzer, here's what happens:
+						</p>
+						<ol class="list-decimal pl-6 text-gray-700 space-y-2">
+							<li><strong>You submit a YouTube URL:</strong> The URL is processed to extract the video ID</li>
+							<li><strong>We fetch public comments:</strong> Using YouTube's public API, we retrieve up to 100 public comments from the video</li>
+							<li><strong>Real-time analysis:</strong> Comments are sent to OpenAI's API for sentiment analysis</li>
+							<li><strong>Results are returned:</strong> Analysis results are sent back to your browser</li>
+							<li><strong>Data is discarded:</strong> All data (URL, comments, results) is immediately purged from our servers</li>
+						</ol>
+					</section>
 
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Third-Party Services</h2>
-							<p class="text-gray-700 mb-4">
-								Our service uses two third-party APIs:
-							</p>
-							<div class="space-y-4">
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h3 class="font-semibold text-gray-900 mb-2">YouTube Data API v3</h3>
-									<p class="text-gray-700 text-sm">
-										We use YouTube's public API to fetch comments from videos. This is subject to YouTube's own privacy policy and terms of service. We only access publicly available comment data.
-									</p>
-								</div>
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h3 class="font-semibold text-gray-900 mb-2">OpenAI API</h3>
-									<p class="text-gray-700 text-sm">
-										We use OpenAI's GPT-4o model for sentiment analysis. Comments are sent to OpenAI for processing and are subject to OpenAI's privacy policy. We do not store the comments or analysis results.
-									</p>
-								</div>
-							</div>
-						</section>
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Data Processing</h2>
+						<div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+							<p class="text-green-800 font-medium">Our privacy-first approach:</p>
+						</div>
+						<ul class="list-disc pl-6 text-gray-700 space-y-2">
+							<li><strong>No Storage:</strong> We do not save any data to our servers or databases</li>
+							<li><strong>No Tracking:</strong> We do not track user behavior or create user profiles</li>
+							<li><strong>No Logs:</strong> We do not maintain logs of user activity</li>
+							<li><strong>No Cookies:</strong> We do not use cookies or similar tracking technologies</li>
+							<li><strong>Real-time Only:</strong> All processing happens in real-time and is immediately discarded</li>
+						</ul>
+					</section>
 
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Your Rights</h2>
-							<p class="text-gray-700 mb-4">
-								Since we do not collect or store any personal information, there is no personal data to access, modify, or delete. However, you have the right to:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Use our service anonymously without providing any personal information</li>
-								<li>Stop using our service at any time</li>
-								<li>Contact us with questions about our privacy practices</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Children's Privacy</h2>
-							<p class="text-gray-700">
-								Our service is not intended for children under 13 years of age. Since we do not collect personal information, we do not knowingly collect personal information from children under 13.
-							</p>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Changes to This Policy</h2>
-							<p class="text-gray-700">
-								We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.
-							</p>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">Contact Us</h2>
-							<p class="text-gray-700 mb-4">
-								If you have any questions about this Privacy Policy or our privacy practices, please contact us:
-							</p>
-							<div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-								<p class="text-blue-800">
-									<strong>Email:</strong> <a href="mailto:tomasbeltran2014@gmail.com" class="text-blue-600 hover:text-blue-800 underline">tomasbeltran2014@gmail.com</a>
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Third-Party Services</h2>
+						<p class="text-gray-700 mb-4">
+							Our service uses two third-party APIs:
+						</p>
+						<div class="space-y-4">
+							<div class="border border-gray-200 rounded-lg p-4">
+								<h3 class="font-semibold text-gray-900 mb-2">YouTube Data API v3</h3>
+								<p class="text-gray-700 text-sm">
+									We use YouTube's public API to fetch comments from videos. This is subject to YouTube's own privacy policy and terms of service. We only access publicly available comment data.
 								</p>
 							</div>
-						</section>
+							<div class="border border-gray-200 rounded-lg p-4">
+								<h3 class="font-semibold text-gray-900 mb-2">OpenAI API</h3>
+								<p class="text-gray-700 text-sm">
+									We use OpenAI's GPT-4o model for sentiment analysis. Comments are sent to OpenAI for processing and are subject to OpenAI's privacy policy. We do not store the comments or analysis results.
+								</p>
+							</div>
+						</div>
+					</section>
 
-						<div class="border-t border-gray-200 pt-6 mt-8">
-							<p class="text-sm text-gray-500 text-center">
-								Last updated: July 3, 2025
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Your Rights</h2>
+						<p class="text-gray-700 mb-4">
+							Since we do not collect or store any personal information, there is no personal data to access, modify, or delete. However, you have the right to:
+						</p>
+						<ul class="list-disc pl-6 text-gray-700 space-y-2">
+							<li>Use our service anonymously without providing any personal information</li>
+							<li>Stop using our service at any time</li>
+							<li>Contact us with questions about our privacy practices</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Children's Privacy</h2>
+						<p class="text-gray-700">
+							Our service is not intended for children under 13 years of age. Since we do not collect personal information, we do not knowingly collect personal information from children under 13.
+						</p>
+					</section>
+
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Changes to This Policy</h2>
+						<p class="text-gray-700">
+							We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.
+						</p>
+					</section>
+
+					<section>
+						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Contact Us</h2>
+						<p class="text-gray-700 mb-4">
+							If you have any questions about this Privacy Policy or our privacy practices, please contact us:
+						</p>
+						<div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+							<p class="text-blue-800">
+								<strong>Email:</strong> <a href="mailto:tomasbeltran2014@gmail.com" class="text-blue-600 hover:text-blue-800 underline">tomasbeltran2014@gmail.com</a>
 							</p>
 						</div>
+					</section>
+
+					<div class="border-t border-gray-200 pt-6 mt-8">
+						<p class="text-sm text-gray-500 text-center">
+							Last updated: July 3, 2025
+						</p>
 					</div>
 				</div>
-
-				<!-- Back to Home -->
-				<div class="text-center mt-8">
-					<a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-						<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-						</svg>
-						Back to YouTube Sentiment Analyzer
-					</a>
-				</div>
-					</div>
-	</main>
-
-	<!-- Cookie Notice -->
-	<div id="cookie-notice" class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 z-50 transform translate-y-full transition-transform duration-300">
-		<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between">
-			<div class="text-sm mb-4 sm:mb-0">
-				<p>We use cookies to enhance your experience. By continuing to use this site, you agree to our use of cookies. 
-				<a href="/privacy" class="text-blue-400 hover:text-blue-300 underline">Learn more</a></p>
 			</div>
-			<div class="flex space-x-3">
-				<button id="accept-cookies" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
-					Accept
-				</button>
-				<button id="decline-cookies" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm transition-colors">
-					Decline
-				</button>
+
+			<!-- Back to Home -->
+			<div class="text-center mt-8">
+				<a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+					<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+					</svg>
+					Back to YouTube Sentiment Analyzer
+				</a>
 			</div>
 		</div>
-	</div>
-
-	<script>
-		// Cookie Notice Functionality
-		const cookieNotice = document.getElementById('cookie-notice');
-		const acceptCookies = document.getElementById('accept-cookies');
-		const declineCookies = document.getElementById('decline-cookies');
-
-		// Check if user has already made a choice
-		const cookieChoice = localStorage.getItem('cookieChoice');
-		
-		if (!cookieChoice) {
-			// Show cookie notice after a short delay
-			setTimeout(() => {
-				cookieNotice?.classList.remove('translate-y-full');
-			}, 1000);
-		}
-
-		// Handle accept cookies
-		acceptCookies?.addEventListener('click', () => {
-			localStorage.setItem('cookieChoice', 'accepted');
-			cookieNotice?.classList.add('translate-y-full');
-		});
-
-		// Handle decline cookies
-		declineCookies?.addEventListener('click', () => {
-			localStorage.setItem('cookieChoice', 'declined');
-			cookieNotice?.classList.add('translate-y-full');
-		});
-	</script>
-</body>
-</html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style> 
+	</main>
+</Layout>

@@ -1,212 +1,188 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Terms of Service - YouTube Sentiment Analyzer</title>
-		<meta name="description" content="Terms of service for YouTube Sentiment Analyzer. Learn about usage terms, limitations, and user responsibilities for our free AI-powered sentiment analysis tool." />
-		<meta name="robots" content="index, follow" />
-		<link rel="canonical" href="https://www.senti-meter.com/terms-of-service" />
-	</head>
-	<body>
-		<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
-			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-				<!-- Header -->
-				<div class="text-center mb-12">
-					<h1 class="text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
-					<p class="text-xl text-gray-600">Terms and conditions for using our YouTube sentiment analysis tool</p>
-				</div>
+<head slot="head">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  <title>Terms of Service - YouTube Sentiment Analyzer</title>
+  <meta name="description" content="Terms of service for YouTube Sentiment Analyzer. Learn about usage terms, limitations, and user responsibilities for our free AI-powered sentiment analysis tool." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.senti-meter.com/terms-of-service" />
+</head>
 
-				<!-- Terms Content -->
-				<div class="bg-white rounded-lg shadow-lg p-8">
-					<div class="space-y-8">
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
-							<p class="text-gray-700 mb-4">
-								By accessing and using the YouTube Sentiment Analyzer ("Service") provided by Senti-Meter ("we", "us", or "our"), you accept and agree to be bound by the terms and provision of this agreement.
-							</p>
-							<p class="text-gray-700">
-								If you do not agree to abide by the above, please do not use this service. We reserve the right to update these terms at any time without prior notice.
-							</p>
-						</section>
+<Layout>
+  <main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
+        <p class="text-xl text-gray-600">Terms and conditions for using our YouTube sentiment analysis tool</p>
+      </div>
 
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Service Description</h2>
-							<p class="text-gray-700 mb-4">
-								YouTube Sentiment Analyzer is a free web-based tool that analyzes the sentiment of YouTube video comments using artificial intelligence. Our service:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Analyzes publicly available YouTube comments</li>
-								<li>Provides sentiment classification (positive, neutral, negative)</li>
-								<li>Generates summaries and insights about viewer sentiment</li>
-								<li>Operates in real-time without storing user data</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Acceptable Use</h2>
-							<p class="text-gray-700 mb-4">
-								You agree to use our service only for lawful purposes and in accordance with these Terms. You agree NOT to use the service:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>In any way that violates any applicable federal, state, local, or international law or regulation</li>
-								<li>To analyze private or restricted content without proper authorization</li>
-								<li>To attempt to gain unauthorized access to our systems or networks</li>
-								<li>To interfere with or disrupt the service or servers connected to the service</li>
-								<li>For commercial purposes without our express written consent</li>
-								<li>To harass, abuse, or harm individuals or groups based on sentiment analysis results</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">4. User Responsibilities</h2>
-							<p class="text-gray-700 mb-4">
-								When using our service, you are responsible for:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Ensuring you have the right to analyze the YouTube content you submit</li>
-								<li>Respecting YouTube's Terms of Service and Community Guidelines</li>
-								<li>Using sentiment analysis results responsibly and ethically</li>
-								<li>Not relying solely on our analysis for critical business or personal decisions</li>
-								<li>Understanding that AI analysis may not be 100% accurate</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Limitations and Disclaimers</h2>
-							<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-								<p class="text-yellow-800 font-medium">Important Limitations:</p>
-							</div>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li><strong>No Warranty:</strong> The service is provided "as is" without any warranties, express or implied</li>
-								<li><strong>Accuracy:</strong> While we strive for accuracy, AI analysis may contain errors or misinterpretations</li>
-								<li><strong>Availability:</strong> We do not guarantee uninterrupted or error-free service</li>
-								<li><strong>Data Dependency:</strong> Our service depends on third-party APIs (YouTube, OpenAI) which may affect availability</li>
-								<li><strong>Rate Limits:</strong> We may implement usage limits to ensure fair access for all users</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Privacy and Data Handling</h2>
-							<p class="text-gray-700 mb-4">
-								Our approach to privacy and data handling is detailed in our <a href="/privacy" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>. Key points:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>We do not store user data, URLs, or analysis results</li>
-								<li>All processing is done in real-time and immediately discarded</li>
-								<li>We do not track users or create user profiles</li>
-								<li>Comments are processed through third-party AI services as described in our Privacy Policy</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">7. Intellectual Property</h2>
-							<p class="text-gray-700 mb-4">
-								The YouTube Sentiment Analyzer service, including its design, functionality, and content, is owned by us and protected by intellectual property laws. You may not:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Copy, modify, or create derivative works of our service</li>
-								<li>Reverse engineer or attempt to extract source code</li>
-								<li>Use our branding or trademarks without permission</li>
-								<li>Resell or redistribute our service without authorization</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Third-Party Services</h2>
-							<p class="text-gray-700 mb-4">
-								Our service integrates with third-party APIs and services:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li><strong>YouTube Data API:</strong> Subject to Google's Terms of Service</li>
-								<li><strong>OpenAI API:</strong> Subject to OpenAI's Terms of Use</li>
-								<li><strong>Vercel Hosting:</strong> Subject to Vercel's Terms of Service</li>
-							</ul>
-							<p class="text-gray-700 mt-4">
-								We are not responsible for the availability, content, or practices of these third-party services.
-							</p>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">9. Limitation of Liability</h2>
-							<p class="text-gray-700 mb-4">
-								To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Your use of or inability to use the service</li>
-								<li>Any inaccuracies in sentiment analysis results</li>
-								<li>Any decisions made based on our analysis</li>
-								<li>Any interruption or cessation of the service</li>
-								<li>Any third-party content or conduct</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">10. Service Modifications and Termination</h2>
-							<p class="text-gray-700 mb-4">
-								We reserve the right to:
-							</p>
-							<ul class="list-disc pl-6 text-gray-700 space-y-2">
-								<li>Modify or discontinue the service at any time with or without notice</li>
-								<li>Temporarily or permanently ban users who violate these terms</li>
-								<li>Implement usage limits or restrictions as needed</li>
-								<li>Update our algorithms and analysis methods</li>
-							</ul>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">11. Governing Law</h2>
-							<p class="text-gray-700">
-								These Terms shall be interpreted and governed by the laws of the United States. Any disputes relating to these terms or the service shall be subject to the exclusive jurisdiction of the courts in the United States.
-							</p>
-						</section>
-
-						<section>
-							<h2 class="text-2xl font-semibold text-gray-900 mb-4">12. Contact Information</h2>
-							<p class="text-gray-700 mb-4">
-								If you have any questions about these Terms of Service, please contact us:
-							</p>
-							<div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-								<p class="text-blue-800">
-									<strong>Email:</strong> <a href="mailto:tomasbeltran2014@gmail.com" class="text-blue-600 hover:text-blue-800 underline">tomasbeltran2014@gmail.com</a><br>
-									<strong>Website:</strong> <a href="https://www.senti-meter.com" class="text-blue-600 hover:text-blue-800 underline">www.senti-meter.com</a>
-								</p>
-							</div>
-						</section>
-
-						<div class="border-t border-gray-200 pt-6 mt-8">
-							<p class="text-sm text-gray-500 text-center">
-								Last updated: July 7, 2025
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Back to Home -->
-				<div class="text-center mt-8">
-					<a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-						<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-						</svg>
-						Back to YouTube Sentiment Analyzer
-					</a>
-				</div>
-			</div>
-		</main>
-	</body>
-</html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+      <!-- Terms Content -->
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="space-y-8">
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
+            <p class="text-gray-700 mb-4">
+              By accessing and using the YouTube Sentiment Analyzer ("Service") provided by Senti-Meter ("we", "us", or "our"), you accept and agree to be bound by the terms and provision of this agreement.
+            </p>
+            <p class="text-gray-700">
+              If you do not agree to abide by the above, please do not use this service. We reserve the right to update these terms at any time without prior notice.
+            </p>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Service Description</h2>
+            <p class="text-gray-700 mb-4">
+              YouTube Sentiment Analyzer is a free web-based tool that analyzes the sentiment of YouTube video comments using artificial intelligence. Our service:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>Analyzes publicly available YouTube comments</li>
+              <li>Provides sentiment classification (positive, neutral, negative)</li>
+              <li>Generates summaries and insights about viewer sentiment</li>
+              <li>Operates in real-time without storing user data</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Acceptable Use</h2>
+            <p class="text-gray-700 mb-4">
+              You agree to use our service only for lawful purposes and in accordance with these Terms. You agree NOT to use the service:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>In any way that violates any applicable federal, state, local, or international law or regulation</li>
+              <li>To analyze private or restricted content without proper authorization</li>
+              <li>To attempt to gain unauthorized access to our systems or networks</li>
+              <li>To interfere with or disrupt the service or servers connected to the service</li>
+              <li>For commercial purposes without our express written consent</li>
+              <li>To harass, abuse, or harm individuals or groups based on sentiment analysis results</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. User Responsibilities</h2>
+            <p class="text-gray-700 mb-4">
+              When using our service, you are responsible for:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>Ensuring you have the right to analyze the YouTube content you submit</li>
+              <li>Respecting YouTube's Terms of Service and Community Guidelines</li>
+              <li>Using sentiment analysis results responsibly and ethically</li>
+              <li>Not relying solely on our analysis for critical business or personal decisions</li>
+              <li>Understanding that AI analysis may not be 100% accurate</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Limitations and Disclaimers</h2>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+              <p class="text-yellow-800 font-medium">Important Limitations:</p>
+            </div>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li><strong>No Warranty:</strong> The service is provided "as is" without any warranties, express or implied</li>
+              <li><strong>Accuracy:</strong> While we strive for accuracy, AI analysis may contain errors or misinterpretations</li>
+              <li><strong>Availability:</strong> We do not guarantee uninterrupted or error-free service</li>
+              <li><strong>Data Dependency:</strong> Our service depends on third-party APIs (YouTube, OpenAI) which may affect availability</li>
+              <li><strong>Rate Limits:</strong> We may implement usage limits to ensure fair access for all users</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Privacy and Data Handling</h2>
+            <p class="text-gray-700 mb-4">
+              Our approach to privacy and data handling is detailed in our <a href="/privacy" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>. Key points:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>We do not store user data, URLs, or analysis results</li>
+              <li>All processing is done in real-time and immediately discarded</li>
+              <li>We do not track users or create user profiles</li>
+              <li>Comments are processed through third-party AI services as described in our Privacy Policy</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">7. Intellectual Property</h2>
+            <p class="text-gray-700 mb-4">
+              The YouTube Sentiment Analyzer service, including its design, functionality, and content, is owned by us and protected by intellectual property laws. You may not:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>Copy, modify, or create derivative works of our service</li>
+              <li>Reverse engineer or attempt to extract source code</li>
+              <li>Use our branding or trademarks without permission</li>
+              <li>Resell or redistribute our service without authorization</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Third-Party Services</h2>
+            <p class="text-gray-700 mb-4">
+              Our service integrates with third-party APIs and services:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li><strong>YouTube Data API:</strong> Subject to Google's Terms of Service</li>
+              <li><strong>OpenAI API:</strong> Subject to OpenAI's Terms of Use</li>
+              <li><strong>Vercel Hosting:</strong> Subject to Vercel's Terms of Service</li>
+            </ul>
+            <p class="text-gray-700 mt-4">
+              We are not responsible for the availability, content, or practices of these third-party services.
+            </p>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">9. Limitation of Liability</h2>
+            <p class="text-gray-700 mb-4">
+              To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>Your use of or inability to use the service</li>
+              <li>Any inaccuracies in sentiment analysis results</li>
+              <li>Any decisions made based on our analysis</li>
+              <li>Any interruption or cessation of the service</li>
+              <li>Any third-party content or conduct</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">10. Service Modifications and Termination</h2>
+            <p class="text-gray-700 mb-4">
+              We reserve the right to:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 space-y-2">
+              <li>Modify or discontinue the service at any time with or without notice</li>
+              <li>Temporarily or permanently ban users who violate these terms</li>
+              <li>Implement usage limits or restrictions as needed</li>
+              <li>Update our algorithms and analysis methods</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">11. Governing Law</h2>
+            <p class="text-gray-700">
+              These Terms shall be interpreted and governed by the laws of the United States. Any disputes relating to these terms or the service shall be subject to the exclusive jurisdiction of the courts in the United States.
+            </p>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">12. Contact Information</h2>
+            <p class="text-gray-700 mb-4">
+              If you have any questions about these Terms of Service, please contact us:
+            </p>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p class="text-blue-800">
+                <strong>Email:</strong> <a href="mailto:tomasbeltran2014@gmail.com" class="text-blue-600 hover:text-blue-800 underline">tomasbeltran2014@gmail.com</a><br>
+                <strong>Website:</strong> <a href="https://www.senti-meter.com" class="text-blue-600 hover:text-blue-800 underline">www.senti-meter.com</a>
+              </p>
+            </div>
+          </section>
+          <div class="border-t border-gray-200 pt-6 mt-8">
+            <p class="text-sm text-gray-500 text-center">
+              Last updated: July 7, 2025
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Back to Home -->
+      <div class="text-center mt-8">
+        <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to YouTube Sentiment Analyzer
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>

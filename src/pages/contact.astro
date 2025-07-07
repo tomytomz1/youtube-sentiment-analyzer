@@ -1,277 +1,262 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
+<Layout>
+	<head slot="head">
 		<title>Contact Us - YouTube Sentiment Analyzer | Senti-Meter</title>
 		<meta name="description" content="Get in touch with the Senti-Meter team. Contact us for support, feedback, business inquiries, or questions about our YouTube sentiment analysis tool." />
 		<meta name="robots" content="index, follow" />
 		<link rel="canonical" href="https://www.senti-meter.com/contact" />
 	</head>
-	<body>
-		<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
-			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-				<!-- Header -->
-				<div class="text-center mb-12">
-					<h1 class="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-					<p class="text-xl text-gray-600">We'd love to hear from you! Reach out with questions, feedback, or ideas.</p>
-				</div>
 
-				<div class="grid lg:grid-cols-2 gap-8">
-					<!-- Contact Form -->
-					<div class="bg-white rounded-lg shadow-lg p-8">
-						<h2 class="text-2xl font-semibold text-gray-900 mb-6">Send us a message</h2>
-						<form id="contact-form" class="space-y-6">
-							<div>
-								<label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-									Name *
-								</label>
-								<input
-									type="text"
-									id="name"
-									name="name"
-									required
-									class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-									placeholder="Your full name"
-								/>
-							</div>
-							<div>
-								<label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-									Email *
-								</label>
-								<input
-									type="email"
-									id="email"
-									name="email"
-									required
-									class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-									placeholder="your.email@example.com"
-								/>
-							</div>
-							<div>
-								<label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
-									Subject *
-								</label>
-								<select
-									id="subject"
-									name="subject"
-									required
-									class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-								>
-									<option value="">Select a topic</option>
-									<option value="general">General Question</option>
-									<option value="support">Technical Support</option>
-									<option value="feedback">Feedback & Suggestions</option>
-									<option value="business">Business Inquiry</option>
-									<option value="partnership">Partnership Opportunity</option>
-									<option value="bug">Bug Report</option>
-									<option value="feature">Feature Request</option>
-									<option value="other">Other</option>
-								</select>
-							</div>
-							<div>
-								<label for="message" class="block text-sm font-medium text-gray-700 mb-2">
-									Message *
-								</label>
-								<textarea
-									id="message"
-									name="message"
-									rows="5"
-									required
-									class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 resize-vertical"
-									placeholder="Tell us how we can help you..."
-								></textarea>
-							</div>
-							<button
-								type="submit"
-								class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+	<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			<!-- Header -->
+			<div class="text-center mb-12">
+				<h1 class="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
+				<p class="text-xl text-gray-600">We'd love to hear from you! Reach out with questions, feedback, or ideas.</p>
+			</div>
+
+			<div class="grid lg:grid-cols-2 gap-8">
+				<!-- Contact Form -->
+				<div class="bg-white rounded-lg shadow-lg p-8">
+					<h2 class="text-2xl font-semibold text-gray-900 mb-6">Send us a message</h2>
+					<form id="contact-form" class="space-y-6">
+						<div>
+							<label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+								Name *
+							</label>
+							<input
+								type="text"
+								id="name"
+								name="name"
+								required
+								class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+								placeholder="Your full name"
+							/>
+						</div>
+						<div>
+							<label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+								Email *
+							</label>
+							<input
+								type="email"
+								id="email"
+								name="email"
+								required
+								class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+								placeholder="your.email@example.com"
+							/>
+						</div>
+						<div>
+							<label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+								Subject *
+							</label>
+							<select
+								id="subject"
+								name="subject"
+								required
+								class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
 							>
-								Send Message
-							</button>
-						</form>
-					</div>
-
-					<!-- Contact Info -->
-					<div class="space-y-6">
-						<!-- Direct Contact -->
-						<div class="bg-white rounded-lg shadow-lg p-8">
-							<h2 class="text-2xl font-semibold text-gray-900 mb-6">Get in touch directly</h2>
-							<div class="space-y-4">
-								<!-- Email -->
-								<div class="flex items-start space-x-4">
-									<div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-										<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-										</svg>
-									</div>
-									<div>
-										<h3 class="text-lg font-semibold text-gray-900">Email</h3>
-										<a href="mailto:tomasbeltran2014@gmail.com" class="text-blue-600 hover:text-blue-800 transition-colors">
-											tomasbeltran2014@gmail.com
-										</a>
-										<p class="text-gray-600 text-sm mt-1">We typically respond within 24 hours</p>
-									</div>
-								</div>
-								<!-- Website -->
-								<div class="flex items-start space-x-4">
-									<div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-										<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9m0 9c-5 0-9-4-9-9s4-9 9-9"></path>
-										</svg>
-									</div>
-									<div>
-										<h3 class="text-lg font-semibold text-gray-900">Website</h3>
-										<a href="https://www.senti-meter.com" class="text-green-600 hover:text-green-800 transition-colors">
-											www.senti-meter.com
-										</a>
-										<p class="text-gray-600 text-sm mt-1">Our YouTube sentiment analysis tool</p>
-									</div>
-								</div>
-							</div>
+								<option value="">Select a topic</option>
+								<option value="general">General Question</option>
+								<option value="support">Technical Support</option>
+								<option value="feedback">Feedback & Suggestions</option>
+								<option value="business">Business Inquiry</option>
+								<option value="partnership">Partnership Opportunity</option>
+								<option value="bug">Bug Report</option>
+								<option value="feature">Feature Request</option>
+								<option value="other">Other</option>
+							</select>
 						</div>
-
-						<!-- FAQ Quick Links -->
-						<div class="bg-white rounded-lg shadow-lg p-8">
-							<h2 class="text-2xl font-semibold text-gray-900 mb-6">Common Questions</h2>
-							<div class="space-y-4">
-								<div>
-									<h3 class="text-lg font-medium text-gray-900 mb-2">How does the sentiment analyzer work?</h3>
-									<p class="text-gray-600 text-sm mb-3">Our tool uses advanced AI (GPT-4o) to analyze YouTube comments and provide accurate sentiment insights.</p>
-									<a href="/#faq" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Read full FAQ →</a>
-								</div>
-								<div>
-									<h3 class="text-lg font-medium text-gray-900 mb-2">Is the tool really free?</h3>
-									<p class="text-gray-600 text-sm mb-3">Yes! Our YouTube sentiment analyzer is completely free with no registration required or usage limits.</p>
-									<a href="/about" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Learn more about us →</a>
-								</div>
-								<div>
-									<h3 class="text-lg font-medium text-gray-900 mb-2">Do you store my data?</h3>
-									<p class="text-gray-600 text-sm mb-3">No, we don't store any user data. All analysis is done in real-time and immediately discarded.</p>
-									<a href="/privacy" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Read privacy policy →</a>
-								</div>
-							</div>
+						<div>
+							<label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+								Message *
+							</label>
+							<textarea
+								id="message"
+								name="message"
+								rows="5"
+								required
+								class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 resize-vertical"
+								placeholder="Tell us how we can help you..."
+							></textarea>
 						</div>
-
-						<!-- Response Times -->
-						<div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
-							<h3 class="text-lg font-semibold text-gray-900 mb-4">Response Times</h3>
-							<div class="space-y-3">
-								<div class="flex justify-between items-center">
-									<span class="text-gray-600">General inquiries</span>
-									<span class="text-sm font-medium text-green-600">24 hours</span>
-								</div>
-								<div class="flex justify-between items-center">
-									<span class="text-gray-600">Technical support</span>
-									<span class="text-sm font-medium text-green-600">12 hours</span>
-								</div>
-								<div class="flex justify-between items-center">
-									<span class="text-gray-600">Business inquiries</span>
-									<span class="text-sm font-medium text-blue-600">48 hours</span>
-								</div>
-								<div class="flex justify-between items-center">
-									<span class="text-gray-600">Bug reports</span>
-									<span class="text-sm font-medium text-red-600">6 hours</span>
-								</div>
-							</div>
-						</div>
-					</div>
+						<button
+							type="submit"
+							class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+						>
+							Send Message
+						</button>
+					</form>
 				</div>
 
-				<!-- Business Hours -->
-				<div class="mt-8 bg-white rounded-lg shadow-lg p-8">
-					<div class="text-center">
-						<h2 class="text-2xl font-semibold text-gray-900 mb-4">Support Hours</h2>
-						<p class="text-gray-600 mb-6">We're here to help! While our tool is available 24/7, our support team operates during these hours:</p>
-						<div class="grid md:grid-cols-2 gap-6">
-							<div class="text-center">
-								<h3 class="text-lg font-semibold text-gray-900 mb-2">Weekdays</h3>
-								<p class="text-gray-600">Monday - Friday</p>
-								<p class="text-blue-600 font-medium">9:00 AM - 6:00 PM (EST)</p>
+				<!-- Contact Info -->
+				<div class="space-y-6">
+					<!-- Direct Contact -->
+					<div class="bg-white rounded-lg shadow-lg p-8">
+						<h2 class="text-2xl font-semibold text-gray-900 mb-6">Get in touch directly</h2>
+						<div class="space-y-4">
+							<!-- Email -->
+							<div class="flex items-start space-x-4">
+								<div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+									<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+									</svg>
+								</div>
+								<div>
+									<h3 class="text-lg font-semibold text-gray-900">Email</h3>
+									<a href="mailto:tomasbeltran2014@gmail.com" class="text-blue-600 hover:text-blue-800 transition-colors">
+										tomasbeltran2014@gmail.com
+									</a>
+									<p class="text-gray-600 text-sm mt-1">We typically respond within 24 hours</p>
+								</div>
 							</div>
-							<div class="text-center">
-								<h3 class="text-lg font-semibold text-gray-900 mb-2">Weekends</h3>
-								<p class="text-gray-600">Saturday - Sunday</p>
-								<p class="text-blue-600 font-medium">10:00 AM - 4:00 PM (EST)</p>
+							<!-- Website -->
+							<div class="flex items-start space-x-4">
+								<div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+									<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9m0 9c-5 0-9-4-9-9s4-9 9-9"></path>
+									</svg>
+								</div>
+								<div>
+									<h3 class="text-lg font-semibold text-gray-900">Website</h3>
+									<a href="https://www.senti-meter.com" class="text-green-600 hover:text-green-800 transition-colors">
+										www.senti-meter.com
+									</a>
+									<p class="text-gray-600 text-sm mt-1">Our YouTube sentiment analysis tool</p>
+								</div>
 							</div>
 						</div>
-						<p class="text-gray-500 text-sm mt-4">
-							* Emergency bug reports and critical issues are monitored 24/7
-						</p>
 					</div>
-				</div>
 
-				<!-- Back to Home -->
-				<div class="text-center mt-8">
-					<a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-						<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-						</svg>
-						Back to YouTube Sentiment Analyzer
-					</a>
+					<!-- FAQ Quick Links -->
+					<div class="bg-white rounded-lg shadow-lg p-8">
+						<h2 class="text-2xl font-semibold text-gray-900 mb-6">Common Questions</h2>
+						<div class="space-y-4">
+							<div>
+								<h3 class="text-lg font-medium text-gray-900 mb-2">How does the sentiment analyzer work?</h3>
+								<p class="text-gray-600 text-sm mb-3">Our tool uses advanced AI (GPT-4o) to analyze YouTube comments and provide accurate sentiment insights.</p>
+								<a href="/#faq" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Read full FAQ →</a>
+							</div>
+							<div>
+								<h3 class="text-lg font-medium text-gray-900 mb-2">Is the tool really free?</h3>
+								<p class="text-gray-600 text-sm mb-3">Yes! Our YouTube sentiment analyzer is completely free with no registration required or usage limits.</p>
+								<a href="/about" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Learn more about us →</a>
+							</div>
+							<div>
+								<h3 class="text-lg font-medium text-gray-900 mb-2">Do you store my data?</h3>
+								<p class="text-gray-600 text-sm mb-3">No, we don't store any user data. All analysis is done in real-time and immediately discarded.</p>
+								<a href="/privacy" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Read privacy policy →</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Response Times -->
+					<div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
+						<h3 class="text-lg font-semibold text-gray-900 mb-4">Response Times</h3>
+						<div class="space-y-3">
+							<div class="flex justify-between items-center">
+								<span class="text-gray-600">General inquiries</span>
+								<span class="text-sm font-medium text-green-600">24 hours</span>
+							</div>
+							<div class="flex justify-between items-center">
+								<span class="text-gray-600">Technical support</span>
+								<span class="text-sm font-medium text-green-600">12 hours</span>
+							</div>
+							<div class="flex justify-between items-center">
+								<span class="text-gray-600">Business inquiries</span>
+								<span class="text-sm font-medium text-blue-600">48 hours</span>
+							</div>
+							<div class="flex justify-between items-center">
+								<span class="text-gray-600">Bug reports</span>
+								<span class="text-sm font-medium text-red-600">6 hours</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</main>
 
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const form = document.getElementById('contact-form');
+			<!-- Business Hours -->
+			<div class="mt-8 bg-white rounded-lg shadow-lg p-8">
+				<div class="text-center">
+					<h2 class="text-2xl font-semibold text-gray-900 mb-4">Support Hours</h2>
+					<p class="text-gray-600 mb-6">We're here to help! While our tool is available 24/7, our support team operates during these hours:</p>
+					<div class="grid md:grid-cols-2 gap-6">
+						<div class="text-center">
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">Weekdays</h3>
+							<p class="text-gray-600">Monday - Friday</p>
+							<p class="text-blue-600 font-medium">9:00 AM - 6:00 PM (EST)</p>
+						</div>
+						<div class="text-center">
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">Weekends</h3>
+							<p class="text-gray-600">Saturday - Sunday</p>
+							<p class="text-blue-600 font-medium">10:00 AM - 4:00 PM (EST)</p>
+						</div>
+					</div>
+					<p class="text-gray-500 text-sm mt-4">
+						* Emergency bug reports and critical issues are monitored 24/7
+					</p>
+				</div>
+			</div>
+
+			<!-- Back to Home -->
+			<div class="text-center mt-8">
+				<a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+					<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+					</svg>
+					Back to YouTube Sentiment Analyzer
+				</a>
+			</div>
+		</div>
+	</main>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const form = document.getElementById('contact-form');
+			
+			form?.addEventListener('submit', (e) => {
+				e.preventDefault();
 				
-				form?.addEventListener('submit', (e) => {
-					e.preventDefault();
-					
-					// Get form data
-					const formData = new FormData(form);
-					const name = formData.get('name');
-					const email = formData.get('email');
-					const subject = formData.get('subject');
-					const message = formData.get('message');
-					
-					// Create mailto link
-					const mailtoSubject = encodeURIComponent(`[Senti-Meter] ${subject}: ${formData.get('subject')}`);
-					const mailtoBody = encodeURIComponent(
-						`Name: ${name}\n` +
-						`Email: ${email}\n` +
-						`Subject: ${subject}\n\n` +
-						`Message:\n${message}\n\n` +
-						`---\n` +
-						`Sent from: ${window.location.href}`
-					);
-					
-					const mailtoLink = `mailto:tomasbeltran2014@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-					
-					// Open email client
-					window.location.href = mailtoLink;
-					
-					// Show success message
-					const button = form.querySelector('button[type="submit"]');
-					const originalText = button.textContent;
-					button.textContent = 'Email client opened!';
-					button.classList.add('bg-green-600');
-					button.classList.remove('bg-blue-600');
-					
-					setTimeout(() => {
-						button.textContent = originalText;
-						button.classList.remove('bg-green-600');
-						button.classList.add('bg-blue-600');
-						form.reset();
-					}, 3000);
-				});
+				// Get form data
+				const formData = new FormData(form);
+				const name = formData.get('name');
+				const email = formData.get('email');
+				const subject = formData.get('subject');
+				const message = formData.get('message');
+				
+				// Create mailto link
+				const mailtoSubject = encodeURIComponent(`[Senti-Meter] ${subject}: ${formData.get('subject')}`);
+				const mailtoBody = encodeURIComponent(
+					`Name: ${name}\n` +
+					`Email: ${email}\n` +
+					`Subject: ${subject}\n\n` +
+					`Message:\n${message}\n\n` +
+					`---\n` +
+					`Sent from: ${window.location.href}`
+				);
+				
+				const mailtoLink = `mailto:tomasbeltran2014@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+				
+				// Open email client
+				window.location.href = mailtoLink;
+				
+				// Show success message
+				const button = form.querySelector('button[type="submit"]');
+				const originalText = button.textContent;
+				button.textContent = 'Email client opened!';
+				button.classList.add('bg-green-600');
+				button.classList.remove('bg-blue-600');
+				
+				setTimeout(() => {
+					button.textContent = originalText;
+					button.classList.remove('bg-green-600');
+					button.classList.add('bg-blue-600');
+					form.reset();
+				}, 3000);
 			});
-		</script>
-	</body>
-</html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+		});
+	</script>
+</Layout>
