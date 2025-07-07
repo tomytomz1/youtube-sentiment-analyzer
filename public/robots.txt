@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.senti-meter.com/sitemap.xml
+
+# Optional: Block any admin or private paths (if you add them later)
+# Disallow: /admin/
+# Disallow: /api/
+
+# Allow common crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Crawl delay (optional - helps prevent server overload)
+Crawl-delay: 1
