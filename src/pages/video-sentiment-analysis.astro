@@ -554,7 +554,7 @@ const image = "/og-image.svg";
       
       form?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const url = urlInput?.value?.trim();
+        const url = (urlInput as HTMLInputElement)?.value?.trim();
         if (url) {
           // Redirect to main tool with the URL pre-filled
           window.location.href = `/?url=${encodeURIComponent(url)}`;
