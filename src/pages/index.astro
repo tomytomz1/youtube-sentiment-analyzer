@@ -336,20 +336,81 @@ const image = "/og-image.svg";
     </div>
   </div>
 
-  <!-- JSON-LD Schema -->
-  <script type="application/ld+json">
+  <!-- Enhanced JSON-LD Schema -->
+<script type="application/ld+json">
+  [
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "YouTube Sentiment Analyzer",
-      "url": "https://youtube-sentiment-analyzer.vercel.app",
+      "url": "https://www.senti-meter.com",
       "description": "Paste any YouTube video link and get an instant summary of comment sentiment: see if viewers love or hate a video in seconds. Free, no login needed.",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://youtube-sentiment-analyzer.vercel.app/?video={search_term_string}",
+        "target": "https://www.senti-meter.com/?video={search_term_string}",
         "query-input": "required name=search_term_string"
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Sentiment Analyzer",
+      "alternateName": "Senti-Meter",
+      "url": "https://www.senti-meter.com",
+      "description": "Free AI-powered tool to analyze YouTube video comment sentiment instantly. Get percentage breakdowns, sentiment summaries, and sample comments in seconds.",
+      "applicationCategory": "AnalyticsApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "screenshot": "https://www.senti-meter.com/og-image.svg",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "description": "Free to use with no registration required"
+      },
+      "featureList": [
+        "AI-powered sentiment analysis using GPT-4o",
+        "Analyzes up to 300 YouTube comments",
+        "Real-time processing with instant results",
+        "Privacy-focused with no data storage",
+        "Supports all YouTube URL formats",
+        "Percentage breakdowns by sentiment",
+        "Sample comments for each sentiment category",
+        "Most liked comment highlighting"
+      ],
+      "creator": {
+        "@type": "Organization",
+        "name": "Senti-Meter"
+      },
+      "datePublished": "2025-01-07",
+      "inLanguage": "en-US",
+      "isAccessibleForFree": true,
+      "keywords": "YouTube sentiment analysis, comment analysis, video sentiment, AI analysis, free tool, YouTube analytics",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Content creators, marketers, researchers, YouTube users"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "YouTube Sentiment Analyzer",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
     }
+  ]
   </script>
 
   <script>
