@@ -1,0 +1,357 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "YouTube Comment Analyzer - Free AI Tool to Analyze Video Comments";
+const description = "Analyze YouTube comments instantly with our free AI-powered comment analyzer. Get sentiment breakdowns, viewer insights, and engagement metrics for any video.";
+const url = "https://www.senti-meter.com/youtube-comment-analyzer";
+const image = "/og-image.svg";
+---
+<Layout>
+  <head>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="YouTube Comment Analyzer" />
+    <meta name="keywords" content="youtube comment analyzer, comment analysis, youtube comments, video feedback analysis, comment sentiment" />
+    <link rel="canonical" href={url} />
+  </head>
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#comment-analyzer-tool" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
+    Skip to comment analyzer
+  </a>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        YouTube Comment Analyzer
+      </h1>
+      <p class="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
+        Analyze YouTube video comments instantly with our free AI-powered tool. Understand what viewers really think about any video with detailed sentiment analysis, engagement insights, and comment breakdowns.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#comment-analyzer-tool" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          Analyze Comments Now
+        </a>
+        <a href="#how-it-works" class="border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          Learn How It Works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Benefits -->
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use Our YouTube Comment Analyzer?</h2>
+        <p class="text-lg text-gray-600">Get deep insights into viewer sentiment and engagement patterns</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Benefit 1 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Instant Analysis</h3>
+          <p class="text-gray-600">Get comprehensive comment analysis in seconds. No waiting, no delays - just paste your YouTube URL and see results immediately.</p>
+        </div>
+        <!-- Benefit 2 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">100% Free & Private</h3>
+          <p class="text-gray-600">No registration required. We don't store your data or track your activity. Analyze unlimited videos with complete privacy.</p>
+        </div>
+        <!-- Benefit 3 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">AI-Powered Insights</h3>
+          <p class="text-gray-600">Advanced GPT-4o AI understands context, sarcasm, and nuanced emotions that basic tools miss. Get human-level accuracy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Integration -->
+  <section id="comment-analyzer-tool" class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Analyze YouTube Comments</h2>
+          <p class="text-lg text-gray-600">Paste any YouTube video URL below to start analyzing comments</p>
+        </div>
+        
+        <!-- Tool Form -->
+        <form id="comment-analysis-form" class="space-y-6">
+          <div>
+            <label for="youtube-url-input" class="block text-sm font-medium text-gray-700 mb-2">
+              YouTube Video URL
+            </label>
+            <input
+              type="url"
+              id="youtube-url-input"
+              name="youtube-url"
+              placeholder="https://www.youtube.com/watch?v=..."
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            id="analyze-comments-button"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+          >
+            Analyze YouTube Comments
+          </button>
+        </form>
+
+        <!-- Results will be shown here -->
+        <div id="analysis-results" class="hidden mt-8">
+          <!-- Results content will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our YouTube Comment Analyzer Works</h2>
+        <p class="text-lg text-gray-600">Advanced AI technology for accurate comment sentiment analysis</p>
+      </div>
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Paste YouTube URL</h3>
+          <p class="text-gray-600">Simply copy and paste any YouTube video URL into our analyzer tool.</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Fetch Comments</h3>
+          <p class="text-gray-600">We securely retrieve up to 300 public comments using YouTube's official API.</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">AI Analysis</h3>
+          <p class="text-gray-600">Advanced GPT-4o AI analyzes sentiment, context, and emotional tone of each comment.</p>
+        </div>
+        <!-- Step 4 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">4</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Get Insights</h3>
+          <p class="text-gray-600">Receive detailed sentiment breakdowns, sample comments, and engagement insights.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Perfect for Content Creators & Marketers</h2>
+        <p class="text-lg text-gray-600">Understand your audience and improve your content strategy</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Use Case 1 -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📺 YouTubers</h3>
+          <p class="text-gray-600">Track audience sentiment across videos to understand what content resonates best with your viewers.</p>
+        </div>
+        <!-- Use Case 2 -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📈 Marketers</h3>
+          <p class="text-gray-600">Analyze competitor videos and campaign performance to optimize your marketing strategy.</p>
+        </div>
+        <!-- Use Case 3 -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🔬 Researchers</h3>
+          <p class="text-gray-600">Study public opinion and sentiment trends on topics, brands, or social issues through YouTube comments.</p>
+        </div>
+        <!-- Use Case 4 -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🏢 Agencies</h3>
+          <p class="text-gray-600">Provide client reports with detailed sentiment analysis and audience insights for video campaigns.</p>
+        </div>
+        <!-- Use Case 5 -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📚 Educators</h3>
+          <p class="text-gray-600">Understand student and audience feedback on educational content to improve learning materials.</p>
+        </div>
+        <!-- Use Case 6 -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">💼 Brands</h3>
+          <p class="text-gray-600">Monitor brand mentions and sentiment in video comments to manage online reputation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Comparison -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Comment Analyzer?</h2>
+        <p class="text-lg text-gray-600">See how we compare to other YouTube comment analysis tools</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-blue-50">
+            <tr>
+              <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Feature</th>
+              <th class="border border-gray-300 px-4 py-3 text-center font-semibold text-blue-600">Our Tool</th>
+              <th class="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-600">Basic Tools</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white">
+              <td class="border border-gray-300 px-4 py-3">AI-Powered Analysis</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ GPT-4o</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Basic algorithms</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="border border-gray-300 px-4 py-3">Understands Context & Sarcasm</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ Advanced</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Limited</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="border border-gray-300 px-4 py-3">Comments Analyzed</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ Up to 300</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">⚠️ 10-50</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="border border-gray-300 px-4 py-3">Privacy Protection</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ No data stored</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Data collected</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="border border-gray-300 px-4 py-3">Cost</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ 100% Free</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">💰 Paid plans</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="border border-gray-300 px-4 py-3">Setup Required</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ None</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Registration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-blue-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">Ready to Analyze YouTube Comments?</h2>
+      <p class="text-xl text-blue-100 mb-8">Start understanding your audience better with AI-powered comment analysis</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#comment-analyzer-tool" class="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          Analyze Comments Now
+        </a>
+        <a href="/" class="border border-white text-white hover:bg-blue-700 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          View All Features
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+        <p class="text-lg text-gray-600">Everything you need to know about YouTube comment analysis</p>
+      </div>
+      <div class="space-y-6">
+        <!-- FAQ Item 1 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">How many YouTube comments can I analyze?</h3>
+          <p class="text-gray-600">Our tool analyzes up to 300 comments per video for comprehensive insights. We fetch both the most relevant and recent comments to give you a balanced view of audience sentiment.</p>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Is the YouTube comment analyzer really free?</h3>
+          <p class="text-gray-600">Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited YouTube videos.</p>
+        </div>
+        <!-- FAQ Item 3 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">How accurate is the sentiment analysis of comments?</h3>
+          <p class="text-gray-600">We use OpenAI's GPT-4o model, which provides human-level accuracy in understanding context, sarcasm, and emotional nuances that simpler tools miss. Our AI analyzes emoji usage, capitalization, and contextual clues for highly accurate results.</p>
+        </div>
+        <!-- FAQ Item 4 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Can I analyze comments on private or unlisted videos?</h3>
+          <p class="text-gray-600">No, our tool only works with public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "YouTube Comment Analyzer - Free AI Tool",
+      "description": "Analyze YouTube comments instantly with our free AI-powered comment analyzer. Get sentiment breakdowns, viewer insights, and engagement metrics for any video.",
+      "url": "https://www.senti-meter.com/youtube-comment-analyzer",
+      "mainEntity": {
+        "@type": "WebApplication",
+        "name": "YouTube Comment Analyzer",
+        "applicationCategory": "AnalyticsApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    }
+  </script>
+
+  <!-- JavaScript for tool functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('comment-analysis-form');
+      const urlInput = document.getElementById('youtube-url-input');
+      
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = urlInput?.value?.trim();
+        if (url) {
+          // Redirect to main tool with the URL pre-filled
+          window.location.href = `/?url=${encodeURIComponent(url)}`;
+        }
+      });
+    });
+  </script>
+</Layout>
