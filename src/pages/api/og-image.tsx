@@ -8,8 +8,9 @@ export const config = {
 };
 
 export default async function handler(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  // const { searchParams } = new URL(req.url);
+  // const id = searchParams.get('id');
+  const id = "de08fc0b-3795-4cd5-ba8f-9ee1cad7df94"; // Hardcoded for debug
 
   // Helper: Always return a PNG, never an HTML error page!
   const errorImage = (msg: string) =>
