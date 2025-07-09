@@ -20,178 +20,425 @@ interface SentimentMeta {
   };
 }
 
+interface SentimentRequest {
+  comments: string[];
+  analyzedCount?: number;
+  totalComments?: number;
+  mostLiked?: { text: string; likeCount: number };
+  videoInfo?: any;
+  channelInfo?: any;
+}
+
+// Rate limiting (reuse from comments API)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 3; // Lower limit for AI API calls
+
+function getRateLimitKey(request: Request): string {
+  const forwarded = request.headers.get('x-forwarded-for');
+  const ip = forwarded ? forwarded.split(',')[0] : 
+             request.headers.get('x-real-ip') || 'unknown';
+  return ip;
+}
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const limit = rateLimitMap.get(key);
+  
+  if (!limit || now > limit.resetTime) {
+    rateLimitMap.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return false;
+  }
+  
+  if (limit.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return true;
+  }
+  
+  limit.count++;
+  return false;
+}
+
+function sanitizeString(str: unknown, maxLength: number = 1000): string {
+  if (typeof str !== 'string') return '';
+  
+  // Remove potentially dangerous characters but preserve basic punctuation
+  const cleaned = str
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove control characters
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+    
+  return cleaned.slice(0, maxLength);
+}
+
+function validateComments(comments: unknown): string[] {
+  if (!Array.isArray(comments)) {
+    throw new Error('Comments must be an array');
+  }
+
+  if (comments.length === 0) {
+    throw new Error('Comments array cannot be empty');
+  }
+
+  if (comments.length > 500) {
+    throw new Error('Too many comments provided');
+  }
+
+  const validatedComments = comments
+    .filter((comment): comment is string => typeof comment === 'string')
+    .map(comment => sanitizeString(comment, 1000))
+    .filter(comment => comment.length > 0 && comment.length <= 1000);
+
+  if (validatedComments.length === 0) {
+    throw new Error('No valid comments found');
+  }
+
+  return validatedComments.slice(0, 300); // Limit to 300 comments
+}
+
+function validateMetadata(meta: any): SentimentMeta {
+  const validated: SentimentMeta = {};
+
+  if (typeof meta.analyzedCount === 'number' && meta.analyzedCount >= 0) {
+    validated.analyzedCount = Math.min(meta.analyzedCount, 1000);
+  }
+
+  if (typeof meta.totalComments === 'number' && meta.totalComments >= 0) {
+    validated.totalComments = Math.min(meta.totalComments, 10000000);
+  }
+
+  if (meta.mostLiked && typeof meta.mostLiked === 'object') {
+    validated.mostLiked = {
+      text: sanitizeString(meta.mostLiked.text || '', 500),
+      likeCount: Math.max(0, Number(meta.mostLiked.likeCount) || 0)
+    };
+  }
+
+  if (meta.videoInfo && typeof meta.videoInfo === 'object') {
+    validated.videoInfo = {
+      title: sanitizeString(meta.videoInfo.title || '', 200),
+      description: sanitizeString(meta.videoInfo.description || '', 1000),
+      channelId: sanitizeString(meta.videoInfo.channelId || '', 50),
+      channelTitle: sanitizeString(meta.videoInfo.channelTitle || '', 100),
+    };
+  }
+
+  if (meta.channelInfo && typeof meta.channelInfo === 'object') {
+    validated.channelInfo = {
+      channelTitle: sanitizeString(meta.channelInfo.channelTitle || '', 100),
+      channelDescription: sanitizeString(meta.channelInfo.channelDescription || '', 1000),
+      channelPublishedAt: sanitizeString(meta.channelInfo.channelPublishedAt || '', 50),
+      channelCustomUrl: sanitizeString(meta.channelInfo.channelCustomUrl || '', 100),
+      channelTopics: Array.isArray(meta.channelInfo.channelTopics)
+        ? meta.channelInfo.channelTopics.slice(0, 10).map((topic: any) => sanitizeString(topic, 100))
+        : [],
+      channelThumbnails: validateThumbnails(meta.channelInfo.channelThumbnails)
+    };
+  }
+
+  return validated;
+}
+
+function validateThumbnails(thumbnails: any) {
+  if (!thumbnails || typeof thumbnails !== 'object') return {};
+  
+  const validated: any = {};
+  ['default', 'medium', 'high'].forEach(size => {
+    if (thumbnails[size]?.url) {
+      try {
+        const url = new URL(thumbnails[size].url);
+        // Only allow trusted YouTube/Google domains
+        if (['ytimg.com', 'ggpht.com', 'googleusercontent.com'].some(domain => url.hostname.endsWith(domain))) {
+          validated[size] = { url: url.toString() };
+        }
+      } catch (e) {
+        // Invalid URL, skip
+      }
+    }
+  });
+  
+  return validated;
+}
+
+function secureResponse(data: any, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+      'Access-Control-Allow-Origin': import.meta.env.PROD
+        ? 'https://www.senti-meter.com'
+        : 'http://localhost:4321',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
+
+function createErrorResponse(message: string, status: number = 400) {
+  // Generic error messages to prevent information disclosure
+  const genericMessages: Record<string, string> = {
+    'Comments must be an array': 'Invalid data provided',
+    'Comments array cannot be empty': 'Invalid data provided',
+    'Too many comments provided': 'Too much data provided',
+    'No valid comments found': 'Invalid data provided',
+    'OpenAI API key not configured': 'Service temporarily unavailable',
+    'Invalid OpenAI API key': 'Service temporarily unavailable',
+    'OpenAI API rate limit exceeded': 'Service busy. Please try again later',
+    'OpenAI API error': 'Service temporarily unavailable',
+    'No response from OpenAI': 'Service temporarily unavailable',
+    'Invalid JSON response from OpenAI': 'Service temporarily unavailable',
+    'Invalid response format from OpenAI': 'Service temporarily unavailable',
+    'Request timeout': 'Request timed out. Please try again',
+    'Too many requests': 'Too many requests. Please try again later',
+    'Invalid content type': 'Invalid request format',
+    'Invalid JSON': 'Invalid request data',
+    'Internal server error': 'An unexpected error occurred',
+  };
+
+  const safeMessage = genericMessages[message] || 'An error occurred. Please try again';
+  
+  return secureResponse({ error: safeMessage }, status);
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = await request.json();
-    const {
-      comments,
-      analyzedCount,
-      totalComments,
-      mostLiked,
-      videoInfo,
-      channelInfo,
-    }: { comments: string[] } & SentimentMeta = body;
-
-    // Validate input
-    if (!comments || !Array.isArray(comments) || comments.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid comments array provided' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+    // Rate limiting
+    const rateLimitKey = getRateLimitKey(request);
+    if (isRateLimited(rateLimitKey)) {
+      return createErrorResponse('Too many requests', 429);
     }
 
+    // Validate Content-Type
+    const contentType = request.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      return createErrorResponse('Invalid content type', 400);
+    }
+
+    // Parse and validate request body
+    let body: SentimentRequest;
+    try {
+      body = await request.json();
+    } catch (error) {
+      return createErrorResponse('Invalid JSON', 400);
+    }
+
+    // Validate comments
+    const validatedComments = validateComments(body.comments);
+
+    // Validate metadata
+    const validatedMeta = validateMetadata({
+      analyzedCount: body.analyzedCount,
+      totalComments: body.totalComments,
+      mostLiked: body.mostLiked,
+      videoInfo: body.videoInfo,
+      channelInfo: body.channelInfo,
+    });
+
+    // Validate API key
     const apiKey = import.meta.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
+    if (!apiKey || apiKey === 'your_openai_api_key_here' || !apiKey.startsWith('sk-')) {
+      console.error('OpenAI API key not configured or invalid');
+      return createErrorResponse('OpenAI API key not configured', 500);
     }
 
-    // ---- Prepare context for summary style ----
-    const channelNiche = detectChannelNiche(channelInfo);
+    // Detect channel niche
+    const channelNiche = detectChannelNiche(validatedMeta.channelInfo);
 
-    // Sentiment analysis
-    const sentimentAnalysis = await analyzeSentiment(
-      comments,
-      apiKey,
-      {
-        videoInfo,
-        channelInfo,
-        channelNiche,
+    // Perform sentiment analysis with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+    let sentimentAnalysis;
+    try {
+      sentimentAnalysis = await analyzeSentiment(
+        validatedComments,
+        apiKey,
+        {
+          videoInfo: validatedMeta.videoInfo,
+          channelInfo: validatedMeta.channelInfo,
+          channelNiche,
+        },
+        controller.signal
+      );
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          return createErrorResponse('Request timeout', 504);
+        }
+        if (error.message.includes('rate limit')) {
+          return createErrorResponse('OpenAI API rate limit exceeded', 429);
+        }
+        if (error.message.includes('API key')) {
+          return createErrorResponse('Invalid OpenAI API key', 500);
+        }
+        if (error.message.includes('OpenAI')) {
+          return createErrorResponse('OpenAI API error', 500);
+        }
       }
-    );
+      
+      console.error('Sentiment analysis error:', error);
+      return createErrorResponse('Service temporarily unavailable', 500);
+    }
+    clearTimeout(timeoutId);
 
-    // Pass through all meta fields
+    // Combine results with metadata
     const result = {
       ...sentimentAnalysis,
-      ...(analyzedCount !== undefined && { analyzedCount }),
-      ...(totalComments !== undefined && { totalComments }),
-      ...(mostLiked !== undefined && { mostLiked }),
-      ...(videoInfo !== undefined && { videoInfo }),
-      ...(channelInfo !== undefined && { channelInfo }),
-      ...(channelNiche !== undefined && { channelNiche }),
+      ...validatedMeta,
+      ...(channelNiche && { channelNiche }),
     };
 
-    return new Response(JSON.stringify(result), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return secureResponse(result);
 
   } catch (error) {
     console.error('Error analyzing sentiment:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return createErrorResponse('Internal server error', 500);
   }
 };
 
+// Handle preflight requests
+export const OPTIONS: APIRoute = async () => {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': import.meta.env.PROD
+        ? 'https://www.senti-meter.com'
+        : 'http://localhost:4321',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
+};
+
 /**
- * Helper: Extract JSON object from GPT output
+ * Helper: Extract JSON object from GPT output with validation
  */
 function extractJSON(str: string): string {
-  const match = str.match(/{[\s\S]*}/);
-  if (match) return match[0];
-  throw new Error("No JSON object found in OpenAI response");
+  // Remove markdown code blocks if present
+  const cleaned = str.replace(/```json\s*|\s*```/g, '');
+  
+  // Find JSON object
+  const match = cleaned.match(/{[\s\S]*}/);
+  if (!match) {
+    throw new Error('No JSON object found in response');
+  }
+  
+  // Validate it's actually JSON
+  try {
+    JSON.parse(match[0]);
+    return match[0];
+  } catch (e) {
+    throw new Error('Invalid JSON in response');
+  }
 }
 
 /**
- * Detects the niche/topic from channelInfo or videoInfo
+ * Detects the niche/topic from channelInfo with sanitization
  */
-function detectChannelNiche(channelInfo?: SentimentMeta["channelInfo"]): string | undefined {
+function detectChannelNiche(channelInfo?: SentimentMeta['channelInfo']): string | undefined {
   if (!channelInfo) return undefined;
+  
   if (Array.isArray(channelInfo.channelTopics) && channelInfo.channelTopics.length > 0) {
-    // YouTube topic categories are full URLs, try to extract last part or keyword
     return channelInfo.channelTopics
       .map((topic: string) => {
         try {
-          // E.g. http://www.youtube.com/topic/UC2R-7eYkD0GfjI_n9vIm_HA or http://en.wikipedia.org/wiki/Music
-          return decodeURIComponent(topic.split('/').pop() ?? topic);
+          // Extract meaningful part from YouTube topic URLs
+          const urlParts = topic.split('/');
+          return decodeURIComponent(urlParts[urlParts.length - 1] || topic);
         } catch {
           return topic;
         }
       })
       .filter(Boolean)
+      .slice(0, 3) // Limit to first 3 topics
       .join(', ');
   }
-  // Fallback: try to infer from channel description
+  
+  // Fallback: extract keywords from channel description
   if (channelInfo.channelDescription) {
-    // crude guess: extract most common non-stopword noun/adjective
-    // or just return first 10 words as a teaser
-    return channelInfo.channelDescription.split(/\s+/).slice(0, 10).join(' ');
+    const words = channelInfo.channelDescription
+      .split(/\s+/)
+      .filter(word => word.length > 3 && word.length < 20)
+      .slice(0, 5);
+    return words.join(' ');
   }
+  
   return undefined;
 }
 
 /**
- * Analyze sentiment using OpenAI GPT-4o with newsroom-level summary prompt
+ * Analyze sentiment using OpenAI GPT-4o with security measures
  */
 async function analyzeSentiment(
   comments: string[],
   apiKey: string,
   meta: {
-    videoInfo?: SentimentMeta["videoInfo"],
-    channelInfo?: SentimentMeta["channelInfo"],
+    videoInfo?: SentimentMeta['videoInfo'],
+    channelInfo?: SentimentMeta['channelInfo'],
     channelNiche?: string,
-  }
+  },
+  signal?: AbortSignal
 ) {
-  // Prepare context for the prompt
-  const videoTitle = meta.videoInfo?.title || 'N/A';
-  const channelTitle = meta.channelInfo?.channelTitle || 'N/A';
-  const channelDesc = meta.channelInfo?.channelDescription || 'N/A';
-  const channelNiche = meta.channelNiche || 'N/A';
+  // Prepare context for the prompt (sanitized)
+  const videoTitle = sanitizeString(meta.videoInfo?.title || 'N/A', 100);
+  const channelTitle = sanitizeString(meta.channelInfo?.channelTitle || 'N/A', 50);
+  const channelNiche = sanitizeString(meta.channelNiche || 'N/A', 100);
 
-  // Improved prompt for newsroom-quality summary
-  const prompt = `
-You are an expert media analyst for a leading news publication.
+  // Limit comments for prompt to prevent prompt injection
+  const limitedComments = comments.slice(0, 200);
 
-Analyze the sentiment of the following YouTube comments and provide a newsroom-quality, highly detailed summary of the overall sentiment. Your summary should be written in the objective, insightful, and context-aware style of a professional news outlet, referencing the video and channel context as appropriate.
-
-Video Title: "${videoTitle}"
-Channel Name: "${channelTitle}"
-Channel Description: "${channelDesc}"
-Channel Niche: "${channelNiche}"
+  // Create a secure prompt that limits potential misuse
+  const prompt = `Analyze the sentiment of these YouTube comments for a video titled "${videoTitle}" from channel "${channelTitle}" in the ${channelNiche} category.
 
 Comments to analyze:
-${comments.map((comment, index) => `${index + 1}. ${comment}`).join('\n')}
+${limitedComments.map((comment, index) => `${index + 1}. ${comment.slice(0, 200)}`).join('\n')}
 
-Respond ONLY with a valid JSON object. Do NOT use markdown, do NOT include code fencing, do NOT add any explanation or text—just output valid JSON.
+Respond ONLY with valid JSON. No markdown, no explanation, just JSON:
 
-Your JSON object must include:
-1. "positive": percentage of positive comments (number)
-2. "neutral": percentage of neutral comments (number)
-3. "negative": percentage of negative comments (number)
-4. "summary": a thorough, newsroom-quality, multi-sentence summary that contextualizes the sentiment in relation to the video's topic, channel style, and its audience (at least 3-4 sentences, news style, with details on trends, controversies, or engagement patterns if present). Use a professional, neutral tone and, if appropriate, separate paragraphs with double line breaks (\\n\\n).
-5. "sampleComments": an object with arrays of 3-5 example comments for each sentiment:
-   - "positive": array of positive comment examples
-   - "neutral": array of neutral comment examples
-   - "negative": array of negative comment examples
+{
+  "positive": <number 0-100>,
+  "neutral": <number 0-100>, 
+  "negative": <number 0-100>,
+  "summary": "<professional 2-3 sentence summary>",
+  "sampleComments": {
+    "positive": ["<comment1>", "<comment2>", "<comment3>"],
+    "neutral": ["<comment1>", "<comment2>", "<comment3>"],
+    "negative": ["<comment1>", "<comment2>", "<comment3>"]
+  }
+}
 
-Make sure percentages add up to 100.
-`;
+Ensure percentages sum to 100.`;
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
+      signal,
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'User-Agent': 'YouTube-Sentiment-Analyzer/1.0',
       },
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
           {
             role: 'system',
-            content: 'You are a sentiment analysis expert. Respond only with valid JSON as requested.'
+            content: 'You are a sentiment analysis expert. Respond only with valid JSON as requested. Do not include any explanations or markdown formatting.'
           },
           {
             role: 'user',
             content: prompt
           }
         ],
-        max_tokens: 1500,
-        temperature: 0.2,
+        max_tokens: 1000,
+        temperature: 0.1, // Lower temperature for more consistent results
+        top_p: 0.9,
       }),
     });
 
@@ -200,8 +447,10 @@ Make sure percentages add up to 100.
         throw new Error('Invalid OpenAI API key');
       } else if (response.status === 429) {
         throw new Error('OpenAI API rate limit exceeded');
+      } else if (response.status === 400) {
+        throw new Error('OpenAI API bad request');
       } else {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        throw new Error(`OpenAI API error: ${response.status}`);
       }
     }
 
@@ -212,20 +461,21 @@ Make sure percentages add up to 100.
       throw new Error('No response from OpenAI');
     }
 
+    // Extract and validate JSON response
     let cleanJSON: string;
     try {
       cleanJSON = extractJSON(content);
     } catch (extractErr) {
-      console.error("Failed to extract JSON from OpenAI response:", content);
-      throw new Error("Invalid JSON response from OpenAI");
+      console.error('Failed to extract JSON from OpenAI response:', content);
+      throw new Error('Invalid response format from AI');
     }
 
     let sentimentData;
     try {
       sentimentData = JSON.parse(cleanJSON);
     } catch (parseErr) {
-      console.error("Failed to parse extracted JSON:", cleanJSON);
-      throw new Error("Invalid JSON response from OpenAI");
+      console.error('Failed to parse extracted JSON:', cleanJSON);
+      throw new Error('Invalid response format from AI');
     }
 
     // Validate the response structure
@@ -234,12 +484,45 @@ Make sure percentages add up to 100.
       typeof sentimentData.neutral !== 'number' ||
       typeof sentimentData.negative !== 'number' ||
       typeof sentimentData.summary !== 'string' ||
-      !sentimentData.sampleComments
+      !sentimentData.sampleComments ||
+      !Array.isArray(sentimentData.sampleComments.positive) ||
+      !Array.isArray(sentimentData.sampleComments.neutral) ||
+      !Array.isArray(sentimentData.sampleComments.negative)
     ) {
-      throw new Error('Invalid response format from OpenAI');
+      throw new Error('Invalid response structure from AI');
     }
 
-    return sentimentData;
+    // Sanitize and validate the response
+    const sanitizedResponse = {
+      positive: Math.max(0, Math.min(100, Math.round(sentimentData.positive))),
+      neutral: Math.max(0, Math.min(100, Math.round(sentimentData.neutral))),
+      negative: Math.max(0, Math.min(100, Math.round(sentimentData.negative))),
+      summary: sanitizeString(sentimentData.summary, 2000),
+      sampleComments: {
+        positive: sentimentData.sampleComments.positive
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 300))
+          .filter((comment: string) => comment.length > 0),
+        neutral: sentimentData.sampleComments.neutral
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 300))
+          .filter((comment: string) => comment.length > 0),
+        negative: sentimentData.sampleComments.negative
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 300))
+          .filter((comment: string) => comment.length > 0),
+      }
+    };
+
+    // Ensure percentages sum to 100
+    const total = sanitizedResponse.positive + sanitizedResponse.neutral + sanitizedResponse.negative;
+    if (total !== 100) {
+      const diff = 100 - total;
+      sanitizedResponse.positive += diff; // Adjust positive to make it sum to 100
+      sanitizedResponse.positive = Math.max(0, Math.min(100, sanitizedResponse.positive));
+    }
+
+    return sanitizedResponse;
 
   } catch (error) {
     console.error('Error calling OpenAI API:', error);

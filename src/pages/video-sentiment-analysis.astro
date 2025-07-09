@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout.astro';
 const title = "Video Sentiment Analysis - Free AI Tool to Analyze YouTube Video Sentiment";
 const description = "Analyze sentiment of any YouTube video instantly with AI. Get detailed insights into viewer emotions, engagement patterns, and content performance metrics for free.";
 const url = "https://www.senti-meter.com/video-sentiment-analysis";
-const image = "/og-image.svg";
 ---
 <Layout>
   <head>
@@ -15,13 +14,13 @@ const image = "/og-image.svg";
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content="/logo.svg" />
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={url} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={image} />
+    <meta property="twitter:image" content="/logo.svg" />
     <!-- Additional SEO -->
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Video Sentiment Analysis Tool" />
@@ -498,7 +497,7 @@ const image = "/og-image.svg";
   </section>
 
   <!-- Schema Markup -->
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
     {
       "@context": "https://schema.org",
       "@type": "WebPage",

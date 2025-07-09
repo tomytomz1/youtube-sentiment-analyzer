@@ -221,7 +221,7 @@ import Layout from '../layouts/Layout.astro';
 				e.preventDefault();
 				
 				// Get form data
-				const formData = new FormData(form);
+				const formData = new FormData(form as HTMLFormElement);
 				const name = formData.get('name');
 				const email = formData.get('email');
 				const subject = formData.get('subject');
@@ -244,18 +244,22 @@ import Layout from '../layouts/Layout.astro';
 				window.location.href = mailtoLink;
 				
 				// Show success message
-				const button = form.querySelector('button[type="submit"]');
-				const originalText = button.textContent;
-				button.textContent = 'Email client opened!';
-				button.classList.add('bg-green-600');
-				button.classList.remove('bg-blue-600');
-				
-				setTimeout(() => {
-					button.textContent = originalText;
-					button.classList.remove('bg-green-600');
-					button.classList.add('bg-blue-600');
-					form.reset();
-				}, 3000);
+				const button = (form as HTMLFormElement).querySelector('button[type="submit"]') as HTMLButtonElement | null;
+				if (button) {
+					const originalText = button.textContent;
+					button.textContent = 'Email client opened!';
+					button.classList.add('bg-green-600');
+					button.classList.remove('bg-blue-600');
+
+					setTimeout(() => {
+						if (button) {
+							button.textContent = originalText;
+							button.classList.remove('bg-green-600');
+							button.classList.add('bg-blue-600');
+						}
+						(form as HTMLFormElement).reset();
+					}, 3000);
+				}
 			});
 		});
 	</script>
