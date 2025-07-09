@@ -372,15 +372,15 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
               Share Results
             </button>
             <script type="module" is:inline>{`
+              const channel = ${JSON.stringify(meta.channelInfo?.channelTitle || 'This creator')};
+              const video = ${JSON.stringify(meta.videoInfo?.title || 'this video')};
+              const pos = ${sentiment.positive || 0};
+              const neu = ${sentiment.neutral || 0};
+              const neg = ${sentiment.negative || 0};
+              const homepage = "https://www.senti-meter.com";
+              const text = \`${channel}'s video "\${video}" sentiment: \${pos}% positive, \${neu}% neutral, \${neg}% negative. See more: \${homepage}\`;
+              const shareUrl = \`https://twitter.com/intent/tweet?text=\${encodeURIComponent(text)}\`;
               document.getElementById('share-results-btn').onclick = () => {
-                const channel = "${meta.channelInfo?.channelTitle?.replace(/"/g, '\"') || 'This creator'}";
-                const video = "${meta.videoInfo?.title?.replace(/"/g, '\"') || 'this video'}";
-                const pos = ${sentiment.positive || 0};
-                const neu = ${sentiment.neutral || 0};
-                const neg = ${sentiment.negative || 0};
-                const homepage = "https://www.senti-meter.com";
-                const text = \`${channel}'s video "\${video}" sentiment: \${pos}% positive, \${neu}% neutral, \${neg}% negative. See more: \${homepage}\`;
-                const shareUrl = \`https://twitter.com/intent/tweet?text=\${encodeURIComponent(text)}\`;
                 window.open(shareUrl, '_blank');
               };
             `}</script>
