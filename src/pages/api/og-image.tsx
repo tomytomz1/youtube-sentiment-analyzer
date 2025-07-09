@@ -34,6 +34,7 @@ export default async function handler(req: Request) {
       mostLiked?: { likeCount?: number; text?: string };
     };
     videoUrl?: string;
+    platform?: string;
   } | null;
 
   if (!resultData) {
@@ -50,6 +51,20 @@ export default async function handler(req: Request) {
   const summary = sentiment.summary || '';
   const mostLiked = meta.mostLiked || null;
   const videoUrl = resultData.videoUrl || '';
+  const platform = (resultData as any).platform || 'youtube';
+  // Platform branding
+  let platformLogo = 'https://www.senti-meter.com/logo.svg';
+  let platformName = 'YouTube';
+  let platformColor = blue;
+  if (platform === 'reddit') {
+    platformLogo = 'https://www.senti-meter.com/reddit-logo.svg';
+    platformName = 'Reddit';
+    platformColor = '#FF4500';
+  } else if (platform === 'twitter' || platform === 'x') {
+    platformLogo = 'https://www.senti-meter.com/x-logo.svg';
+    platformName = 'X (Twitter)';
+    platformColor = '#000000';
+  }
 
   // Helper to extract YouTube video ID
   function extractVideoId(url: string): string | null {
@@ -102,21 +117,13 @@ export default async function handler(req: Request) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            {videoThumbnail ? (
-              <img
-                src={videoThumbnail}
-                width={88}
-                height={50}
-                style={{
-                  borderRadius: 10,
-                  border: `2.5px solid ${blue}`,
-                  boxShadow: '0 0 6px #dbeafe',
-                  objectFit: 'cover',
-                  background: '#e0e7ef'
-                }}
-                alt="Video thumbnail"
-              />
-            ) : null}
+            <img
+              src={platformLogo}
+              width={50}
+              height={50}
+              style={{ borderRadius: 12, border: `2.5px solid ${platformColor}`, background: '#fff', marginRight: 18 }}
+              alt={`${platformName} logo`}
+            />
             <div>
               <div
                 style={{
@@ -130,7 +137,7 @@ export default async function handler(req: Request) {
                   whiteSpace: 'nowrap'
                 }}
               >
-                {videoTitle}
+                {platformName}: {videoTitle}
               </div>
               <div
                 style={{
