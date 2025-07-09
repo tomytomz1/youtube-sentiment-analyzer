@@ -96,7 +96,7 @@ function createErrorCanvas(message: string): Buffer {
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   
   ctx.fillStyle = 'white';
-  ctx.font = 'bold 60px Arial';
+  ctx.font = 'bold 60px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(message, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
@@ -238,11 +238,10 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
 
     // Extract data with fallbacks for both root and nested structure
     const sentiment = (resultData as any).sentimentData || (resultData as any).meta?.sentimentData || {};
-    const meta = resultData.meta || resultData;
+    const meta = (resultData as any).meta || resultData;
     const videoTitle = (meta as any).videoInfo?.title || (resultData as any).videoInfo?.title || 'YouTube Video';
     const channelTitle = (meta as any).channelInfo?.channelTitle || (resultData as any).channelInfo?.channelTitle || 'Unknown Channel';
-    const channelAvatar = (meta as any).channelInfo?.channelThumbnails?.default?.url || 
-                         (resultData as any).channelInfo?.channelThumbnails?.default?.url || null;
+    const channelAvatar = (meta as any).channelInfo?.channelThumbnails?.default?.url || (resultData as any).channelInfo?.channelThumbnails?.default?.url || null;
     const analyzedCount = (meta as any).analyzedCount || (resultData as any).analyzedCount || 0;
     const totalComments = (meta as any).totalComments || (resultData as any).totalComments || 0;
     const summary = (sentiment as any).summary || '';
@@ -303,14 +302,14 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
 
     // Draw platform letter in icon
     ctx.fillStyle = 'white';
-    ctx.font = 'bold 24px Arial';
+    ctx.font = 'bold 24px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(platformName[0], iconX + iconSize/2, iconY + iconSize/2);
 
     // Draw video title
     ctx.fillStyle = COLORS.text.primary;
-    ctx.font = 'bold 30px Arial';
+    ctx.font = 'bold 30px sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     
@@ -327,7 +326,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
 
     // Draw channel info
     ctx.fillStyle = COLORS.text.secondary;
-    ctx.font = '400 20px Arial';
+    ctx.font = '400 20px sans-serif';
     
     const channelY = titleY + (Math.min(titleLines.length, 2) * 34) + 10;
     let channelX = titleX;
@@ -367,7 +366,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
     function drawSentimentBar(label: string, percentage: number, color: string, x: number): void {
       // Percentage text
       ctx.fillStyle = color;
-      ctx.font = 'bold 34px Arial';
+      ctx.font = 'bold 34px sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText(`${percentage}%`, x, barsY);
 
@@ -384,7 +383,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
 
       // Label
       ctx.fillStyle = color;
-      ctx.font = 'bold 17px Arial';
+      ctx.font = 'bold 17px sans-serif';
       ctx.fillText(label, x, barsY + 75);
     }
 
@@ -410,7 +409,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
 
       // Summary text
       ctx.fillStyle = COLORS.text.secondary;
-      ctx.font = '500 18px Arial';
+      ctx.font = '500 18px sans-serif';
       ctx.textAlign = 'left';
       
       const summaryLines = wrapText(ctx, summary, summaryWidth - 50);
@@ -423,7 +422,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
     const statsY = cardY + cardHeight - 120;
     
     ctx.fillStyle = COLORS.text.secondary;
-    ctx.font = '600 18px Arial';
+    ctx.font = '600 18px sans-serif';
     
     let statsX = cardX + 44;
     ctx.fillText(`${analyzedCount} analyzed`, statsX, statsY);
@@ -452,7 +451,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
     ctx.fill();
     
     ctx.fillStyle = COLORS.text.purple;
-    ctx.font = 'bold 14px Arial';
+    ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('AI Powered', statsX + badgeWidth/2, statsY - 6);
 
@@ -461,13 +460,13 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
     
     // Senti-Meter logo placeholder
     ctx.fillStyle = COLORS.text.blue;
-    ctx.font = 'bold 16px Arial';
+    ctx.font = 'bold 16px sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText('Senti-Meter', cardX + 44, bottomY);
 
     // Call to action
     ctx.fillStyle = COLORS.text.blue;
-    ctx.font = 'bold 21px Arial';
+    ctx.font = 'bold 21px sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText('Try it free at www.senti-meter.com', cardX + cardWidth - 44, bottomY);
 
