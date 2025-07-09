@@ -40,18 +40,23 @@ export default async function handler(req: Request) {
     return errorImage('IMAGE NOT FOUND');
   }
 
-  // Unpack data as before
-  const sentiment = resultData.sentimentData || {};
-  const meta = resultData.meta || {};
-  const videoTitle = meta.videoInfo?.title || 'YouTube Video';
-  const channelTitle = meta.channelInfo?.channelTitle || 'Unknown Channel';
-  const channelAvatar = meta.channelInfo?.channelThumbnails?.default?.url || null;
-  const analyzedCount = meta.analyzedCount || 0;
-  const totalComments = meta.totalComments || 0;
+  // Unpack data robustly (support both root and meta)
+  const sentiment = resultData.sentimentData || resultData.meta?.sentimentData || {};
+  const meta = resultData.meta || resultData;
+  const videoTitle = meta.videoInfo?.title || resultData.videoInfo?.title || 'YouTube Video';
+  const channelTitle = meta.channelInfo?.channelTitle || resultData.channelInfo?.channelTitle || 'Unknown Channel';
+  const channelAvatar = meta.channelInfo?.channelThumbnails?.default?.url || resultData.channelInfo?.channelThumbnails?.default?.url || null;
+  const analyzedCount = meta.analyzedCount || resultData.analyzedCount || 0;
+  const totalComments = meta.totalComments || resultData.totalComments || 0;
   const summary = sentiment.summary || '';
-  const mostLiked = meta.mostLiked || null;
-  const videoUrl = resultData.videoUrl || '';
-  const platform = (resultData.platform) || 'youtube';
+  const mostLiked = meta.mostLiked || resultData.mostLiked || null;
+  const videoUrl = resultData.videoUrl || meta.videoUrl || '';
+  const platform = resultData.platform || meta.platform || 'youtube';
+
+  // If required fields are missing, return error image
+  if (!videoTitle || !channelTitle || !('positive' in sentiment)) {
+    return errorImage('DATA ERROR');
+  }
 
   // Brand colors
   const green = '#16a34a';
