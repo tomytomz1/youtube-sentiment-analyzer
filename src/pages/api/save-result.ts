@@ -28,6 +28,7 @@ export const POST = async ({ request }: APIContext) => {
     // Add metadata to the saved data (this is the enhancement)
     const enrichedData = {
       ...data,
+      platform: data.platform || 'youtube',
       createdAt: new Date().toISOString(),
       version: '1.0'
     };
