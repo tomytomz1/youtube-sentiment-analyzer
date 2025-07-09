@@ -42,7 +42,7 @@ export default async function handler(req: Request) {
   const resultData = await redis.get(id);
 
   if (!resultData) {
-    return errorImage('IMAGE NOT FOUND');
+    return errorImage(`NOT FOUND: id=${id} url=${process.env.KV_REST_API_URL?.slice(-10)} token=${process.env.KV_REST_API_TOKEN?.slice(0, 6)}`);
   }
 
   // Unpack data robustly (support both root and meta)
