@@ -377,9 +377,8 @@ const video = JSON.stringify(meta.videoInfo?.title || 'this video');
 const pos = sentiment.positive || 0;
 const neu = sentiment.neutral || 0;
 const neg = sentiment.negative || 0;
-const homepage = "https://www.senti-meter.com";
-const text = `${channel}'s video "${video}" sentiment: ${pos}% positive, ${neu}% neutral, ${neg}% negative. See more: ${homepage}`;
-const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+const text = `${channel}'s video "${video}" sentiment: ${pos}% positive, ${neu}% neutral, ${neg}% negative. See more: ${window.location.href}`;
+const shareUrl = window.location.href;
 document.getElementById('share-results-btn').onclick = () => {
   window.open(shareUrl, '_blank');
 };
