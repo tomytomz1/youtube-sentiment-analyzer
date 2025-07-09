@@ -28,6 +28,10 @@ export default async function handler(req: Request) {
     return errorImage('ID MISSING');
   }
 
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    return errorImage('Missing ENV');
+  }
+
   const redis = new Redis({
     url: process.env.KV_REST_API_URL!,
     token: process.env.KV_REST_API_TOKEN!,
