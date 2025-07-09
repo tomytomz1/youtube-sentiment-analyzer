@@ -371,19 +371,19 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
               </svg>
               Share Results
             </button>
-            <script type="module" is:inline>{`
-              const channel = ${JSON.stringify(meta.channelInfo?.channelTitle || 'This creator')};
-              const video = ${JSON.stringify(meta.videoInfo?.title || 'this video')};
-              const pos = ${sentiment.positive || 0};
-              const neu = ${sentiment.neutral || 0};
-              const neg = ${sentiment.negative || 0};
-              const homepage = "https://www.senti-meter.com";
-              const text = \`${channel}'s video "\${video}" sentiment: \${pos}% positive, \${neu}% neutral, \${neg}% negative. See more: \${homepage}\`;
-              const shareUrl = \`https://twitter.com/intent/tweet?text=\${encodeURIComponent(text)}\`;
-              document.getElementById('share-results-btn').onclick = () => {
-                window.open(shareUrl, '_blank');
-              };
-            `}</script>
+            <script type="module" is:inline>
+const channel = {shareChannel};
+const video = {shareVideo};
+const pos = {sharePos};
+const neu = {shareNeu};
+const neg = {shareNeg};
+const homepage = "https://www.senti-meter.com";
+const text = `${channel}'s video "${video}" sentiment: ${pos}% positive, ${neu}% neutral, ${neg}% negative. See more: ${homepage}`;
+const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+document.getElementById('share-results-btn').onclick = () => {
+  window.open(shareUrl, '_blank');
+};
+</script>
           </div>
           <p class="text-sm text-gray-500">
             Powered by AI • Created with YouTube Sentiment Analyzer
