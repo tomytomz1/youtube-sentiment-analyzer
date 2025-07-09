@@ -14,7 +14,7 @@ import Footer from '../components/footer.astro';
 		<title>YouTube Sentiment Analyzer</title>
 		
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-R3XF0RWZY3"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-R3XF0RWZY3" is:inline></script>
 		<script>
 			// @ts-ignore
 			window.dataLayer = window.dataLayer || [];
@@ -29,8 +29,10 @@ import Footer from '../components/footer.astro';
 		<!-- Allow pages to add their own head content -->
 		<slot name="head" />
 	</head>
-	<body>
-		<slot />
+	<body class="flex flex-col min-h-screen">
+		<div class="flex-1">
+			<slot />
+		</div>
 		<Footer />
 		<Analytics />
 	</body>
@@ -41,6 +43,6 @@ import Footer from '../components/footer.astro';
 	body {
 		margin: 0;
 		width: 100%;
-		min-height: 100%;
+		min-height: 100vh;
 	}
 </style>

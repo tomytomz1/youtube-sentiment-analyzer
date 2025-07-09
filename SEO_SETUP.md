@@ -37,9 +37,8 @@ The YouTube Sentiment Analyzer includes comprehensive SEO optimization with the 
 ## Open Graph Image
 
 ### Location
-- File: `/public/og-image.svg`
-- Dimensions: 1200x630 pixels (optimal for social media)
-- Format: SVG (scalable and lightweight)
+- OG images are now served dynamically via `/api/og-image?id=...` for result pages.
+- Logos use `/logo.svg`.
 
 ### Design Elements
 - **Background**: Blue gradient matching the site design

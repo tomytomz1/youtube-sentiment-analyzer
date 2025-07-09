@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout.astro';
 const title = "YouTube Comment Analyzer - Free AI Tool to Analyze Video Comments";
 const description = "Analyze YouTube comments instantly with our free AI-powered comment analyzer. Get sentiment breakdowns, viewer insights, and engagement metrics for any video.";
 const url = "https://www.senti-meter.com/youtube-comment-analyzer";
-const image = "/og-image.svg";
 ---
 <Layout>
   <head>
@@ -15,13 +14,13 @@ const image = "/og-image.svg";
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content="/logo.svg" />
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={url} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={image} />
+    <meta property="twitter:image" content="/logo.svg" />
     <!-- Additional SEO -->
     <meta name="robots" content="index, follow" />
     <meta name="author" content="YouTube Comment Analyzer" />
@@ -317,7 +316,7 @@ const image = "/og-image.svg";
   </section>
 
   <!-- Schema Markup -->
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -346,7 +345,7 @@ const image = "/og-image.svg";
       
       form?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const url = urlInput?.value?.trim();
+        const url = (urlInput as HTMLInputElement)?.value?.trim();
         if (url) {
           // Redirect to main tool with the URL pre-filled
           window.location.href = `/?url=${encodeURIComponent(url)}`;
