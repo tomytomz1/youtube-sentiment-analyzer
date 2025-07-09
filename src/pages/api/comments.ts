@@ -109,6 +109,18 @@ function sanitizeThumbnails(thumbnails: any) {
   return sanitized;
 }
 
+// HTML entity decoder (safe, no dependencies)
+function decodeHtmlEntities(str: string): string {
+  if (!str || typeof str !== 'string') return '';
+  return str.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+            .replace(/&#x([\da-fA-F]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
+            .replace(/&quot;/g, '"')
+            .replace(/&apos;/g, "'")
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>');
+}
+
 // Main API Route
 export const POST: APIRoute = async ({ request }) => {
   console.log('=== Comments API Debug Start ===');
@@ -540,7 +552,8 @@ async function fetchYouTubeComments(
       for (const item of data.items) {
         const snippet = item.snippet?.topLevelComment?.snippet;
         if (snippet && snippet.textDisplay && typeof snippet.textDisplay === 'string') {
-          const clean = sanitizeString(snippet.textDisplay, 500);
+          const decoded = decodeHtmlEntities(snippet.textDisplay);
+          const clean = sanitizeString(decoded, 500);
           if (clean && !comments.some(c => c.text === clean)) {
             comments.push({
               text: clean,
