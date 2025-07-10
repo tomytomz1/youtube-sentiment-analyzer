@@ -79,7 +79,8 @@ const videoTitle = meta.videoInfo?.title || 'YouTube Video';
 const channelTitle = meta.channelInfo?.channelTitle || 'Unknown Channel';
 const title = `${sentimentEmoji} "${videoTitle}" - Sentiment Analysis (${platformName})`;
 const description = `${dominantSentiment} audience reaction: ${sentiment.positive || 0}% positive, ${sentiment.neutral || 0}% neutral, ${sentiment.negative || 0}% negative comments. Analyzed ${meta.analyzedCount || 0} comments from ${channelTitle}.`;
-const url = `${Astro.url.origin}/result/${id}`;
+const baseUrl = 'https://www.senti-meter.com';
+const url = `${baseUrl}/result/${id}`;
 
 // Create a simple image URL (you could generate a more complex one)
 const imageUrl = `${Astro.url.origin}/api/og-image?id=${id}`;
@@ -112,7 +113,8 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
     <!-- Force fresh OG image with cache busting -->
     {(() => {
       const timestamp = Date.now();
-      const imageUrlWithCache = `${Astro.url.origin}/api/og-image?id=${id}&v=${timestamp}`;
+      const baseUrl = 'https://www.senti-meter.com'; // Hardcoded to fix domain issue
+      const imageUrlWithCache = `${baseUrl}/api/og-image?id=${id}&v=${timestamp}`;
       return (
         <>
           <!-- Open Graph / Facebook -->
@@ -139,7 +141,7 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
         </>
       );
     })()}
-
+  
     <!-- SEO & Canonical -->
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={url} />
@@ -151,7 +153,7 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
       "name": title,
       "description": description,
       "url": url,
-      "image": `${Astro.url.origin}/api/og-image?id=${id}`,
+      "image": `https://www.senti-meter.com/api/og-image?id=${id}`, // Hardcoded domain
       "about": {
         "@type": "VideoObject",
         "name": videoTitle,
