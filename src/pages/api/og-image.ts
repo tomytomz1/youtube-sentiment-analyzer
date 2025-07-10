@@ -11,10 +11,9 @@ import {
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Font registration with robust path resolution and error handling
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const fontRegular = path.join(__dirname, '../../assets/fonts/Geist-Regular.ttf');
-const fontBold = path.join(__dirname, '../../assets/fonts/Geist-Bold.ttf');
+// Font registration using public/fonts and process.cwd()
+const fontRegular = path.join(process.cwd(), 'public/fonts/Geist-Regular.ttf');
+const fontBold = path.join(process.cwd(), 'public/fonts/Geist-Bold.ttf');
 
 try {
   console.log('Attempting to register Geist Sans fonts...');
