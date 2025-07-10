@@ -72,7 +72,13 @@ export const GET: APIRoute = async ({ url }) => {
 
     console.log('[OG-PNG] Creating PNG image for:', { videoTitle, channelTitle, positive, neutral, negative });
 
-    return createSentimentImage(meta);
+    // Extract avatar URL and channel name
+    const channelInfo = meta?.channelInfo || {};
+    const channelName = channelInfo.channelTitle || 'Unknown Channel';
+    const avatarUrl = channelInfo.channelThumbnails?.medium?.url || channelInfo.channelThumbnails?.default?.url;
+    const avatarBuffer = await fetchAvatarBuffer(avatarUrl);
+
+    return createSentimentImage(meta, channelName, avatarBuffer, avatarUrl);
 
   } catch (error) {
     console.error('[OG-PNG] Error generating OG image:', error);
@@ -80,7 +86,27 @@ export const GET: APIRoute = async ({ url }) => {
   }
 };
 
-function createSentimentImage(data: any) {
+function getInitials(name: string) {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+}
+
+async function fetchAvatarBuffer(url: string | undefined): Promise<ArrayBuffer | null> {
+  if (!url) return null;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    return await res.arrayBuffer();
+  } catch {
+    return null;
+  }
+}
+
+function createSentimentImage(data: any, channelName: string, avatarBuffer: ArrayBuffer | null, avatarUrl: string | undefined) {
   // Extract video title
   const title = data?.videoInfo?.title || 'YouTube Video';
 
@@ -89,7 +115,7 @@ function createSentimentImage(data: any) {
       style: {
         width: 1200,
         height: 630,
-        backgroundColor: 'white', // full white background
+        backgroundColor: 'white',
         borderRadius: 0,
         overflow: 'hidden',
         display: 'flex',
@@ -101,7 +127,7 @@ function createSentimentImage(data: any) {
         style: {
           width: '100%',
           height: 80,
-          backgroundColor: '#2563eb', // blue
+          backgroundColor: '#2563eb',
           borderTopLeftRadius: 0,
           borderTopRightRadius: 0,
           display: 'flex',
@@ -121,6 +147,57 @@ function createSentimentImage(data: any) {
             whiteSpace: 'nowrap',
           }
         }, title)
+      ),
+      // Avatar + Channel Name Row
+      React.createElement('div', {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: 24,
+          marginLeft: 40,
+        }
+      },
+        // Avatar
+        avatarBuffer && avatarUrl ?
+          React.createElement('img', {
+            src: avatarUrl,
+            width: 56,
+            height: 56,
+            style: {
+              borderRadius: '50%',
+              objectFit: 'cover',
+              marginRight: 20,
+              border: '2px solid #e5e7eb',
+              background: '#f3f4f6',
+            }
+          }) :
+          React.createElement('div', {
+            style: {
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              background: '#e5e7eb',
+              color: '#6b7280',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 24,
+              fontWeight: 'bold',
+              marginRight: 20,
+            }
+          }, getInitials(channelName)),
+        // Channel Name
+        React.createElement('span', {
+          style: {
+            fontSize: 28,
+            color: '#374151',
+            fontWeight: 600,
+            maxWidth: 400,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }
+        }, channelName)
       )
       // More content will be added below in next steps
     ),
