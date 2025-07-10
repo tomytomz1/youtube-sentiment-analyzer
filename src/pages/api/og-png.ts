@@ -109,6 +109,9 @@ async function fetchAvatarBuffer(url: string | undefined): Promise<ArrayBuffer |
 function createSentimentImage(data: any, channelName: string, avatarBuffer: ArrayBuffer | null, avatarUrl: string | undefined) {
   // Extract video title
   const title = data?.videoInfo?.title || 'YouTube Video';
+  const positive = Math.max(0, Math.min(100, Math.round(data?.sentimentData?.positive ?? 0)));
+  const neutral = Math.max(0, Math.min(100, Math.round(data?.sentimentData?.neutral ?? 0)));
+  const negative = Math.max(0, Math.min(100, Math.round(data?.sentimentData?.negative ?? 0)));
 
   return new ImageResponse(
     React.createElement('div', {
@@ -157,7 +160,6 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           marginLeft: 40,
         }
       },
-        // Avatar
         avatarBuffer && avatarUrl ?
           React.createElement('img', {
             src: avatarUrl,
@@ -186,7 +188,6 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               marginRight: 20,
             }
           }, getInitials(channelName)),
-        // Channel Name
         React.createElement('span', {
           style: {
             fontSize: 28,
@@ -198,6 +199,110 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             whiteSpace: 'nowrap',
           }
         }, channelName)
+      ),
+      // Sentiment Bars Row
+      React.createElement('div', {
+        style: {
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: 40,
+          marginLeft: 40,
+          marginRight: 40,
+          gap: 32,
+        }
+      },
+        // Positive Bar
+        React.createElement('div', {
+          style: {
+            flex: 1,
+            background: '#e0f7ec',
+            borderRadius: 16,
+            padding: '24px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '0 2px 8px 0 rgba(16, 185, 129, 0.08)',
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: '#059669',
+              fontSize: 48,
+              fontWeight: 'bold',
+              marginBottom: 8,
+            }
+          }, `${positive}%`),
+          React.createElement('span', {
+            style: {
+              color: '#059669',
+              fontSize: 20,
+              fontWeight: 600,
+              letterSpacing: 1,
+            }
+          }, 'Positive')
+        ),
+        // Neutral Bar
+        React.createElement('div', {
+          style: {
+            flex: 1,
+            background: '#f3f4f6',
+            borderRadius: 16,
+            padding: '24px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '0 2px 8px 0 rgba(107, 114, 128, 0.08)',
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: '#6b7280',
+              fontSize: 48,
+              fontWeight: 'bold',
+              marginBottom: 8,
+            }
+          }, `${neutral}%`),
+          React.createElement('span', {
+            style: {
+              color: '#6b7280',
+              fontSize: 20,
+              fontWeight: 600,
+              letterSpacing: 1,
+            }
+          }, 'Neutral')
+        ),
+        // Negative Bar
+        React.createElement('div', {
+          style: {
+            flex: 1,
+            background: '#fee2e2',
+            borderRadius: 16,
+            padding: '24px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '0 2px 8px 0 rgba(220, 38, 38, 0.08)',
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: '#dc2626',
+              fontSize: 48,
+              fontWeight: 'bold',
+              marginBottom: 8,
+            }
+          }, `${negative}%`),
+          React.createElement('span', {
+            style: {
+              color: '#dc2626',
+              fontSize: 20,
+              fontWeight: 600,
+              letterSpacing: 1,
+            }
+          }, 'Negative')
+        )
       )
       // More content will be added below in next steps
     ),
