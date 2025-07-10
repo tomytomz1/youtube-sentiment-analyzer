@@ -81,7 +81,7 @@ export const GET: APIRoute = async ({ url }) => {
 };
 
 function createSentimentImage() {
-  // Minimal test: solid red PNG, 1200x630
+  // Minimal test: solid red PNG with centered white text, 1200x630
   return new ImageResponse(
     React.createElement('div', {
       style: {
@@ -92,7 +92,15 @@ function createSentimentImage() {
         alignItems: 'center',
         justifyContent: 'center',
       }
-    }),
+    },
+      React.createElement('span', {
+        style: {
+          color: 'white',
+          fontSize: 80,
+          fontWeight: 'bold',
+        }
+      }, 'OG IMAGE TEST')
+    ),
     {
       width: 1200,
       height: 630,
