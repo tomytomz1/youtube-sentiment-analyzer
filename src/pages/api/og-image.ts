@@ -8,9 +8,23 @@ import {
   type Image,
   registerFont 
 } from 'canvas';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-registerFont('node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf', { family: 'Geist Sans', weight: 'normal' });
-registerFont('node_modules/geist/dist/fonts/geist-sans/Geist-Bold.ttf', { family: 'Geist Sans', weight: 'bold' });
+// Font registration with correct paths and family names
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const fontRegular = path.join(__dirname, '../../../node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf');
+const fontBold = path.join(__dirname, '../../../node_modules/geist/dist/fonts/geist-sans/Geist-Bold.ttf');
+
+try {
+  registerFont(fontRegular, { family: 'Geist Sans', weight: 'normal' });
+  registerFont(fontBold, { family: 'Geist Sans', weight: 'bold' });
+  console.log('Geist Sans fonts registered successfully:', fontRegular, fontBold);
+} catch (e) {
+  console.error('Font registration failed:', e, fontRegular, fontBold);
+  // Fallback to system fonts if registration fails
+  console.log('Using fallback system fonts');
+}
 
 export const config = {
   runtime: 'nodejs',
