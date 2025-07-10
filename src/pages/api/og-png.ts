@@ -114,6 +114,11 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   const positive = Math.max(0, Math.min(100, Math.round(sentiment.positive ?? 0)));
   const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral ?? 0)));
   const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative ?? 0)));
+  const mostLiked = sentiment.mostLiked || {};
+  const mostLikedText = mostLiked.text || '';
+  const mostLikedLikes = mostLiked.likeCount || 0;
+  // Truncate comment to 120 chars for OG image
+  const truncatedComment = mostLikedText.length > 120 ? mostLikedText.slice(0, 117) + '...' : mostLikedText;
 
   return new ImageResponse(
     React.createElement('div', {
@@ -304,6 +309,58 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               letterSpacing: 1,
             }
           }, 'Negative')
+        )
+      ),
+      // Most Liked Comment Highlight Box
+      React.createElement('div', {
+        style: {
+          marginTop: 40,
+          marginLeft: 40,
+          marginRight: 40,
+          background: '#fef9c3',
+          borderRadius: 16,
+          padding: '24px 32px',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 20,
+          minHeight: 60,
+        }
+      },
+        // Trophy emoji
+        React.createElement('span', {
+          style: {
+            fontSize: 32,
+            marginRight: 8,
+            marginTop: 2,
+          }
+        }, '🏆'),
+        // Comment and like count
+        React.createElement('div', {
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: '#92400e',
+              fontSize: 22,
+              fontWeight: 600,
+              marginBottom: 6,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: 900,
+            }
+          }, truncatedComment),
+          React.createElement('span', {
+            style: {
+              color: '#b45309',
+              fontSize: 18,
+              fontWeight: 500,
+            }
+          }, `${mostLikedLikes} likes`)
         )
       )
       // More content will be added below in next steps
