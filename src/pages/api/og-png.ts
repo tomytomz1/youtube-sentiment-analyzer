@@ -378,13 +378,10 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             marginBottom: 16,
           }
         }, summary);
-        // Render comment box at the bottom (just above bottom margin)
+        // Render comment box at the bottom, centered, just above bottom padding
+        const CARD_PADDING = 28; // same as top margin
         const commentBox = mostLikedText ? React.createElement('div', {
           style: {
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 80, // same as card bottom margin
             background: '#f8fafc',
             borderRadius: 14,
             padding: '10px 18px 10px 18px', // same top padding as bars
@@ -394,6 +391,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             maxWidth: 1100,
             marginLeft: 'auto',
             marginRight: 'auto',
+            marginBottom: CARD_PADDING, // match card bottom padding
             boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)',
           }
         },
