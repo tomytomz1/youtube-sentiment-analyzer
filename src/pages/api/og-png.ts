@@ -135,16 +135,18 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         paddingBottom: 80, // extra bottom margin for social label
       }
     },
-      // Top Row: Avatar (with channel name below) + Sentiment Bars + Analyzed/Total
+      // Top Row: Avatar (with channel name below) + Sentiment Bars + Analyzed/Total (centralized, prominent, minimal padding)
       React.createElement('div', {
         style: {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          marginTop: 48,
-          marginLeft: 40,
-          marginRight: 40,
-          gap: 32,
+          justifyContent: 'center', // centralized
+          gap: 36,
+          maxWidth: 1100,
+          margin: '0 auto',
+          paddingTop: 0,
+          paddingBottom: 0,
         }
       },
         // Avatar + Channel Name (column)
@@ -153,41 +155,42 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            minWidth: 90,
-            marginRight: 24,
+            minWidth: 110,
+            marginRight: 18,
           }
         },
           avatarBuffer && avatarUrl ?
             React.createElement('img', {
               src: avatarUrl,
-              width: 64,
-              height: 64,
+              width: 88,
+              height: 88,
               style: {
                 borderRadius: '50%',
                 objectFit: 'cover',
-                border: '2px solid #e5e7eb',
+                border: '2.5px solid #e5e7eb',
                 background: '#f3f4f6',
+                boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
               }
             }) :
             React.createElement('div', {
               style: {
-                width: 64,
-                height: 64,
+                width: 88,
+                height: 88,
                 borderRadius: '50%',
                 background: '#e5e7eb',
                 color: '#6b7280',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 28,
+                fontSize: 36,
                 fontWeight: 'bold',
               }
             }, getInitials(channelName)),
           React.createElement('span', {
             style: {
-              fontSize: 22,
+              fontSize: 28,
               color: '#374151',
-              fontWeight: 600,
+              fontWeight: 700,
               marginTop: 10,
               textAlign: 'center',
             }
@@ -199,18 +202,18 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 24,
+            gap: 18,
             flex: 1,
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
           }
         },
           // Positive
           React.createElement('div', {
             style: {
-              minWidth: 140,
+              minWidth: 150,
               background: '#e0f7ec',
               borderRadius: 12,
-              padding: '12px 0',
+              padding: '10px 0',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -220,7 +223,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#059669',
-                fontSize: 32,
+                fontSize: 40,
                 fontWeight: 'bold',
                 marginBottom: 4,
               }
@@ -228,8 +231,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#059669',
-                fontSize: 16,
-                fontWeight: 600,
+                fontSize: 20,
+                fontWeight: 700,
                 letterSpacing: 1,
               }
             }, 'Positive')
@@ -237,10 +240,10 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           // Neutral
           React.createElement('div', {
             style: {
-              minWidth: 140,
+              minWidth: 150,
               background: '#f3f4f6',
               borderRadius: 12,
-              padding: '12px 0',
+              padding: '10px 0',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -250,7 +253,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#6b7280',
-                fontSize: 32,
+                fontSize: 40,
                 fontWeight: 'bold',
                 marginBottom: 4,
               }
@@ -258,8 +261,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#6b7280',
-                fontSize: 16,
-                fontWeight: 600,
+                fontSize: 20,
+                fontWeight: 700,
                 letterSpacing: 1,
               }
             }, 'Neutral')
@@ -267,10 +270,10 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           // Negative
           React.createElement('div', {
             style: {
-              minWidth: 140,
+              minWidth: 150,
               background: '#fee2e2',
               borderRadius: 12,
-              padding: '12px 0',
+              padding: '10px 0',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -280,7 +283,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#dc2626',
-                fontSize: 32,
+                fontSize: 40,
                 fontWeight: 'bold',
                 marginBottom: 4,
               }
@@ -288,8 +291,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#dc2626',
-                fontSize: 16,
-                fontWeight: 600,
+                fontSize: 20,
+                fontWeight: 700,
                 letterSpacing: 1,
               }
             }, 'Negative')
@@ -297,10 +300,10 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           // Analyzed
           React.createElement('div', {
             style: {
-              minWidth: 110,
+              minWidth: 120,
               background: '#e0e7ff',
               borderRadius: 12,
-              padding: '12px 0',
+              padding: '10px 0',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -310,7 +313,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#2563eb',
-                fontSize: 28,
+                fontSize: 32,
                 fontWeight: 'bold',
                 marginBottom: 4,
               }
@@ -318,8 +321,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#2563eb',
-                fontSize: 16,
-                fontWeight: 600,
+                fontSize: 18,
+                fontWeight: 700,
                 letterSpacing: 1,
               }
             }, 'Analyzed')
@@ -327,10 +330,10 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           // Total
           React.createElement('div', {
             style: {
-              minWidth: 110,
+              minWidth: 120,
               background: '#f1f5f9',
               borderRadius: 12,
-              padding: '12px 0',
+              padding: '10px 0',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -340,7 +343,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#334155',
-                fontSize: 28,
+                fontSize: 32,
                 fontWeight: 'bold',
                 marginBottom: 4,
               }
@@ -348,8 +351,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             React.createElement('span', {
               style: {
                 color: '#334155',
-                fontSize: 16,
-                fontWeight: 600,
+                fontSize: 18,
+                fontWeight: 700,
                 letterSpacing: 1,
               }
             }, 'Total')
