@@ -466,22 +466,22 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               color: '#374151',
               fontSize: commentFontSize,
               fontWeight: 500,
-              marginBottom: 2,
+              marginBottom: 0, // minimize space below comment
               textAlign: 'left',
               width: '100%',
               lineHeight: 1.5,
               maxWidth: 1100,
               alignSelf: 'flex-start',
-              fontStyle: 'italic',
+              fontStyle: 'italic', // always italic
             }
           }, `"${commentDisplay}"`),
-          // Like count (just below comment)
+          // Like count (just below comment, minimal space)
           React.createElement('span', {
             style: {
               color: '#6b7280',
               fontSize: 18,
               fontWeight: 400,
-              marginTop: 0,
+              marginTop: 0, // minimize space above likes
               alignSelf: 'flex-start',
             }
           }, `${mostLikedLikes} likes`)
