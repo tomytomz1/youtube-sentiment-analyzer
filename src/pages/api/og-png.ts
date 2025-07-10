@@ -117,8 +117,6 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   const mostLiked = sentiment.mostLiked || {};
   const mostLikedText = mostLiked.text || '';
   const mostLikedLikes = mostLiked.likeCount || 0;
-  // Truncate comment to 120 chars for OG image
-  const truncatedComment = mostLikedText.length > 120 ? mostLikedText.slice(0, 117) + '...' : mostLikedText;
 
   return new ImageResponse(
     React.createElement('div', {
@@ -311,7 +309,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }, 'Negative')
         )
       ),
-      // Most Liked Comment Highlight Box
+      // Most Liked Comment Highlight Box (multi-line, no truncation)
       React.createElement('div', {
         style: {
           marginTop: 40,
@@ -324,6 +322,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           alignItems: 'flex-start',
           gap: 20,
           minHeight: 60,
+          maxHeight: 140,
+          overflow: 'hidden',
         }
       },
         // Trophy emoji
@@ -350,10 +350,14 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               marginBottom: 6,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
+              // Allow multi-line, clamp to 4 lines
+              display: '-webkit-box',
+              WebkitLineClamp: 4,
+              WebkitBoxOrient: 'vertical',
+              whiteSpace: 'normal',
               maxWidth: 900,
             }
-          }, truncatedComment),
+          }, mostLikedText),
           React.createElement('span', {
             style: {
               color: '#b45309',
