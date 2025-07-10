@@ -135,228 +135,230 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         paddingBottom: 80, // extra bottom margin for social label
       }
     },
-      // Top Row: Avatar (with channel name below) + Sentiment Bars + Analyzed/Total (centralized, prominent, minimal padding)
+      // Top Row: Avatar+Channel Name as one cell, then 5 equal-sized data squares (all horizontally aligned)
       React.createElement('div', {
         style: {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center', // centralized
-          gap: 36,
+          justifyContent: 'center',
+          gap: 18,
           maxWidth: 1100,
           margin: '0 auto',
           paddingTop: 0,
           paddingBottom: 0,
         }
       },
-        // Avatar + Channel Name (column)
+        // Avatar + Channel Name (single cell, vertically stacked)
         React.createElement('div', {
           style: {
+            minWidth: 150,
+            minHeight: 110,
+            background: '#f8fafc',
+            borderRadius: 12,
+            padding: '10px 0',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            minWidth: 110,
-            marginRight: 18,
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.04)',
           }
         },
           avatarBuffer && avatarUrl ?
             React.createElement('img', {
               src: avatarUrl,
-              width: 88,
-              height: 88,
+              width: 48,
+              height: 48,
               style: {
                 borderRadius: '50%',
                 objectFit: 'cover',
-                border: '2.5px solid #e5e7eb',
+                border: '2px solid #e5e7eb',
                 background: '#f3f4f6',
-                boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
+                marginBottom: 6,
               }
             }) :
             React.createElement('div', {
               style: {
-                width: 88,
-                height: 88,
+                width: 48,
+                height: 48,
                 borderRadius: '50%',
                 background: '#e5e7eb',
                 color: '#6b7280',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 36,
+                fontSize: 22,
                 fontWeight: 'bold',
+                marginBottom: 6,
               }
             }, getInitials(channelName)),
           React.createElement('span', {
             style: {
-              fontSize: 28,
+              fontSize: 20,
               color: '#374151',
               fontWeight: 700,
-              marginTop: 10,
               textAlign: 'center',
+              maxWidth: 120,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }
           }, channelName)
         ),
-        // Sentiment Bars + Analyzed/Total (row)
+        // Positive
         React.createElement('div', {
           style: {
+            minWidth: 150,
+            background: '#e0f7ec',
+            borderRadius: 12,
+            padding: '10px 0',
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
-            gap: 18,
-            flex: 1,
             justifyContent: 'center',
+            boxShadow: '0 2px 8px 0 rgba(16, 185, 129, 0.08)',
           }
         },
-          // Positive
-          React.createElement('div', {
+          React.createElement('span', {
             style: {
-              minWidth: 150,
-              background: '#e0f7ec',
-              borderRadius: 12,
-              padding: '10px 0',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              boxShadow: '0 2px 8px 0 rgba(16, 185, 129, 0.08)',
+              color: '#059669',
+              fontSize: 40,
+              fontWeight: 'bold',
+              marginBottom: 4,
             }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#059669',
-                fontSize: 40,
-                fontWeight: 'bold',
-                marginBottom: 4,
-              }
-            }, `${positive}%`),
-            React.createElement('span', {
-              style: {
-                color: '#059669',
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: 1,
-              }
-            }, 'Positive')
-          ),
-          // Neutral
-          React.createElement('div', {
+          }, `${positive}%`),
+          React.createElement('span', {
             style: {
-              minWidth: 150,
-              background: '#f3f4f6',
-              borderRadius: 12,
-              padding: '10px 0',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              boxShadow: '0 2px 8px 0 rgba(107, 114, 128, 0.08)',
+              color: '#059669',
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: 1,
             }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#6b7280',
-                fontSize: 40,
-                fontWeight: 'bold',
-                marginBottom: 4,
-              }
-            }, `${neutral}%`),
-            React.createElement('span', {
-              style: {
-                color: '#6b7280',
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: 1,
-              }
-            }, 'Neutral')
-          ),
-          // Negative
-          React.createElement('div', {
+          }, 'Positive')
+        ),
+        // Neutral
+        React.createElement('div', {
+          style: {
+            minWidth: 150,
+            background: '#f3f4f6',
+            borderRadius: 12,
+            padding: '10px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px 0 rgba(107, 114, 128, 0.08)',
+          }
+        },
+          React.createElement('span', {
             style: {
-              minWidth: 150,
-              background: '#fee2e2',
-              borderRadius: 12,
-              padding: '10px 0',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              boxShadow: '0 2px 8px 0 rgba(220, 38, 38, 0.08)',
+              color: '#6b7280',
+              fontSize: 40,
+              fontWeight: 'bold',
+              marginBottom: 4,
             }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#dc2626',
-                fontSize: 40,
-                fontWeight: 'bold',
-                marginBottom: 4,
-              }
-            }, `${negative}%`),
-            React.createElement('span', {
-              style: {
-                color: '#dc2626',
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: 1,
-              }
-            }, 'Negative')
-          ),
-          // Analyzed
-          React.createElement('div', {
+          }, `${neutral}%`),
+          React.createElement('span', {
             style: {
-              minWidth: 120,
-              background: '#e0e7ff',
-              borderRadius: 12,
-              padding: '10px 0',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.08)',
+              color: '#6b7280',
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: 1,
             }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#2563eb',
-                fontSize: 32,
-                fontWeight: 'bold',
-                marginBottom: 4,
-              }
-            }, analyzedCount),
-            React.createElement('span', {
-              style: {
-                color: '#2563eb',
-                fontSize: 18,
-                fontWeight: 700,
-                letterSpacing: 1,
-              }
-            }, 'Analyzed')
-          ),
-          // Total
-          React.createElement('div', {
+          }, 'Neutral')
+        ),
+        // Negative
+        React.createElement('div', {
+          style: {
+            minWidth: 150,
+            background: '#fee2e2',
+            borderRadius: 12,
+            padding: '10px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px 0 rgba(220, 38, 38, 0.08)',
+          }
+        },
+          React.createElement('span', {
             style: {
-              minWidth: 120,
-              background: '#f1f5f9',
-              borderRadius: 12,
-              padding: '10px 0',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              boxShadow: '0 2px 8px 0 rgba(71, 85, 105, 0.08)',
+              color: '#dc2626',
+              fontSize: 40,
+              fontWeight: 'bold',
+              marginBottom: 4,
             }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#334155',
-                fontSize: 32,
-                fontWeight: 'bold',
-                marginBottom: 4,
-              }
-            }, totalComments),
-            React.createElement('span', {
-              style: {
-                color: '#334155',
-                fontSize: 18,
-                fontWeight: 700,
-                letterSpacing: 1,
-              }
-            }, 'Total')
-          )
+          }, `${negative}%`),
+          React.createElement('span', {
+            style: {
+              color: '#dc2626',
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: 1,
+            }
+          }, 'Negative')
+        ),
+        // Analyzed
+        React.createElement('div', {
+          style: {
+            minWidth: 150,
+            background: '#e0e7ff',
+            borderRadius: 12,
+            padding: '10px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.08)',
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: '#2563eb',
+              fontSize: 40,
+              fontWeight: 'bold',
+              marginBottom: 4,
+            }
+          }, analyzedCount),
+          React.createElement('span', {
+            style: {
+              color: '#2563eb',
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: 1,
+            }
+          }, 'Analyzed')
+        ),
+        // Total
+        React.createElement('div', {
+          style: {
+            minWidth: 150,
+            background: '#f1f5f9',
+            borderRadius: 12,
+            padding: '10px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px 0 rgba(71, 85, 105, 0.08)',
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: '#334155',
+              fontSize: 40,
+              fontWeight: 'bold',
+              marginBottom: 4,
+            }
+          }, totalComments),
+          React.createElement('span', {
+            style: {
+              color: '#334155',
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: 1,
+            }
+          }, 'Total')
         )
       ),
       // Summary/Analysis Section (now above comment, maximized)
