@@ -107,6 +107,7 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
 
 <Layout>
   <Fragment slot="head">
+    <title>{title}</title>
     <meta name="description" content={description} />
     
     <!-- Force fresh OG image with cache busting -->
@@ -119,6 +120,7 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
           <!-- Open Graph / Facebook -->
           <meta property="og:type" content="website" />
           <meta property="og:url" content={url} />
+          <meta property="og:title" content="Senti-Meter's Sentiment Analyzer" />
           <meta property="og:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
           <meta property="og:image" content={imageUrlWithCache} />
           <meta property="og:image:secure_url" content={imageUrlWithCache} />
@@ -131,6 +133,7 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
           <!-- Twitter -->
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:url" content={url} />
+          <meta name="twitter:title" content="Senti-Meter's Sentiment Analyzer" />
           <meta name="twitter:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
           <meta name="twitter:image" content={imageUrlWithCache} />
           <meta name="twitter:image:alt" content={`Senti-Meter sentiment analysis card for "${videoTitle}"`} />

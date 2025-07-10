@@ -8,17 +8,20 @@ const url = `${Astro.url.origin}/404`;
 
 <Layout>
   <head>
+    <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="noindex, nofollow" />
     
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
+    <meta property="og:title" content="Senti-Meter's Sentiment Analyzer" />
     <meta property="og:description" content={description} />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:url" content={url} />
+    <meta name="twitter:title" content="Senti-Meter's Sentiment Analyzer" />
     <meta name="twitter:description" content={description} />
   </head>
 
