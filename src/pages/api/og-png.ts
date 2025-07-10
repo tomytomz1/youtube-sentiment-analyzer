@@ -363,7 +363,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
       ),
       // --- True dynamic layout: no height/line estimates, natural flow, no overlap ---
       (() => {
-        // Render analysis block
+        // Render analysis block (above)
         const analysisBlock = React.createElement('div', {
           style: {
             marginTop: 24,
@@ -378,13 +378,16 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             marginBottom: 16,
           }
         }, summary);
-        // Render comment box (no minHeight, only padding)
+        // Render comment box at the bottom (just above bottom margin)
         const commentBox = mostLikedText ? React.createElement('div', {
           style: {
-            marginTop: 0,
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 80, // same as card bottom margin
             background: '#f8fafc',
             borderRadius: 14,
-            padding: '18px 18px 14px 18px',
+            padding: '10px 18px 10px 18px', // same top padding as bars
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -394,18 +397,35 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)',
           }
         },
-          // Label
-          React.createElement('span', {
+          // Label and likes (inline)
+          React.createElement('div', {
             style: {
-              color: '#2563eb',
-              fontSize: 20,
-              fontWeight: 700,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
               marginBottom: 4,
-              alignSelf: 'flex-start',
-              letterSpacing: 0.5,
             }
-          }, 'Most Liked Comment'),
-          // Comment text (italic, in quotes, minimal margin)
+          },
+            React.createElement('span', {
+              style: {
+                color: '#2563eb',
+                fontSize: 20,
+                fontWeight: 700,
+                letterSpacing: 0.5,
+                marginRight: 12,
+              }
+            }, 'Most Liked Comment'),
+            React.createElement('span', {
+              style: {
+                color: '#6b7280',
+                fontSize: 18,
+                fontWeight: 400,
+                marginLeft: 0,
+              }
+            }, `(${mostLikedLikes} likes)`),
+          ),
+          // Comment text (italic, in quotes, inline)
           React.createElement('span', {
             style: {
               color: '#374151',
@@ -419,22 +439,9 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               alignSelf: 'flex-start',
               fontStyle: 'italic',
             }
-          }, `"${mostLikedText}"`),
-          // Like count (just below comment, minimal space)
-          React.createElement('span', {
-            style: {
-              color: '#6b7280',
-              fontSize: 18,
-              fontWeight: 400,
-              marginTop: 0,
-              alignSelf: 'flex-start',
-            }
-          }, `${mostLikedLikes} likes`)
+          }, `"${mostLikedText}"`)
         ) : null;
-        // If the card is too full (not enough space for comment), omit comment and show CTA
-        // This is not strictly enforceable without measuring, but we trust natural flow
-        // If you want, you can add a prop to forcibly omit the comment if needed
-        // Render blocks in order
+        // Render blocks in order: analysis, then comment box at the bottom
         return [analysisBlock, commentBox];
       })(),
       // More content can be added below
