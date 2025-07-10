@@ -11,12 +11,15 @@ import {
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Font registration with correct paths and family names
+// Font registration with robust path resolution and error handling
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const fontRegular = path.join(__dirname, '../../../node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf');
-const fontBold = path.join(__dirname, '../../../node_modules/geist/dist/fonts/geist-sans/Geist-Bold.ttf');
+const fontRegular = path.join(__dirname, '../../assets/fonts/Geist-Regular.ttf');
+const fontBold = path.join(__dirname, '../../assets/fonts/Geist-Bold.ttf');
 
 try {
+  console.log('Attempting to register Geist Sans fonts...');
+  console.log('Regular font path:', fontRegular);
+  console.log('Bold font path:', fontBold);
   registerFont(fontRegular, { family: 'Geist Sans', weight: 'normal' });
   registerFont(fontBold, { family: 'Geist Sans', weight: 'bold' });
   console.log('Geist Sans fonts registered successfully:', fontRegular, fontBold);
