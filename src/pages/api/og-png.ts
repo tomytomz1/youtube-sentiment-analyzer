@@ -118,6 +118,14 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   const mostLikedText = mostLiked.text || '';
   const mostLikedLikes = mostLiked.likeCount || 0;
 
+  const summary = sentiment.summary || '';
+  // Truncate summary to 3 lines with CTA if too long
+  const maxSummaryLines = 3;
+  // We'll use CSS line clamp, but also add CTA if text is truncated
+  // (We can't detect actual line count in server-side, so always add CTA if text is long)
+  const summaryTooLong = summary.length > 220; // rough estimate for 3 lines
+  const summaryDisplay = summaryTooLong ? summary.slice(0, 217) + '... ' : summary;
+
   return new ImageResponse(
     React.createElement('div', {
       style: {
@@ -371,6 +379,35 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             alignSelf: 'flex-start',
           }
         }, `${mostLikedLikes} likes`)
+      ),
+      // Summary/Analysis Section
+      React.createElement('div', {
+        style: {
+          marginTop: 28,
+          marginLeft: 56,
+          marginRight: 56,
+          color: '#6b7280',
+          fontSize: 18,
+          fontWeight: 400,
+          lineHeight: 1.4,
+          maxWidth: 980,
+          display: '-webkit-box',
+          WebkitLineClamp: maxSummaryLines,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          whiteSpace: 'normal',
+        }
+      },
+        summaryDisplay,
+        summaryTooLong && React.createElement('span', {
+          style: {
+            color: '#2563eb',
+            fontWeight: 600,
+            marginLeft: 4,
+            fontSize: 18,
+            cursor: 'pointer',
+          }
+        }, 'Read full analysis →')
       ),
       // More content will be added below in next steps
     ),
