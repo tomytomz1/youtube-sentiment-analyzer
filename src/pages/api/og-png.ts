@@ -73,12 +73,12 @@ export const GET: APIRoute = async ({ url }) => {
     console.log('[OG-PNG] Creating PNG image for:', { videoTitle, channelTitle, positive, neutral, negative });
 
     // Extract avatar URL and channel name
-    const channelInfo = meta?.channelInfo || {};
+    const channelInfo = (resultData as any)?.meta?.channelInfo || {};
     const channelName = channelInfo.channelTitle || 'Unknown Channel';
     const avatarUrl = channelInfo.channelThumbnails?.medium?.url || channelInfo.channelThumbnails?.default?.url;
     const avatarBuffer = await fetchAvatarBuffer(avatarUrl);
 
-    return createSentimentImage(meta, channelName, avatarBuffer, avatarUrl);
+    return createSentimentImage(resultData, channelName, avatarBuffer, avatarUrl);
 
   } catch (error) {
     console.error('[OG-PNG] Error generating OG image:', error);
@@ -107,11 +107,13 @@ async function fetchAvatarBuffer(url: string | undefined): Promise<ArrayBuffer |
 }
 
 function createSentimentImage(data: any, channelName: string, avatarBuffer: ArrayBuffer | null, avatarUrl: string | undefined) {
-  // Extract video title
-  const title = data?.videoInfo?.title || 'YouTube Video';
-  const positive = Math.max(0, Math.min(100, Math.round(data?.sentimentData?.positive ?? 0)));
-  const neutral = Math.max(0, Math.min(100, Math.round(data?.sentimentData?.neutral ?? 0)));
-  const negative = Math.max(0, Math.min(100, Math.round(data?.sentimentData?.negative ?? 0)));
+  // Extract from correct locations
+  const sentiment = data?.sentimentData || {};
+  const meta = data?.meta || {};
+  const title = meta?.videoInfo?.title || 'YouTube Video';
+  const positive = Math.max(0, Math.min(100, Math.round(sentiment.positive ?? 0)));
+  const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral ?? 0)));
+  const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative ?? 0)));
 
   return new ImageResponse(
     React.createElement('div', {
