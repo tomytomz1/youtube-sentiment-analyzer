@@ -386,18 +386,6 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
               </svg>
               Share Results
             </button>
-            <script type="module" is:inline>
-const channel = JSON.stringify(meta.channelInfo?.channelTitle || 'This creator');
-const video = JSON.stringify(meta.videoInfo?.title || 'this video');
-const pos = sentiment.positive || 0;
-const neu = sentiment.neutral || 0;
-const neg = sentiment.negative || 0;
-const text = `${channel}'s video "${video}" sentiment: ${pos}% positive, ${neu}% neutral, ${neg}% negative. See more: ${window.location.href}`;
-const shareUrl = window.location.href;
-document.getElementById('share-results-btn').onclick = () => {
-  window.open(shareUrl, '_blank');
-};
-</script>
           </div>
           <p class="text-sm text-gray-500">
             Powered by AI • Created with YouTube Sentiment Analyzer
@@ -618,12 +606,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareBtn = document.getElementById('share-results-btn');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
-      // Prepare data for sharing
+      // Get the current page URL - this should be the result page
       const shareUrl = window.location.href;
+      console.log('Sharing URL:', shareUrl); // Debug log
+      
+      // Get video info from the page
       const videoTitle = document.querySelector('h2')?.textContent || 'YouTube Video';
       const positive = document.querySelector('.text-green-600')?.textContent?.trim() || '0%';
-      const neutral = document.querySelector('.text-gray-600')?.textContent?.trim() || '0%';
+      const neutral = document.querySelector('.text-gray-600')?.textContent?.trim() || '0%';  
       const negative = document.querySelector('.text-red-600')?.textContent?.trim() || '0%';
+      
+      // Debug logs
+      console.log('Video Title:', videoTitle);
+      console.log('Sentiment:', positive, neutral, negative);
+      
+      // Open the share modal
       createShareModal(shareUrl, videoTitle, positive, neutral, negative);
     });
   }
