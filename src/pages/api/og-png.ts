@@ -1,6 +1,7 @@
-// src/pages/api/og-png.ts - Working React version that generates PNG
+// src/pages/api/og-png.ts - Using React.createElement (no JSX)
 import { ImageResponse } from '@vercel/og';
 import type { APIRoute } from 'astro';
+import React from 'react';
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -88,9 +89,10 @@ function createSentimentImage(data: {
   const truncatedChannel = channelTitle.length > 30 ? channelTitle.substring(0, 27) + '...' : channelTitle;
 
   return new ImageResponse(
-    (
-      <div
-        style={{
+    React.createElement(
+      'div',
+      {
+        style: {
           height: '100%',
           width: '100%',
           display: 'flex',
@@ -98,10 +100,12 @@ function createSentimentImage(data: {
           justifyContent: 'center',
           backgroundColor: '#3B82F6',
           backgroundImage: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
-        }}
-      >
-        <div
-          style={{
+        }
+      },
+      React.createElement(
+        'div',
+        {
+          style: {
             display: 'flex',
             flexDirection: 'column',
             width: '1080px',
@@ -110,11 +114,13 @@ function createSentimentImage(data: {
             borderRadius: '20px',
             padding: '60px',
             position: 'relative',
-          }}
-        >
-          {/* Platform Badge */}
-          <div
-            style={{
+          }
+        },
+        // Platform Badge
+        React.createElement(
+          'div',
+          {
+            style: {
               backgroundColor: '#FF0000',
               color: 'white',
               padding: '8px 20px',
@@ -124,157 +130,181 @@ function createSentimentImage(data: {
               marginBottom: '30px',
               display: 'inline-block',
               width: 'fit-content',
-            }}
-          >
-            YouTube
-          </div>
-          
-          {/* Title */}
-          <div
-            style={{
+            }
+          },
+          'YouTube'
+        ),
+        // Title
+        React.createElement(
+          'div',
+          {
+            style: {
               fontSize: '32px',
               fontWeight: 'bold',
               color: '#1F2937',
               marginBottom: '10px',
               lineHeight: '1.2',
-            }}
-          >
-            {truncatedTitle}
-          </div>
-          
-          {/* Channel */}
-          <div
-            style={{
+            }
+          },
+          truncatedTitle
+        ),
+        // Channel
+        React.createElement(
+          'div',
+          {
+            style: {
               fontSize: '20px',
               color: '#6B7280',
               marginBottom: '30px',
-            }}
-          >
-            {truncatedChannel}
-          </div>
-          
-          {/* Sentiment Title */}
-          <div
-            style={{
+            }
+          },
+          truncatedChannel
+        ),
+        // Sentiment Title
+        React.createElement(
+          'div',
+          {
+            style: {
               fontSize: '24px',
               fontWeight: 'bold',
               color: '#1F2937',
               marginBottom: '30px',
-            }}
-          >
-            Sentiment Analysis Results
-          </div>
-          
-          {/* Sentiment Grid */}
-          <div
-            style={{
+            }
+          },
+          'Sentiment Analysis Results'
+        ),
+        // Sentiment Grid
+        React.createElement(
+          'div',
+          {
+            style: {
               display: 'flex',
               justifyContent: 'space-between',
               marginBottom: '40px',
-            }}
-          >
-            {/* Positive */}
-            <div style={{ textAlign: 'center', flex: 1 }}>
-              <div
-                style={{
+            }
+          },
+          // Positive
+          React.createElement(
+            'div',
+            { style: { textAlign: 'center', flex: 1 } },
+            React.createElement(
+              'div',
+              {
+                style: {
                   fontSize: '48px',
                   fontWeight: 'bold',
                   color: '#059669',
                   marginBottom: '8px',
-                }}
-              >
-                {positive}%
-              </div>
-              <div
-                style={{
+                }
+              },
+              `${positive}%`
+            ),
+            React.createElement(
+              'div',
+              {
+                style: {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   color: '#059669',
-                }}
-              >
-                POSITIVE
-              </div>
-            </div>
-            
-            {/* Neutral */}
-            <div style={{ textAlign: 'center', flex: 1 }}>
-              <div
-                style={{
+                }
+              },
+              'POSITIVE'
+            )
+          ),
+          // Neutral
+          React.createElement(
+            'div',
+            { style: { textAlign: 'center', flex: 1 } },
+            React.createElement(
+              'div',
+              {
+                style: {
                   fontSize: '48px',
                   fontWeight: 'bold',
                   color: '#6B7280',
                   marginBottom: '8px',
-                }}
-              >
-                {neutral}%
-              </div>
-              <div
-                style={{
+                }
+              },
+              `${neutral}%`
+            ),
+            React.createElement(
+              'div',
+              {
+                style: {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   color: '#6B7280',
-                }}
-              >
-                NEUTRAL
-              </div>
-            </div>
-            
-            {/* Negative */}
-            <div style={{ textAlign: 'center', flex: 1 }}>
-              <div
-                style={{
+                }
+              },
+              'NEUTRAL'
+            )
+          ),
+          // Negative
+          React.createElement(
+            'div',
+            { style: { textAlign: 'center', flex: 1 } },
+            React.createElement(
+              'div',
+              {
+                style: {
                   fontSize: '48px',
                   fontWeight: 'bold',
                   color: '#DC2626',
                   marginBottom: '8px',
-                }}
-              >
-                {negative}%
-              </div>
-              <div
-                style={{
+                }
+              },
+              `${negative}%`
+            ),
+            React.createElement(
+              'div',
+              {
+                style: {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   color: '#DC2626',
-                }}
-              >
-                NEGATIVE
-              </div>
-            </div>
-          </div>
-          
-          {/* Branding */}
-          <div
-            style={{
+                }
+              },
+              'NEGATIVE'
+            )
+          )
+        ),
+        // Branding
+        React.createElement(
+          'div',
+          {
+            style: {
               position: 'absolute',
               bottom: '40px',
               left: '60px',
               right: '60px',
               display: 'flex',
               justifyContent: 'space-between',
-            }}
-          >
-            <div
-              style={{
+            }
+          },
+          React.createElement(
+            'div',
+            {
+              style: {
                 color: '#3B82F6',
                 fontSize: '20px',
                 fontWeight: 'bold',
-              }}
-            >
-              🔍 Senti-Meter
-            </div>
-            <div
-              style={{
+              }
+            },
+            '🔍 Senti-Meter'
+          ),
+          React.createElement(
+            'div',
+            {
+              style: {
                 color: '#3B82F6',
                 fontSize: '18px',
                 fontWeight: 'bold',
-              }}
-            >
-              www.senti-meter.com
-            </div>
-          </div>
-        </div>
-      </div>
+              }
+            },
+            'www.senti-meter.com'
+          )
+        )
+      )
     ),
     {
       width: 1200,
@@ -285,9 +315,10 @@ function createSentimentImage(data: {
 
 function createDefaultImage() {
   return new ImageResponse(
-    (
-      <div
-        style={{
+    React.createElement(
+      'div',
+      {
+        style: {
           height: '100%',
           width: '100%',
           display: 'flex',
@@ -295,40 +326,47 @@ function createDefaultImage() {
           justifyContent: 'center',
           backgroundColor: '#3B82F6',
           backgroundImage: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
-        }}
-      >
-        <div
-          style={{
+        }
+      },
+      React.createElement(
+        'div',
+        {
+          style: {
             backgroundColor: 'white',
             borderRadius: '20px',
             padding: '80px',
             textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: '60px', marginBottom: '20px' }}>
-            🔍
-          </div>
-          <div
-            style={{
+          }
+        },
+        React.createElement(
+          'div',
+          { style: { fontSize: '60px', marginBottom: '20px' } },
+          '🔍'
+        ),
+        React.createElement(
+          'div',
+          {
+            style: {
               fontSize: '48px',
               fontWeight: 'bold',
               color: '#1F2937',
               marginBottom: '20px',
-            }}
-          >
-            Senti-Meter
-          </div>
-          <div
-            style={{
+            }
+          },
+          'Senti-Meter'
+        ),
+        React.createElement(
+          'div',
+          {
+            style: {
               fontSize: '32px',
               fontWeight: 'bold',
               color: '#3B82F6',
-            }}
-          >
-            YouTube Sentiment Analyzer
-          </div>
-        </div>
-      </div>
+            }
+          },
+          'YouTube Sentiment Analyzer'
+        )
+      )
     ),
     {
       width: 1200,
@@ -339,39 +377,45 @@ function createDefaultImage() {
 
 function createErrorImage(message: string) {
   return new ImageResponse(
-    (
-      <div
-        style={{
+    React.createElement(
+      'div',
+      {
+        style: {
           height: '100%',
           width: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#EF4444',
-        }}
-      >
-        <div
-          style={{
+        }
+      },
+      React.createElement(
+        'div',
+        {
+          style: {
             backgroundColor: 'white',
             borderRadius: '20px',
             padding: '80px',
             textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: '48px', marginBottom: '20px' }}>
-            ⚠️
-          </div>
-          <div
-            style={{
+          }
+        },
+        React.createElement(
+          'div',
+          { style: { fontSize: '48px', marginBottom: '20px' } },
+          '⚠️'
+        ),
+        React.createElement(
+          'div',
+          {
+            style: {
               fontSize: '36px',
               fontWeight: 'bold',
               color: '#DC2626',
-            }}
-          >
-            {message}
-          </div>
-        </div>
-      </div>
+            }
+          },
+          message
+        )
+      )
     ),
     {
       width: 1200,
