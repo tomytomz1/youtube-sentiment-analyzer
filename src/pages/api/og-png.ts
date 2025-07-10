@@ -110,10 +110,12 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   // Extract from correct locations
   const sentiment = data?.sentimentData || {};
   const meta = data?.meta || {};
-  // const title = meta?.videoInfo?.title || 'YouTube Video'; // REMOVE TITLE
+  // const title = meta?.videoInfo?.title || 'YouTube Video'; // Title not rendered in image
   const positive = Math.max(0, Math.min(100, Math.round(sentiment.positive ?? 0)));
   const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral ?? 0)));
   const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative ?? 0)));
+  const analyzedCount = meta.analyzedCount || 0;
+  const totalComments = meta.totalComments || 0;
   const mostLiked = sentiment.mostLiked || {};
   const mostLikedText = mostLiked.text || '';
   const mostLikedLikes = mostLiked.likeCount || 0;
@@ -130,10 +132,10 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        paddingBottom: 60, // extra bottom margin for social label
+        paddingBottom: 80, // extra bottom margin for social label
       }
     },
-      // Top Row: Avatar (with channel name below) + Sentiment Bars
+      // Top Row: Avatar (with channel name below) + Sentiment Bars + Analyzed/Total
       React.createElement('div', {
         style: {
           display: 'flex',
@@ -142,7 +144,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           marginTop: 48,
           marginLeft: 40,
           marginRight: 40,
-          gap: 40,
+          gap: 32,
         }
       },
         // Avatar + Channel Name (column)
@@ -191,7 +193,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             }
           }, channelName)
         ),
-        // Sentiment Bars (smaller, horizontal)
+        // Sentiment Bars + Analyzed/Total (row)
         React.createElement('div', {
           style: {
             display: 'flex',
@@ -291,6 +293,66 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
                 letterSpacing: 1,
               }
             }, 'Negative')
+          ),
+          // Analyzed
+          React.createElement('div', {
+            style: {
+              minWidth: 110,
+              background: '#e0e7ff',
+              borderRadius: 12,
+              padding: '12px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.08)',
+            }
+          },
+            React.createElement('span', {
+              style: {
+                color: '#2563eb',
+                fontSize: 28,
+                fontWeight: 'bold',
+                marginBottom: 4,
+              }
+            }, analyzedCount),
+            React.createElement('span', {
+              style: {
+                color: '#2563eb',
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: 1,
+              }
+            }, 'Analyzed')
+          ),
+          // Total
+          React.createElement('div', {
+            style: {
+              minWidth: 110,
+              background: '#f1f5f9',
+              borderRadius: 12,
+              padding: '12px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 2px 8px 0 rgba(71, 85, 105, 0.08)',
+            }
+          },
+            React.createElement('span', {
+              style: {
+                color: '#334155',
+                fontSize: 28,
+                fontWeight: 'bold',
+                marginBottom: 4,
+              }
+            }, totalComments),
+            React.createElement('span', {
+              style: {
+                color: '#334155',
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: 1,
+              }
+            }, 'Total')
           )
         )
       ),
@@ -298,26 +360,26 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
       React.createElement('div', {
         style: {
           marginTop: 36,
-          background: '#f8fafc', // lighter modern background
+          background: '#f8fafc',
           borderRadius: 14,
-          padding: '14px 24px 10px 24px', // compact padding
+          padding: '18px 32px 14px 32px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           minHeight: 60,
-          maxWidth: 900,
+          maxWidth: 1000,
           marginLeft: 'auto',
           marginRight: 'auto',
-          boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)', // subtle shadow
+          boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)',
         }
       },
         // Label
         React.createElement('span', {
           style: {
             color: '#2563eb',
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: 700,
-            marginBottom: 6,
+            marginBottom: 8,
             alignSelf: 'flex-start',
             letterSpacing: 0.5,
           }
@@ -326,13 +388,13 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         React.createElement('span', {
           style: {
             color: '#374151',
-            fontSize: 20,
+            fontSize: 24,
             fontWeight: 500,
-            marginBottom: 8,
+            marginBottom: 10,
             textAlign: 'left',
             width: '100%',
             lineHeight: 1.5,
-            maxWidth: 900,
+            maxWidth: 1000,
             alignSelf: 'flex-start',
           }
         }, mostLikedText),
@@ -347,21 +409,22 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }
         }, `${mostLikedLikes} likes`)
       ),
-      // Summary/Analysis Section (improved readability)
+      // Summary/Analysis Section (maximized)
       React.createElement('div', {
         style: {
-          marginTop: 28,
+          marginTop: 32,
           marginLeft: 'auto',
           marginRight: 'auto',
           color: '#374151',
-          fontSize: 20,
+          fontSize: 26,
           fontWeight: 400,
           lineHeight: 1.5,
-          maxWidth: 900,
+          maxWidth: 1000,
           textAlign: 'left',
+          marginBottom: 80, // ensure no overlap with label
         }
       }, summary),
-      // More content will be added below in next steps
+      // More content can be added below
     ),
     {
       width: 1200,
