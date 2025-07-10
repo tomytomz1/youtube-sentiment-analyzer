@@ -105,79 +105,74 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
 ---
 
 <Layout>
-  <!-- Add this to your result/[id].astro head section -->
-<Fragment slot="head">
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  
-  <!-- Force fresh OG image with cache busting -->
-  {(() => {
-    const timestamp = Date.now();
-    const imageUrlWithCache = `${Astro.url.origin}/api/og-image?id=${id}&v=${timestamp}`;
-    return (
-      <>
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={url} />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
-        <meta property="og:image" content={imageUrlWithCache} />
-        <meta property="og:image:secure_url" content={imageUrlWithCache} />
-        <meta property="og:image:alt" content={`Senti-Meter sentiment analysis card for "${videoTitle}"`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/svg+xml" />
-        <meta property="og:site_name" content="Senti-Meter" />
-      
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={url} />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
-        <meta name="twitter:image" content={imageUrlWithCache} />
-        <meta name="twitter:image:alt" content={`Senti-Meter sentiment analysis card for "${videoTitle}"`} />
-        <meta name="twitter:site" content="@senti_meter" />
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- Force fresh OG image with cache busting -->
+    {(() => {
+      const timestamp = Date.now();
+      const imageUrlWithCache = `${Astro.url.origin}/api/og-image?id=${id}&v=${timestamp}`;
+      return (
+        <>
+          <!-- Open Graph / Facebook -->
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content={url} />
+          <meta property="og:title" content={title} />
+          <meta property="og:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
+          <meta property="og:image" content={imageUrlWithCache} />
+          <meta property="og:image:secure_url" content={imageUrlWithCache} />
+          <meta property="og:image:alt" content={`Senti-Meter sentiment analysis card for "${videoTitle}"`} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:image:type" content="image/svg+xml" />
+          <meta property="og:site_name" content="Senti-Meter" />
         
-        <!-- Fallback static image -->
-        <meta property="og:image" content={`${Astro.url.origin}/static-og-image.png`} />
-        <meta name="twitter:image" content={`${Astro.url.origin}/static-og-image.png`} />
-      </>
-    );
-  })()}
+          <!-- Twitter -->
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:url" content={url} />
+          <meta name="twitter:title" content={title} />
+          <meta name="twitter:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
+          <meta name="twitter:image" content={imageUrlWithCache} />
+          <meta name="twitter:image:alt" content={`Senti-Meter sentiment analysis card for "${videoTitle}"`} />
+          <meta name="twitter:site" content="@senti_meter" />
+        </>
+      );
+    })()}
 
-  <!-- SEO & Canonical -->
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href={url} />
-  
-  <!-- JSON-LD Schema -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": title,
-    "description": description,
-    "url": url,
-    "image": `${Astro.url.origin}/api/og-image?id=${id}`,
-    "about": {
-      "@type": "VideoObject",
-      "name": videoTitle,
-      "creator": {
-        "@type": "Person",
-        "name": channelTitle
-      }
-    },
-    "mainEntity": {
-      "@type": "AnalysisNewsArticle",
-      "headline": title,
+    <!-- SEO & Canonical -->
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={url} />
+    
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": title,
       "description": description,
       "url": url,
-      "datePublished": new Date().toISOString(),
-      "author": {
-        "@type": "Organization",
-        "name": "Senti-Meter"
+      "image": `${Astro.url.origin}/api/og-image?id=${id}`,
+      "about": {
+        "@type": "VideoObject",
+        "name": videoTitle,
+        "creator": {
+          "@type": "Person",
+          "name": channelTitle
+        }
+      },
+      "mainEntity": {
+        "@type": "AnalysisNewsArticle",
+        "headline": title,
+        "description": description,
+        "url": url,
+        "datePublished": new Date().toISOString(),
+        "author": {
+          "@type": "Organization",
+          "name": "Senti-Meter"
+        }
       }
-    }
-  })} is:inline />
-</Fragment>
+    })} is:inline />
+  </Fragment>
 
   {error ? (
     <main class="flex-1 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center px-4">
