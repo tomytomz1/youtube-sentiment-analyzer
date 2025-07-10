@@ -89,52 +89,40 @@ function createSentimentImage(data: any) {
       style: {
         width: 1200,
         height: 630,
-        backgroundColor: '#f3f4f6', // light gray background
+        backgroundColor: 'white', // full white background
+        borderRadius: 0,
+        overflow: 'hidden',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: 'column',
       }
     },
+      // Header
       React.createElement('div', {
         style: {
-          width: 1000,
-          height: 500,
-          backgroundColor: 'white',
-          borderRadius: 32,
-          boxSizing: 'border-box',
-          overflow: 'hidden',
+          width: '100%',
+          height: 80,
+          backgroundColor: '#2563eb', // blue
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'center',
+          paddingLeft: 40,
         }
       },
-        // Header
-        React.createElement('div', {
+        React.createElement('span', {
           style: {
-            width: '100%',
-            height: 80,
-            backgroundColor: '#2563eb', // blue
-            borderTopLeftRadius: 32,
-            borderTopRightRadius: 32,
-            display: 'flex',
-            alignItems: 'center',
-            paddingLeft: 40,
+            color: 'white',
+            fontSize: 36,
+            fontWeight: 'bold',
+            lineHeight: 1.2,
+            maxWidth: 1100,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }
-        },
-          React.createElement('span', {
-            style: {
-              color: 'white',
-              fontSize: 36,
-              fontWeight: 'bold',
-              lineHeight: 1.2,
-              maxWidth: 900,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }
-          }, title)
-        )
-        // More content will be added below in next steps
+        }, title)
       )
+      // More content will be added below in next steps
     ),
     {
       width: 1200,
