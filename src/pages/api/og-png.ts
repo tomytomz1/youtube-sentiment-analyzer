@@ -315,64 +315,63 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           )
         )
       ),
-      // Most Liked Comment Highlight Box (multi-line, no truncation)
+      // Most Liked Comment Highlight Box (modern, centered, new color, label, compact)
       React.createElement('div', {
         style: {
-          marginTop: 40,
+          marginTop: 36,
           marginLeft: 40,
           marginRight: 40,
-          background: '#fef9c3',
-          borderRadius: 16,
-          padding: '24px 32px',
+          background: '#f3f4f6', // modern soft gray
+          borderRadius: 14,
+          padding: '18px 28px 14px 28px', // compact padding
           display: 'flex',
-          alignItems: 'flex-start',
-          gap: 20,
+          flexDirection: 'column',
+          alignItems: 'center',
           minHeight: 60,
-          maxHeight: 140,
-          overflow: 'hidden',
+          maxHeight: 180,
+          justifyContent: 'center',
         }
       },
-        // Trophy emoji
+        // Label
         React.createElement('span', {
           style: {
-            fontSize: 32,
-            marginRight: 8,
-            marginTop: 2,
+            color: '#2563eb',
+            fontSize: 18,
+            fontWeight: 700,
+            marginBottom: 6,
+            alignSelf: 'flex-start',
+            letterSpacing: 0.5,
           }
-        }, '🏆'),
-        // Comment and like count
-        React.createElement('div', {
+        }, 'Most Liked Comment'),
+        // Comment text (centered vertically)
+        React.createElement('span', {
           style: {
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
+            color: '#374151',
+            fontSize: 20,
+            fontWeight: 500,
+            marginBottom: 8,
+            textAlign: 'left',
+            width: '100%',
+            lineHeight: 1.35,
+            display: '-webkit-box',
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            whiteSpace: 'normal',
+            alignSelf: 'flex-start',
           }
-        },
-          React.createElement('span', {
-            style: {
-              color: '#92400e',
-              fontSize: 22,
-              fontWeight: 600,
-              marginBottom: 6,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              // Allow multi-line, clamp to 4 lines
-              display: '-webkit-box',
-              WebkitLineClamp: 4,
-              WebkitBoxOrient: 'vertical',
-              whiteSpace: 'normal',
-              maxWidth: 900,
-            }
-          }, mostLikedText),
-          React.createElement('span', {
-            style: {
-              color: '#b45309',
-              fontSize: 18,
-              fontWeight: 500,
-            }
-          }, `${mostLikedLikes} likes`)
-        )
-      )
+        }, mostLikedText),
+        // Like count (bottom left)
+        React.createElement('span', {
+          style: {
+            color: '#6b7280',
+            fontSize: 16,
+            fontWeight: 400,
+            marginTop: 2,
+            alignSelf: 'flex-start',
+          }
+        }, `${mostLikedLikes} likes`)
+      ),
       // More content will be added below in next steps
     ),
     {
