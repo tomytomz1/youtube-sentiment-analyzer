@@ -110,21 +110,14 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   // Extract from correct locations
   const sentiment = data?.sentimentData || {};
   const meta = data?.meta || {};
-  const title = meta?.videoInfo?.title || 'YouTube Video';
+  // const title = meta?.videoInfo?.title || 'YouTube Video'; // REMOVE TITLE
   const positive = Math.max(0, Math.min(100, Math.round(sentiment.positive ?? 0)));
   const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral ?? 0)));
   const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative ?? 0)));
   const mostLiked = sentiment.mostLiked || {};
   const mostLikedText = mostLiked.text || '';
   const mostLikedLikes = mostLiked.likeCount || 0;
-
   const summary = sentiment.summary || '';
-  // Truncate summary to 3 lines with CTA if too long
-  const maxSummaryLines = 3;
-  // We'll use CSS line clamp, but also add CTA if text is truncated
-  // (We can't detect actual line count in server-side, so always add CTA if text is long)
-  const summaryTooLong = summary.length > 220; // rough estimate for 3 lines
-  const summaryDisplay = summaryTooLong ? summary.slice(0, 217) + '... ' : summary;
 
   return new ImageResponse(
     React.createElement('div', {
@@ -136,38 +129,17 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'flex-start',
+        paddingBottom: 60, // extra bottom margin for social label
       }
     },
-      // Header (centered title)
-      React.createElement('div', {
-        style: {
-          width: '100%',
-          height: 80,
-          backgroundColor: '#2563eb',
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center', // center the title
-        }
-      },
-        React.createElement('span', {
-          style: {
-            color: 'white',
-            fontSize: 36,
-            fontWeight: 'bold',
-            lineHeight: 1.2,
-            // Remove maxWidth, overflow, textOverflow, whiteSpace for full title
-          }
-        }, title)
-      ),
       // Top Row: Avatar (with channel name below) + Sentiment Bars
       React.createElement('div', {
         style: {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          marginTop: 32,
+          marginTop: 48,
           marginLeft: 40,
           marginRight: 40,
           gap: 40,
@@ -216,7 +188,6 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               fontWeight: 600,
               marginTop: 10,
               textAlign: 'center',
-              // No truncation or maxWidth
             }
           }, channelName)
         ),
@@ -323,21 +294,21 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           )
         )
       ),
-      // Most Liked Comment Highlight Box (modern, centered, new color, label, compact)
+      // Most Liked Comment Highlight Box (modern, centered, new color, label, compact, improved readability)
       React.createElement('div', {
         style: {
           marginTop: 36,
-          marginLeft: 40,
-          marginRight: 40,
-          background: '#f3f4f6', // modern soft gray
+          background: '#f8fafc', // lighter modern background
           borderRadius: 14,
-          padding: '18px 28px 14px 28px', // compact padding
+          padding: '14px 24px 10px 24px', // compact padding
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           minHeight: 60,
-          maxHeight: 180,
-          justifyContent: 'center',
+          maxWidth: 900,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)', // subtle shadow
         }
       },
         // Label
@@ -360,12 +331,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             marginBottom: 8,
             textAlign: 'left',
             width: '100%',
-            lineHeight: 1.35,
-            display: '-webkit-box',
-            WebkitLineClamp: 4,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            whiteSpace: 'normal',
+            lineHeight: 1.5,
+            maxWidth: 900,
             alignSelf: 'flex-start',
           }
         }, mostLikedText),
@@ -373,22 +340,25 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         React.createElement('span', {
           style: {
             color: '#6b7280',
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: 400,
             marginTop: 2,
             alignSelf: 'flex-start',
           }
         }, `${mostLikedLikes} likes`)
       ),
-      // Summary/Analysis Section (debug: dynamic summary only)
+      // Summary/Analysis Section (improved readability)
       React.createElement('div', {
         style: {
           marginTop: 28,
-          marginLeft: 56,
-          marginRight: 56,
-          color: '#6b7280',
-          fontSize: 18,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          color: '#374151',
+          fontSize: 20,
           fontWeight: 400,
+          lineHeight: 1.5,
+          maxWidth: 900,
+          textAlign: 'left',
         }
       }, summary),
       // More content will be added below in next steps
