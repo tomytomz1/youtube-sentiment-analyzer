@@ -130,7 +130,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         flexDirection: 'column',
       }
     },
-      // Header
+      // Header (centered title)
       React.createElement('div', {
         style: {
           width: '100%',
@@ -140,7 +140,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           borderTopRightRadius: 0,
           display: 'flex',
           alignItems: 'center',
-          paddingLeft: 40,
+          justifyContent: 'center', // center the title
         }
       },
         React.createElement('span', {
@@ -149,10 +149,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             fontSize: 36,
             fontWeight: 'bold',
             lineHeight: 1.2,
-            maxWidth: 1100,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            // Remove maxWidth, overflow, textOverflow, whiteSpace for full title
           }
         }, title)
       ),
@@ -210,11 +207,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               color: '#374151',
               fontWeight: 600,
               marginTop: 10,
-              maxWidth: 90,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
               textAlign: 'center',
+              // No truncation or maxWidth
             }
           }, channelName)
         ),
