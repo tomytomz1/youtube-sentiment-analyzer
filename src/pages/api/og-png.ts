@@ -380,7 +380,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }
         }, `${mostLikedLikes} likes`)
       ),
-      // Summary/Analysis Section
+      // Summary/Analysis Section (debug: static string only)
       React.createElement('div', {
         style: {
           marginTop: 28,
@@ -389,28 +389,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           color: '#6b7280',
           fontSize: 18,
           fontWeight: 400,
-          lineHeight: 1.4,
-          maxWidth: 980,
-          display: '-webkit-box',
-          WebkitLineClamp: maxSummaryLines,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          whiteSpace: 'normal',
         }
-      },
-        [
-          summaryDisplay,
-          summaryTooLong && React.createElement('span', {
-            style: {
-              color: '#2563eb',
-              fontWeight: 600,
-              marginLeft: 4,
-              fontSize: 18,
-              cursor: 'pointer',
-            }
-          }, 'Read full analysis →')
-        ]
-      ),
+      }, 'This is a static summary test.'),
       // More content will be added below in next steps
     ),
     {
