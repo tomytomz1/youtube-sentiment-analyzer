@@ -111,8 +111,21 @@ function createSentimentImage(data: {
           justifyContent: 'center',
           backgroundColor: '#3B82F6',
           backgroundImage: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+          position: 'relative',
         }
       },
+      // Debug red rectangle in top left
+      React.createElement('div', {
+        style: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: 100,
+          height: 100,
+          backgroundColor: 'red',
+          zIndex: 1000,
+        }
+      }),
       React.createElement(
         'div',
         {
