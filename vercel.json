@@ -1,10 +1,4 @@
 {
-  "functions": {
-    ".vercel/output/functions/_render.func": {
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  },
   "headers": [
     {
       "source": "/api/og-image",
