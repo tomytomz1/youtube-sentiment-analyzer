@@ -156,157 +156,169 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }
         }, title)
       ),
-      // Avatar + Channel Name Row
-      React.createElement('div', {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          marginTop: 24,
-          marginLeft: 40,
-        }
-      },
-        avatarBuffer && avatarUrl ?
-          React.createElement('img', {
-            src: avatarUrl,
-            width: 56,
-            height: 56,
-            style: {
-              borderRadius: '50%',
-              objectFit: 'cover',
-              marginRight: 20,
-              border: '2px solid #e5e7eb',
-              background: '#f3f4f6',
-            }
-          }) :
-          React.createElement('div', {
-            style: {
-              width: 56,
-              height: 56,
-              borderRadius: '50%',
-              background: '#e5e7eb',
-              color: '#6b7280',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 24,
-              fontWeight: 'bold',
-              marginRight: 20,
-            }
-          }, getInitials(channelName)),
-        React.createElement('span', {
-          style: {
-            fontSize: 28,
-            color: '#374151',
-            fontWeight: 600,
-            maxWidth: 400,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }
-        }, channelName)
-      ),
-      // Sentiment Bars Row
+      // Top Row: Avatar (with channel name below) + Sentiment Bars
       React.createElement('div', {
         style: {
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: 40,
+          marginTop: 32,
           marginLeft: 40,
           marginRight: 40,
-          gap: 32,
+          gap: 40,
         }
       },
-        // Positive Bar
+        // Avatar + Channel Name (column)
         React.createElement('div', {
           style: {
-            flex: 1,
-            background: '#e0f7ec',
-            borderRadius: 16,
-            padding: '24px 0',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            boxShadow: '0 2px 8px 0 rgba(16, 185, 129, 0.08)',
+            minWidth: 90,
+            marginRight: 24,
           }
         },
+          avatarBuffer && avatarUrl ?
+            React.createElement('img', {
+              src: avatarUrl,
+              width: 64,
+              height: 64,
+              style: {
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '2px solid #e5e7eb',
+                background: '#f3f4f6',
+              }
+            }) :
+            React.createElement('div', {
+              style: {
+                width: 64,
+                height: 64,
+                borderRadius: '50%',
+                background: '#e5e7eb',
+                color: '#6b7280',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 28,
+                fontWeight: 'bold',
+              }
+            }, getInitials(channelName)),
           React.createElement('span', {
             style: {
-              color: '#059669',
-              fontSize: 48,
-              fontWeight: 'bold',
-              marginBottom: 8,
-            }
-          }, `${positive}%`),
-          React.createElement('span', {
-            style: {
-              color: '#059669',
-              fontSize: 20,
+              fontSize: 22,
+              color: '#374151',
               fontWeight: 600,
-              letterSpacing: 1,
+              marginTop: 10,
+              maxWidth: 90,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              textAlign: 'center',
             }
-          }, 'Positive')
+          }, channelName)
         ),
-        // Neutral Bar
+        // Sentiment Bars (smaller, horizontal)
         React.createElement('div', {
           style: {
-            flex: 1,
-            background: '#f3f4f6',
-            borderRadius: 16,
-            padding: '24px 0',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
             alignItems: 'center',
-            boxShadow: '0 2px 8px 0 rgba(107, 114, 128, 0.08)',
+            gap: 24,
+            flex: 1,
+            justifyContent: 'flex-start',
           }
         },
-          React.createElement('span', {
+          // Positive
+          React.createElement('div', {
             style: {
-              color: '#6b7280',
-              fontSize: 48,
-              fontWeight: 'bold',
-              marginBottom: 8,
+              minWidth: 140,
+              background: '#e0f7ec',
+              borderRadius: 12,
+              padding: '12px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 2px 8px 0 rgba(16, 185, 129, 0.08)',
             }
-          }, `${neutral}%`),
-          React.createElement('span', {
+          },
+            React.createElement('span', {
+              style: {
+                color: '#059669',
+                fontSize: 32,
+                fontWeight: 'bold',
+                marginBottom: 4,
+              }
+            }, `${positive}%`),
+            React.createElement('span', {
+              style: {
+                color: '#059669',
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: 1,
+              }
+            }, 'Positive')
+          ),
+          // Neutral
+          React.createElement('div', {
             style: {
-              color: '#6b7280',
-              fontSize: 20,
-              fontWeight: 600,
-              letterSpacing: 1,
+              minWidth: 140,
+              background: '#f3f4f6',
+              borderRadius: 12,
+              padding: '12px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 2px 8px 0 rgba(107, 114, 128, 0.08)',
             }
-          }, 'Neutral')
-        ),
-        // Negative Bar
-        React.createElement('div', {
-          style: {
-            flex: 1,
-            background: '#fee2e2',
-            borderRadius: 16,
-            padding: '24px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            boxShadow: '0 2px 8px 0 rgba(220, 38, 38, 0.08)',
-          }
-        },
-          React.createElement('span', {
+          },
+            React.createElement('span', {
+              style: {
+                color: '#6b7280',
+                fontSize: 32,
+                fontWeight: 'bold',
+                marginBottom: 4,
+              }
+            }, `${neutral}%`),
+            React.createElement('span', {
+              style: {
+                color: '#6b7280',
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: 1,
+              }
+            }, 'Neutral')
+          ),
+          // Negative
+          React.createElement('div', {
             style: {
-              color: '#dc2626',
-              fontSize: 48,
-              fontWeight: 'bold',
-              marginBottom: 8,
+              minWidth: 140,
+              background: '#fee2e2',
+              borderRadius: 12,
+              padding: '12px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 2px 8px 0 rgba(220, 38, 38, 0.08)',
             }
-          }, `${negative}%`),
-          React.createElement('span', {
-            style: {
-              color: '#dc2626',
-              fontSize: 20,
-              fontWeight: 600,
-              letterSpacing: 1,
-            }
-          }, 'Negative')
+          },
+            React.createElement('span', {
+              style: {
+                color: '#dc2626',
+                fontSize: 32,
+                fontWeight: 'bold',
+                marginBottom: 4,
+              }
+            }, `${negative}%`),
+            React.createElement('span', {
+              style: {
+                color: '#dc2626',
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: 1,
+              }
+            }, 'Negative')
+          )
         )
       ),
       // Most Liked Comment Highlight Box (multi-line, no truncation)
