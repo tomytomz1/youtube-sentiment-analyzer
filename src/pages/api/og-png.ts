@@ -72,7 +72,7 @@ export const GET: APIRoute = async ({ url }) => {
 
     console.log('[OG-PNG] Creating PNG image for:', { videoTitle, channelTitle, positive, neutral, negative });
 
-    return createSentimentImage();
+    return createSentimentImage(meta);
 
   } catch (error) {
     console.error('[OG-PNG] Error generating OG image:', error);
@@ -80,26 +80,61 @@ export const GET: APIRoute = async ({ url }) => {
   }
 };
 
-function createSentimentImage() {
-  // Minimal test: solid red PNG with centered white text, 1200x630
+function createSentimentImage(data: any) {
+  // Extract video title
+  const title = data?.videoInfo?.title || 'YouTube Video';
+
   return new ImageResponse(
     React.createElement('div', {
       style: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'red',
+        width: 1200,
+        height: 630,
+        backgroundColor: '#f3f4f6', // light gray background
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
       }
     },
-      React.createElement('span', {
+      React.createElement('div', {
         style: {
-          color: 'white',
-          fontSize: 80,
-          fontWeight: 'bold',
+          width: 1000,
+          height: 500,
+          backgroundColor: 'white',
+          borderRadius: 32,
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
         }
-      }, 'OG IMAGE TEST')
+      },
+        // Header
+        React.createElement('div', {
+          style: {
+            width: '100%',
+            height: 80,
+            backgroundColor: '#2563eb', // blue
+            borderTopLeftRadius: 32,
+            borderTopRightRadius: 32,
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: 40,
+          }
+        },
+          React.createElement('span', {
+            style: {
+              color: 'white',
+              fontSize: 36,
+              fontWeight: 'bold',
+              lineHeight: 1.2,
+              maxWidth: 900,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }
+          }, title)
+        )
+        // More content will be added below in next steps
+      )
     ),
     {
       width: 1200,
