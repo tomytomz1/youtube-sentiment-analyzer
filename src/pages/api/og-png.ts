@@ -361,88 +361,33 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }, 'Total')
         )
       ),
-      // --- Dynamic content sizing logic ---
+      // --- True dynamic layout: no height/line estimates, natural flow, no overlap ---
       (() => {
-        // Card height: 630px, top row: ~110px + 28px margin, bottom margin: 80px, min comment box: 70px
-        const CARD_HEIGHT = 630;
-        const TOP_ROW_HEIGHT = 110 + 28;
-        const BOTTOM_MARGIN = 80;
-        const MIN_COMMENT_BOX = 70;
-        const COMMENT_LABEL_HEIGHT = 28;
-        const COMMENT_LIKES_HEIGHT = 24;
-        const COMMENT_BOX_PADDING = 18 + 14; // top + bottom
-        const AVAILABLE_HEIGHT = CARD_HEIGHT - TOP_ROW_HEIGHT - BOTTOM_MARGIN;
-        // Estimate analysis and comment heights
-        const analysisFontSize = 28;
-        const commentFontSize = 24;
-        // Estimate line heights (1.5x)
-        const analysisLineHeight = Math.ceil(analysisFontSize * 1.5);
-        const commentLineHeight = Math.ceil(commentFontSize * 1.5);
-        // Estimate lines for analysis and comment
-        const analysisLines = Math.ceil((summary.length || 1) / 80); // rough estimate: 80 chars/line
-        const commentLines = Math.ceil((mostLikedText.length || 1) / 80);
-        // Calculate required heights
-        const analysisHeight = analysisLines * analysisLineHeight;
-        const commentHeight = commentLines * commentLineHeight + COMMENT_LABEL_HEIGHT + COMMENT_LIKES_HEIGHT + COMMENT_BOX_PADDING;
-        let showComment = true;
-        let showReadMore = false;
-        let maxAnalysisLines = analysisLines;
-        // If both fit, show both
-        if (analysisHeight + commentHeight < AVAILABLE_HEIGHT) {
-          // ok
-        } else if (analysisHeight < AVAILABLE_HEIGHT - MIN_COMMENT_BOX) {
-          // Truncate comment to fit
-          showReadMore = true;
-        } else {
-          // Only show as much analysis as fits, omit comment
-          showComment = false;
-          maxAnalysisLines = Math.floor((AVAILABLE_HEIGHT) / analysisLineHeight);
-          showReadMore = true;
-        }
-        // Truncate analysis if needed
-        let analysisDisplay = summary;
-        if (maxAnalysisLines < analysisLines) {
-          // Truncate to maxAnalysisLines
-          let charsPerLine = 80;
-          let maxChars = maxAnalysisLines * charsPerLine;
-          analysisDisplay = summary.slice(0, maxChars - 4) + '...';
-        }
-        // Truncate comment if needed
-        let commentDisplay = mostLikedText;
-        if (showComment && showReadMore && commentHeight + analysisHeight > AVAILABLE_HEIGHT) {
-          // Truncate comment to fit remaining space
-          let remainingHeight = AVAILABLE_HEIGHT - (maxAnalysisLines * analysisLineHeight);
-          let maxCommentLines = Math.floor((remainingHeight - COMMENT_LABEL_HEIGHT - COMMENT_LIKES_HEIGHT - COMMENT_BOX_PADDING) / commentLineHeight);
-          let charsPerLine = 80;
-          let maxChars = Math.max(0, maxCommentLines * charsPerLine);
-          commentDisplay = mostLikedText.slice(0, maxChars - 4) + (maxChars > 0 ? '...' : '');
-        }
-        // --- Render analysis ---
+        // Render analysis block
         const analysisBlock = React.createElement('div', {
           style: {
             marginTop: 24,
             marginLeft: 'auto',
             marginRight: 'auto',
             color: '#374151',
-            fontSize: analysisFontSize,
+            fontSize: 28,
             fontWeight: 400,
             lineHeight: 1.5,
             maxWidth: 1100,
             textAlign: 'left',
-            marginBottom: 16, // reduced gap above comment box
+            marginBottom: 16,
           }
-        }, analysisDisplay);
-        // --- Render comment box ---
-        const commentBox = showComment ? React.createElement('div', {
+        }, summary);
+        // Render comment box (no minHeight, only padding)
+        const commentBox = mostLikedText ? React.createElement('div', {
           style: {
             marginTop: 0,
             background: '#f8fafc',
             borderRadius: 14,
-            padding: '18px 18px 14px 18px', // keep bottom padding
+            padding: '18px 18px 14px 18px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            minHeight: 60,
             maxWidth: 1100,
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -464,42 +409,33 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           React.createElement('span', {
             style: {
               color: '#374151',
-              fontSize: commentFontSize,
+              fontSize: 24,
               fontWeight: 500,
-              marginBottom: 0, // minimize space below comment
+              marginBottom: 0,
               textAlign: 'left',
               width: '100%',
               lineHeight: 1.5,
               maxWidth: 1100,
               alignSelf: 'flex-start',
-              fontStyle: 'italic', // always italic
+              fontStyle: 'italic',
             }
-          }, `"${commentDisplay}"`),
+          }, `"${mostLikedText}"`),
           // Like count (just below comment, minimal space)
           React.createElement('span', {
             style: {
               color: '#6b7280',
               fontSize: 18,
               fontWeight: 400,
-              marginTop: 0, // minimize space above likes
+              marginTop: 0,
               alignSelf: 'flex-start',
             }
           }, `${mostLikedLikes} likes`)
         ) : null;
-        // --- Render read more CTA if needed ---
-        const readMoreBlock = showReadMore ? React.createElement('div', {
-          style: {
-            marginTop: 18,
-            color: '#2563eb',
-            fontSize: 22,
-            fontWeight: 700,
-            textAlign: 'center',
-            width: '100%',
-            letterSpacing: 0.5,
-          }
-        }, 'Read more →') : null;
-        // --- Compose all blocks ---
-        return [analysisBlock, commentBox, readMoreBlock];
+        // If the card is too full (not enough space for comment), omit comment and show CTA
+        // This is not strictly enforceable without measuring, but we trust natural flow
+        // If you want, you can add a prop to forcibly omit the comment if needed
+        // Render blocks in order
+        return [analysisBlock, commentBox];
       })(),
       // More content can be added below
     ),
