@@ -356,18 +356,33 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           )
         )
       ),
+      // Summary/Analysis Section (now above comment, maximized)
+      React.createElement('div', {
+        style: {
+          marginTop: 32,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          color: '#374151',
+          fontSize: 26,
+          fontWeight: 400,
+          lineHeight: 1.5,
+          maxWidth: 1100,
+          textAlign: 'left',
+          marginBottom: 32, // space before comment box
+        }
+      }, summary),
       // Most Liked Comment Highlight Box (modern, centered, new color, label, compact, improved readability)
       React.createElement('div', {
         style: {
-          marginTop: 36,
+          marginTop: 0,
           background: '#f8fafc',
           borderRadius: 14,
-          padding: '18px 32px 14px 32px',
+          padding: '18px 18px 14px 18px', // reduced horizontal padding
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           minHeight: 60,
-          maxWidth: 1000,
+          maxWidth: 1100,
           marginLeft: 'auto',
           marginRight: 'auto',
           boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)',
@@ -384,7 +399,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             letterSpacing: 0.5,
           }
         }, 'Most Liked Comment'),
-        // Comment text (centered vertically)
+        // Comment text (italic, in quotes)
         React.createElement('span', {
           style: {
             color: '#374151',
@@ -394,10 +409,11 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             textAlign: 'left',
             width: '100%',
             lineHeight: 1.5,
-            maxWidth: 1000,
+            maxWidth: 1100,
             alignSelf: 'flex-start',
+            fontStyle: 'italic',
           }
-        }, mostLikedText),
+        }, `"${mostLikedText}"`),
         // Like count (bottom left)
         React.createElement('span', {
           style: {
@@ -409,21 +425,6 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }
         }, `${mostLikedLikes} likes`)
       ),
-      // Summary/Analysis Section (maximized)
-      React.createElement('div', {
-        style: {
-          marginTop: 32,
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          color: '#374151',
-          fontSize: 26,
-          fontWeight: 400,
-          lineHeight: 1.5,
-          maxWidth: 1000,
-          textAlign: 'left',
-          marginBottom: 80, // ensure no overlap with label
-        }
-      }, summary),
       // More content can be added below
     ),
     {
