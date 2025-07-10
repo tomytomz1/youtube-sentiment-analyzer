@@ -398,16 +398,18 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           whiteSpace: 'normal',
         }
       },
-        summaryDisplay,
-        summaryTooLong && React.createElement('span', {
-          style: {
-            color: '#2563eb',
-            fontWeight: 600,
-            marginLeft: 4,
-            fontSize: 18,
-            cursor: 'pointer',
-          }
-        }, 'Read full analysis →')
+        [
+          summaryDisplay,
+          summaryTooLong && React.createElement('span', {
+            style: {
+              color: '#2563eb',
+              fontWeight: 600,
+              marginLeft: 4,
+              fontSize: 18,
+              cursor: 'pointer',
+            }
+          }, 'Read full analysis →')
+        ]
       ),
       // More content will be added below in next steps
     ),
