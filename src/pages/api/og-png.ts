@@ -4,16 +4,20 @@ import type { APIRoute } from 'astro';
 import React from 'react';
 
 export const GET: APIRoute = async ({ url }) => {
+  console.log('[OG-PNG] API called with url:', url);
   try {
     const searchParams = new URL(url).searchParams;
     const id = searchParams.get('id');
+    console.log('[OG-PNG] Extracted id:', id);
 
     if (!id) {
+      console.error('[OG-PNG] No ID provided');
       return createDefaultImage();
     }
 
     // Validate ID format
     if (!/^[a-f0-9-]{36}$/.test(id)) {
+      console.error('[OG-PNG] Invalid ID format:', id);
       return createErrorImage('Invalid ID Format');
     }
 
@@ -24,8 +28,10 @@ export const GET: APIRoute = async ({ url }) => {
       
       const redisUrl = import.meta.env.KV_REST_API_URL;
       const redisToken = import.meta.env.KV_REST_API_TOKEN;
+      console.log('[OG-PNG] Redis config:', { redisUrl, redisToken: !!redisToken });
 
       if (!redisUrl || !redisToken) {
+        console.error('[OG-PNG] Redis configuration missing');
         return createErrorImage('Configuration Error');
       }
 
@@ -42,12 +48,14 @@ export const GET: APIRoute = async ({ url }) => {
       ]);
 
       resultData = await fetchWithTimeout;
+      console.log('[OG-PNG] Redis fetch result:', { id, hasData: !!resultData, resultData });
     } catch (redisError) {
-      console.error('Redis error:', redisError);
+      console.error('[OG-PNG] Redis error:', redisError);
       return createErrorImage('Database Error');
     }
 
     if (!resultData) {
+      console.error('[OG-PNG] No data found for ID:', id);
       return createErrorImage('Result Not Found');
     }
 
@@ -62,6 +70,8 @@ export const GET: APIRoute = async ({ url }) => {
     const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral || 0)));
     const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative || 0)));
 
+    console.log('[OG-PNG] Creating PNG image for:', { videoTitle, channelTitle, positive, neutral, negative });
+
     return createSentimentImage({
       title: videoTitle,
       channelTitle,
@@ -71,7 +81,7 @@ export const GET: APIRoute = async ({ url }) => {
     });
 
   } catch (error) {
-    console.error('Error generating OG image:', error);
+    console.error('[OG-PNG] Error generating OG image:', error);
     return createErrorImage('Server Error');
   }
 };
@@ -84,6 +94,7 @@ function createSentimentImage(data: {
   negative: number;
 }) {
   const { title, channelTitle, positive, neutral, negative } = data;
+  console.log('[OG-PNG] Sentiment image generated with data:', data);
   
   const truncatedTitle = title.length > 50 ? title.substring(0, 47) + '...' : title;
   const truncatedChannel = channelTitle.length > 30 ? channelTitle.substring(0, 27) + '...' : channelTitle;
@@ -314,6 +325,7 @@ function createSentimentImage(data: {
 }
 
 function createDefaultImage() {
+  console.log('[OG-PNG] Returning default image');
   return new ImageResponse(
     React.createElement(
       'div',
@@ -376,6 +388,7 @@ function createDefaultImage() {
 }
 
 function createErrorImage(message: string) {
+  console.log('[OG-PNG] Returning error image with message:', message);
   return new ImageResponse(
     React.createElement(
       'div',
