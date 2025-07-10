@@ -380,7 +380,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           }
         }, `${mostLikedLikes} likes`)
       ),
-      // Summary/Analysis Section (debug: static string only)
+      // Summary/Analysis Section (debug: dynamic summary only)
       React.createElement('div', {
         style: {
           marginTop: 28,
@@ -390,7 +390,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           fontSize: 18,
           fontWeight: 400,
         }
-      }, 'This is a static summary test.'),
+      }, summary),
       // More content will be added below in next steps
     ),
     {
