@@ -24,22 +24,27 @@ interface ResultData {
   platform?: string; // Added platform field
 }
 
-// Initialize Redis
-const redis = new Redis({
-  url: import.meta.env.KV_REST_API_URL,
-  token: import.meta.env.KV_REST_API_TOKEN,
-});
-
 let resultData: ResultData | null = null;
 let error = null;
 
-try {
-  if (id) {
-    resultData = (await redis.get(id)) as ResultData | null;
+// FIXED: Add safety check for Redis environment variables
+if (import.meta.env.KV_REST_API_URL && import.meta.env.KV_REST_API_TOKEN) {
+  try {
+    // Initialize Redis
+    const redis = new Redis({
+      url: import.meta.env.KV_REST_API_URL,
+      token: import.meta.env.KV_REST_API_TOKEN,
+    });
+
+    if (id) {
+      resultData = (await redis.get(id)) as ResultData | null;
+    }
+  } catch (e) {
+    console.error('Error fetching result:', e);
+    error = 'Failed to load result';
   }
-} catch (e) {
-  console.error('Error fetching result:', e);
-  error = 'Failed to load result';
+} else {
+  error = 'Database configuration error';
 }
 
 // If no data found, show 404
@@ -81,6 +86,10 @@ const title = `${sentimentEmoji} "${videoTitle}" - Sentiment Analysis (${platfor
 const description = `${dominantSentiment} audience reaction: ${sentiment.positive || 0}% positive, ${sentiment.neutral || 0}% neutral, ${sentiment.negative || 0}% negative comments. Analyzed ${meta.analyzedCount || 0} comments from ${channelTitle}.`;
 const baseUrl = 'https://www.senti-meter.com';
 const url = `${baseUrl}/result/${id}`;
+
+// FIXED: Define the missing Twitter variables that were causing the error
+const twitterTitle = title.length > 70 ? `${title.substring(0, 67)}...` : title;
+const twitterDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
 
 // Create a simple image URL (you could generate a more complex one)
 const imageUrl = `${Astro.url.origin}/api/og-png?id=${id}`;
@@ -595,7 +604,7 @@ function createShareModal(shareUrl, videoTitle, positive, neutral, negative) {
   // Event listeners
   document.getElementById('close-share-modal')?.addEventListener('click', () => modal.remove());
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.remove();
+    if (e.target === modal) modal.remove());
   });
   // Platform-specific share handlers
   modal.querySelectorAll('.share-option').forEach(button => {
