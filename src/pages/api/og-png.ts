@@ -441,10 +441,12 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               marginBottom: 0,
               textAlign: 'left',
               width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
               lineHeight: 1.5,
-              maxWidth: 1100,
               alignSelf: 'flex-start',
               fontStyle: 'italic',
+              fontFamily: 'Georgia, serif', // more pronounced italic
             }
           }, `"${mostLikedText}"`)
         ) : null;
