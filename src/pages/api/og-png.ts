@@ -458,13 +458,16 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
       // More content can be added below
       React.createElement('img', {
         src: 'https://www.senti-meter.com/logo.png',
-        width: 560,
-        height: 160,
+        width: 1024,
+        height: 400,
         style: {
           position: 'absolute',
-          right: 8,
-          bottom: 8,
+          right: 0,
+          bottom: 0,
+          margin: 0,
+          padding: 0,
           objectFit: 'contain',
+          display: 'block',
         }
       })
     ),
