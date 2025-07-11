@@ -443,6 +443,22 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         return [analysisBlock, commentBox];
       })(),
       // More content can be added below
+      // Add logo in lower right corner
+      React.createElement('img', {
+        src: 'https://youtube-sentiment-analyzer.vercel.app/logo.svg', // Use absolute URL for OG image rendering
+        width: 72,
+        height: 72,
+        style: {
+          position: 'absolute',
+          right: 32,
+          bottom: 32,
+          opacity: 0.92,
+          background: 'white',
+          borderRadius: 16,
+          boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
+          padding: 8,
+        }
+      })
     ),
     {
       width: 1200,
