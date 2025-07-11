@@ -124,9 +124,9 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   
   // FIXED: Safer extraction of mostLiked data (matches [id].astro structure)
   const mostLiked = meta.mostLiked || {};
-  const mostLikedText = typeof mostLiked.text === 'string' ? mostLiked.text.slice(0, 200) : '';
+  const mostLikedText = typeof mostLiked.text === 'string' ? mostLiked.text : '';
   const mostLikedLikes = Math.max(0, mostLiked.likeCount || 0);
-  const summary = typeof sentiment.summary === 'string' ? sentiment.summary.slice(0, 300) : '';
+  const summary = typeof sentiment.summary === 'string' ? sentiment.summary : '';
 
   return new ImageResponse(
     React.createElement('div', {
