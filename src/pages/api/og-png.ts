@@ -390,7 +390,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         const CARD_PADDING = 28; // same as top margin
         const commentBox = mostLikedText ? React.createElement('div', {
           style: {
-            background: '#f8fafc',
+            background: '#d1d5db', // darker gray for more noticeability
             borderRadius: 14,
             padding: '10px 18px 10px 18px', // same top padding as bars
             display: 'flex',
@@ -411,6 +411,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
               alignItems: 'center',
               width: '100%',
               marginBottom: 4,
+              alignSelf: 'flex-start', // left align the label/likes row
             }
           },
             React.createElement('span', {
@@ -424,7 +425,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             }, 'Most Liked Comment'),
             React.createElement('span', {
               style: {
-                color: '#6b7280',
+                color: '#374151', // darker text for contrast
                 fontSize: 18,
                 fontWeight: 400,
                 marginLeft: 0,
@@ -434,7 +435,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           // Comment text (italic, in quotes, inline)
           React.createElement('span', {
             style: {
-              color: '#374151',
+              color: '#1f2937', // even darker text for main comment
               fontSize: 24,
               fontWeight: 500,
               marginBottom: 0,
