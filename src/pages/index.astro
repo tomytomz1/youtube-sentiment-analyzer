@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const title = "Free YouTube Sentiment Analyzer – Instantly Summarize Video Comments";
+const title = "Senti-Meter's AI Sentiment Analyzer";
 const description = "Paste any YouTube video link and get an instant summary of comment sentiment: see if viewers love or hate a video in seconds. Free, no login needed.";
 const url = "https://www.senti-meter.com";
 ---
@@ -12,13 +12,13 @@ const url = "https://www.senti-meter.com";
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
-    <meta property="og:title" content="Senti-Meter's Sentiment Analyzer" />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content="/logo.svg" />
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={url} />
-    <meta property="twitter:title" content="Senti-Meter's Sentiment Analyzer" />
+    <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content="/logo.svg" />
     <!-- Additional SEO -->

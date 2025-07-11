@@ -82,13 +82,13 @@ if ((sentiment.positive ?? 0) > 60) {
 // Create meta tags
 const videoTitle = meta.videoInfo?.title || 'YouTube Video';
 const channelTitle = meta.channelInfo?.channelTitle || 'Unknown Channel';
-const title = `${sentimentEmoji} "${videoTitle}" - Sentiment Analysis (${platformName})`;
+const title = "Senti-Meter's AI Sentiment Analyzer";
 const description = `${dominantSentiment} audience reaction: ${sentiment.positive || 0}% positive, ${sentiment.neutral || 0}% neutral, ${sentiment.negative || 0}% negative comments. Analyzed ${meta.analyzedCount || 0} comments from ${channelTitle}.`;
 const baseUrl = 'https://www.senti-meter.com';
 const url = `${baseUrl}/result/${id}`;
 
 // FIXED: Define the missing Twitter variables that were causing the error
-const twitterTitle = title.length > 70 ? `${title.substring(0, 67)}...` : title;
+const twitterTitle = title;
 const twitterDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
 
 // Create a simple image URL (you could generate a more complex one)
@@ -129,7 +129,7 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
           <!-- Open Graph / Facebook -->
           <meta property="og:type" content="website" />
           <meta property="og:url" content={url} />
-          <meta property="og:title" content="Senti-Meter's Sentiment Analyzer" />
+          <meta property="og:title" content={title} />
           <meta property="og:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
           <meta property="og:image" content={imageUrlWithCache} />
           <meta property="og:image:secure_url" content={imageUrlWithCache} />
