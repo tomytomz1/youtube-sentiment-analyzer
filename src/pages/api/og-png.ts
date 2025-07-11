@@ -133,6 +133,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         flexDirection: 'column',
         justifyContent: 'flex-start',
         paddingBottom: 80, // extra bottom margin for social label
+        position: 'relative',
       }
     },
       // Top Row: Avatar+Channel Name as one cell, then 5 equal-sized data squares (all horizontally aligned)
@@ -442,23 +443,38 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         // Render blocks in order: analysis, then comment box at the bottom
         return [analysisBlock, commentBox];
       })(),
-      // More content can be added below
-      // Add logo in lower right corner
-      React.createElement('img', {
-        src: 'https://youtube-sentiment-analyzer.vercel.app/logo.svg', // Use absolute URL for OG image rendering
-        width: 72,
-        height: 72,
+      // Logo in lower right corner
+      React.createElement('div', {
         style: {
           position: 'absolute',
-          right: 32,
-          bottom: 32,
-          opacity: 0.92,
-          background: 'white',
-          borderRadius: 16,
-          boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
-          padding: 8,
+          right: 40,
+          bottom: 40,
+          width: 133,
+          height: 'auto',
         }
-      })
+      },
+        React.createElement('svg', {
+          width: 133,
+          height: 40,
+          viewBox: '0 0 200 60',
+          fill: 'none',
+          xmlns: 'http://www.w3.org/2000/svg',
+        },
+          React.createElement('path', {
+            d: 'M10 30C10 18.954 18.954 10 30 10H170C181.046 10 190 18.954 190 30C190 41.046 181.046 50 170 50H30C18.954 50 10 41.046 10 30Z',
+            fill: '#3B82F6',
+          }),
+          React.createElement('text', {
+            x: 100,
+            y: 35,
+            textAnchor: 'middle',
+            fill: 'white',
+            fontSize: 16,
+            fontWeight: 'bold',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+          }, 'Senti-Meter')
+        )
+      ),
     ),
     {
       width: 1200,
