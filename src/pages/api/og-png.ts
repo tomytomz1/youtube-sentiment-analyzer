@@ -160,11 +160,11 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         // Avatar + Channel Name (single cell, vertically stacked)
         React.createElement('div', {
           style: {
-            minWidth: 150,
-            minHeight: 110,
+            minWidth: 220,
+            minHeight: 160,
             background: '#f8fafc',
             borderRadius: 12,
-            padding: '10px 0',
+            padding: '16px 0',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -175,38 +175,38 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           avatarBuffer && avatarUrl ?
             React.createElement('img', {
               src: avatarUrl,
-              width: 48,
-              height: 48,
+              width: 120,
+              height: 120,
               style: {
                 borderRadius: '50%',
                 objectFit: 'cover',
                 border: '2px solid #e5e7eb',
                 background: '#f3f4f6',
-                marginBottom: 6,
+                marginBottom: 10,
               }
             }) :
             React.createElement('div', {
               style: {
-                width: 48,
-                height: 48,
+                width: 120,
+                height: 120,
                 borderRadius: '50%',
                 background: '#e5e7eb',
                 color: '#6b7280',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 22,
+                fontSize: 44,
                 fontWeight: 'bold',
-                marginBottom: 6,
+                marginBottom: 10,
               }
             }, getInitials(channelName)),
           React.createElement('span', {
             style: {
-              fontSize: 20,
+              fontSize: 44,
               color: '#374151',
               fontWeight: 700,
               textAlign: 'center',
-              maxWidth: 120,
+              maxWidth: 180,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -216,7 +216,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         // Positive
         React.createElement('div', {
           style: {
-            minWidth: 150,
+            minWidth: 120,
             background: '#e0f7ec',
             borderRadius: 12,
             padding: '10px 0',
