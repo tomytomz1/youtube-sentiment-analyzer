@@ -462,8 +462,8 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         height: 100,
         style: {
           position: 'absolute',
-          right: 24,
-          bottom: 24,
+          right: 10,
+          bottom: 10,
           objectFit: 'contain',
           display: 'block',
         }
