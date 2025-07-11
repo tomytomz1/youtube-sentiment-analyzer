@@ -456,18 +456,6 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         return [analysisBlock, commentBox].filter(Boolean);
       })(),
       // More content can be added below
-      // Logo in bottom right
-      React.createElement('img', {
-        src: '/logo.svg',
-        width: 160,
-        height: 48,
-        style: {
-          position: 'absolute',
-          right: 32,
-          bottom: 32,
-          objectFit: 'contain',
-        }
-      })
     ),
     {
       width: 1200,
