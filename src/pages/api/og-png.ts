@@ -456,6 +456,18 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         return [analysisBlock, commentBox].filter(Boolean);
       })(),
       // More content can be added below
+      React.createElement('span', {
+        style: {
+          position: 'absolute',
+          right: 32,
+          bottom: 32,
+          color: 'black',
+          fontSize: 24,
+          background: 'white',
+          padding: '4px 8px',
+          borderRadius: 6,
+        }
+      }, 'TEST')
     ),
     {
       width: 1200,
