@@ -133,11 +133,16 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
           <!-- Twitter -->
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:url" content={url} />
-          <meta name="twitter:title" content="Senti-Meter's Sentiment Analyzer" />
-          <meta name="twitter:description" content={`${explanation} ${description} | Try it yourself at www.senti-meter.com`} />
+          <meta name="twitter:title" content={twitterTitle} />
+          <meta name="twitter:description" content={twitterDescription} />
           <meta name="twitter:image" content={imageUrlWithCache} />
-          <meta name="twitter:image:alt" content={`Senti-Meter sentiment analysis card for "${videoTitle}"`} />
+          <meta name="twitter:image:alt" content={`Sentiment analysis: ${sentiment.positive || 0}% positive, ${sentiment.neutral || 0}% neutral, ${sentiment.negative || 0}% negative for "${videoTitle}"`} />
           <meta name="twitter:site" content="@senti_meter" />
+          <meta name="twitter:creator" content="@senti_meter" />
+          <meta name="twitter:label1" content="Comments Analyzed" />
+          <meta name="twitter:data1" content={`${meta.analyzedCount || 0} of ${meta.totalComments || 0}`} />
+          <meta name="twitter:label2" content="Powered by" />
+          <meta name="twitter:data2" content="Senti-Meter AI" />
         </>
       );
     })()}

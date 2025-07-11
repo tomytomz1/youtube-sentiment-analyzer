@@ -1,4 +1,4 @@
-// src/pages/api/og-png.ts - Using React.createElement (no JSX)
+// src/pages/api/og-png.ts - Improved Twitter Card Design
 import { ImageResponse } from '@vercel/og';
 import type { APIRoute } from 'astro';
 import React from 'react';
@@ -70,6 +70,13 @@ export const GET: APIRoute = async ({ url }) => {
     const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral || 0)));
     const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative || 0)));
 
+    // Determine dominant sentiment and emoji
+    let sentimentEmoji = '🤔';
+    if (positive > 60) sentimentEmoji = '✨';
+    else if (positive > 40) sentimentEmoji = '😊';
+    else if (negative > 40) sentimentEmoji = '😬';
+    else if (negative > 60) sentimentEmoji = '💔';
+
     console.log('[OG-PNG] Creating PNG image for:', { videoTitle, channelTitle, positive, neutral, negative });
 
     // Extract avatar URL and channel name
@@ -78,7 +85,7 @@ export const GET: APIRoute = async ({ url }) => {
     const avatarUrl = channelInfo.channelThumbnails?.medium?.url || channelInfo.channelThumbnails?.default?.url;
     const avatarBuffer = await fetchAvatarBuffer(avatarUrl);
 
-    return createSentimentImage(resultData, channelName, avatarBuffer, avatarUrl);
+    return createImprovedSentimentImage(resultData, channelName, avatarBuffer, avatarUrl, sentimentEmoji);
 
   } catch (error) {
     console.error('[OG-PNG] Error generating OG image:', error);
@@ -106,375 +113,271 @@ async function fetchAvatarBuffer(url: string | undefined): Promise<ArrayBuffer |
   }
 }
 
-function createSentimentImage(data: any, channelName: string, avatarBuffer: ArrayBuffer | null, avatarUrl: string | undefined) {
-  // Extract from correct locations
+// Helper function for sentiment gauges
+function createSentimentGauge(label: string, value: number, color: string) {
+  return React.createElement('div', {
+    style: {
+      textAlign: 'center',
+      position: 'relative',
+    }
+  },
+    // Background circle
+    React.createElement('div', {
+      style: {
+        width: 160,
+        height: 160,
+        borderRadius: '50%',
+        background: 'rgba(255,255,255,0.08)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '3px solid rgba(255,255,255,0.15)',
+        position: 'relative',
+        overflow: 'hidden',
+      }
+    },
+      // Progress ring
+      React.createElement('svg', {
+        style: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          transform: 'rotate(-90deg)',
+        }
+      },
+        React.createElement('circle', {
+          cx: 80,
+          cy: 80,
+          r: 76,
+          fill: 'none',
+          stroke: color,
+          strokeWidth: 6,
+          strokeDasharray: `${2 * Math.PI * 76 * value / 100} ${2 * Math.PI * 76}`,
+          strokeLinecap: 'round',
+          opacity: 0.3,
+        })
+      ),
+      React.createElement('div', {
+        style: {
+          fontSize: 52,
+          fontWeight: 'bold',
+          color: color,
+          lineHeight: 1,
+          textShadow: `0 0 20px ${color}33`,
+        }
+      }, `${value}%`),
+      React.createElement('div', {
+        style: {
+          fontSize: 18,
+          color: '#94A3B8',
+          marginTop: 4,
+          fontWeight: 600,
+        }
+      }, label)
+    )
+  );
+}
+
+function createImprovedSentimentImage(data: any, channelName: string, avatarBuffer: ArrayBuffer | null, avatarUrl: string | undefined, sentimentEmoji: string) {
   const sentiment = data?.sentimentData || {};
   const meta = data?.meta || {};
-  // const title = meta?.videoInfo?.title || 'YouTube Video'; // Title not rendered in image
   const positive = Math.max(0, Math.min(100, Math.round(sentiment.positive ?? 0)));
   const neutral = Math.max(0, Math.min(100, Math.round(sentiment.neutral ?? 0)));
   const negative = Math.max(0, Math.min(100, Math.round(sentiment.negative ?? 0)));
   const analyzedCount = meta.analyzedCount || 0;
   const totalComments = meta.totalComments || 0;
-  const mostLiked = sentiment.mostLiked || {};
-  const mostLikedText = mostLiked.text || '';
-  const mostLikedLikes = mostLiked.likeCount || 0;
-  const summary = sentiment.summary || '';
 
   return new ImageResponse(
     React.createElement('div', {
       style: {
         width: 1200,
         height: 630,
-        backgroundColor: 'white',
-        borderRadius: 0,
-        overflow: 'hidden',
+        backgroundColor: '#0F172A',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-start',
-        paddingBottom: 80, // extra bottom margin for social label
         position: 'relative',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
       }
     },
-      // Top Row: Avatar+Channel Name as one cell, then 5 equal-sized data squares (all horizontally aligned)
-      React.createElement('div', {
-        style: {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 18,
-          maxWidth: 1100,
-          margin: '28px auto 0 auto', // add top margin
-          paddingTop: 0,
-          paddingBottom: 0,
-        }
-      },
-        // Avatar + Channel Name (single cell, vertically stacked)
-        React.createElement('div', {
-          style: {
-            minWidth: 150,
-            minHeight: 110,
-            background: '#f8fafc',
-            borderRadius: 12,
-            padding: '10px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.04)',
-          }
-        },
-          avatarBuffer && avatarUrl ?
-            React.createElement('img', {
-              src: avatarUrl,
-              width: 48,
-              height: 48,
-              style: {
-                borderRadius: '50%',
-                objectFit: 'cover',
-                border: '2px solid #e5e7eb',
-                background: '#f3f4f6',
-                marginBottom: 6,
-              }
-            }) :
-            React.createElement('div', {
-              style: {
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                background: '#e5e7eb',
-                color: '#6b7280',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 22,
-                fontWeight: 'bold',
-                marginBottom: 6,
-              }
-            }, getInitials(channelName)),
-          React.createElement('span', {
-            style: {
-              fontSize: 20,
-              color: '#374151',
-              fontWeight: 700,
-              textAlign: 'center',
-              maxWidth: 120,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }
-          }, channelName)
-        ),
-        // Positive
-        React.createElement('div', {
-          style: {
-            minWidth: 150,
-            background: '#e0f7ec',
-            borderRadius: 12,
-            padding: '10px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(16, 185, 129, 0.08)',
-          }
-        },
-          React.createElement('span', {
-            style: {
-              color: '#059669',
-              fontSize: 40,
-              fontWeight: 'bold',
-              marginBottom: 4,
-            }
-          }, `${positive}%`),
-          React.createElement('span', {
-            style: {
-              color: '#059669',
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: 1,
-            }
-          }, 'Positive')
-        ),
-        // Neutral
-        React.createElement('div', {
-          style: {
-            minWidth: 150,
-            background: '#f3f4f6',
-            borderRadius: 12,
-            padding: '10px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(107, 114, 128, 0.08)',
-          }
-        },
-          React.createElement('span', {
-            style: {
-              color: '#6b7280',
-              fontSize: 40,
-              fontWeight: 'bold',
-              marginBottom: 4,
-            }
-          }, `${neutral}%`),
-          React.createElement('span', {
-            style: {
-              color: '#6b7280',
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: 1,
-            }
-          }, 'Neutral')
-        ),
-        // Negative
-        React.createElement('div', {
-          style: {
-            minWidth: 150,
-            background: '#fee2e2',
-            borderRadius: 12,
-            padding: '10px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(220, 38, 38, 0.08)',
-          }
-        },
-          React.createElement('span', {
-            style: {
-              color: '#dc2626',
-              fontSize: 40,
-              fontWeight: 'bold',
-              marginBottom: 4,
-            }
-          }, `${negative}%`),
-          React.createElement('span', {
-            style: {
-              color: '#dc2626',
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: 1,
-            }
-          }, 'Negative')
-        ),
-        // Analyzed
-        React.createElement('div', {
-          style: {
-            minWidth: 150,
-            background: '#e0e7ff',
-            borderRadius: 12,
-            padding: '10px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.08)',
-          }
-        },
-          React.createElement('span', {
-            style: {
-              color: '#2563eb',
-              fontSize: 40,
-              fontWeight: 'bold',
-              marginBottom: 4,
-            }
-          }, analyzedCount),
-          React.createElement('span', {
-            style: {
-              color: '#2563eb',
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: 1,
-            }
-          }, 'Analyzed')
-        ),
-        // Total
-        React.createElement('div', {
-          style: {
-            minWidth: 150,
-            background: '#f1f5f9',
-            borderRadius: 12,
-            padding: '10px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(71, 85, 105, 0.08)',
-          }
-        },
-          React.createElement('span', {
-            style: {
-              color: '#334155',
-              fontSize: 40,
-              fontWeight: 'bold',
-              marginBottom: 4,
-            }
-          }, totalComments),
-          React.createElement('span', {
-            style: {
-              color: '#334155',
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: 1,
-            }
-          }, 'Total')
-        )
-      ),
-      // --- True dynamic layout: no height/line estimates, natural flow, no overlap ---
-      (() => {
-        // Render analysis block (above)
-        const analysisBlock = React.createElement('div', {
-          style: {
-            marginTop: 24,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            color: '#374151',
-            fontSize: 28,
-            fontWeight: 400,
-            lineHeight: 1.5,
-            maxWidth: 1100,
-            textAlign: 'left',
-            marginBottom: 16,
-          }
-        }, summary);
-        // Render comment box at the bottom, centered, just above bottom padding
-        const CARD_PADDING = 28; // same as top margin
-        const commentBox = mostLikedText ? React.createElement('div', {
-          style: {
-            background: '#f8fafc',
-            borderRadius: 14,
-            padding: '10px 18px 10px 18px', // same top padding as bars
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            maxWidth: 1100,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginBottom: CARD_PADDING, // match card bottom padding
-            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)',
-          }
-        },
-          // Label and likes (inline)
-          React.createElement('div', {
-            style: {
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%',
-              marginBottom: 4,
-            }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#2563eb',
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: 0.5,
-                marginRight: 12,
-              }
-            }, 'Most Liked Comment'),
-            React.createElement('span', {
-              style: {
-                color: '#6b7280',
-                fontSize: 18,
-                fontWeight: 400,
-                marginLeft: 0,
-              }
-            }, `(${mostLikedLikes} likes)`),
-          ),
-          // Comment text (italic, in quotes, inline)
-          React.createElement('span', {
-            style: {
-              color: '#374151',
-              fontSize: 24,
-              fontWeight: 500,
-              marginBottom: 0,
-              textAlign: 'left',
-              width: '100%',
-              lineHeight: 1.5,
-              maxWidth: 1100,
-              alignSelf: 'flex-start',
-              fontStyle: 'italic',
-            }
-          }, `"${mostLikedText}"`)
-        ) : null;
-        // Render blocks in order: analysis, then comment box at the bottom
-        return [analysisBlock, commentBox];
-      })(),
-      // Logo in lower right corner
+      // Gradient overlay
       React.createElement('div', {
         style: {
           position: 'absolute',
-          right: 40,
-          bottom: 40,
-          width: 133,
-          height: 'auto',
+          inset: 0,
+          backgroundImage: `
+            radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 70%)
+          `,
+        }
+      }),
+      
+      // Sentiment emoji (top right)
+      React.createElement('div', {
+        style: {
+          position: 'absolute',
+          top: 40,
+          right: 60,
+          fontSize: 80,
+          opacity: 0.2,
+        }
+      }, sentimentEmoji),
+      
+      // Header with channel info
+      React.createElement('div', {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          padding: '50px 60px 30px',
+          gap: 20,
+          zIndex: 1,
         }
       },
-        React.createElement('svg', {
-          width: 133,
-          height: 40,
-          viewBox: '0 0 200 60',
-          fill: 'none',
-          xmlns: 'http://www.w3.org/2000/svg',
+        // Channel avatar
+        avatarBuffer && avatarUrl ?
+          React.createElement('img', {
+            src: avatarUrl,
+            style: {
+              width: 70,
+              height: 70,
+              borderRadius: '50%',
+              border: '4px solid #3B82F6',
+              boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
+            }
+          }) :
+          React.createElement('div', {
+            style: {
+              width: 70,
+              height: 70,
+              borderRadius: '50%',
+              background: '#1E293B',
+              border: '4px solid #3B82F6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 28,
+              fontWeight: 'bold',
+              color: '#3B82F6',
+            }
+          }, getInitials(channelName)),
+        
+        // Channel name and context
+        React.createElement('div', {
+          style: { flex: 1 }
         },
-          React.createElement('path', {
-            d: 'M10 30C10 18.954 18.954 10 30 10H170C181.046 10 190 18.954 190 30C190 41.046 181.046 50 170 50H30C18.954 50 10 41.046 10 30Z',
-            fill: '#3B82F6',
-          }),
-          React.createElement('text', {
-            x: 100,
-            y: 35,
-            textAnchor: 'middle',
-            fill: 'white',
-            fontSize: 16,
-            fontWeight: 'bold',
-            fontFamily: 'system-ui, -apple-system, sans-serif',
-          }, 'Senti-Meter')
+          React.createElement('div', {
+            style: {
+              color: '#64748B',
+              fontSize: 18,
+              marginBottom: 4,
+              letterSpacing: '0.5px',
+            }
+          }, 'YouTube Comment Analysis'),
+          React.createElement('div', {
+            style: {
+              color: '#F1F5F9',
+              fontSize: 32,
+              fontWeight: 'bold',
+              textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+            }
+          }, channelName)
         )
       ),
+      
+      // Main sentiment display
+      React.createElement('div', {
+        style: {
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 80,
+          padding: '0 60px',
+          zIndex: 1,
+        }
+      },
+        createSentimentGauge('Positive', positive, '#10B981'),
+        createSentimentGauge('Neutral', neutral, '#6B7280'),
+        createSentimentGauge('Negative', negative, '#EF4444'),
+      ),
+      
+      // Bottom section with branding and stats
+      React.createElement('div', {
+        style: {
+          background: 'linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent)',
+          padding: '40px 60px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          zIndex: 1,
+        }
+      },
+        React.createElement('div', {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: 20,
+          }
+        },
+          React.createElement('div', {
+            style: {
+              width: 60,
+              height: 60,
+              background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+              borderRadius: 16,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 30,
+              boxShadow: '0 4px 20px rgba(59, 130, 246, 0.4)',
+            }
+          }, '🔍'),
+          React.createElement('div', {},
+            React.createElement('div', {
+              style: {
+                color: '#F1F5F9',
+                fontSize: 26,
+                fontWeight: 'bold',
+                marginBottom: 2,
+              }
+            }, 'Senti-Meter'),
+            React.createElement('div', {
+              style: {
+                color: '#64748B',
+                fontSize: 16,
+              }
+            }, 'AI-Powered Sentiment Analysis')
+          )
+        ),
+        
+        React.createElement('div', {
+          style: {
+            textAlign: 'right',
+          }
+        },
+          React.createElement('div', {
+            style: {
+              color: '#94A3B8',
+              fontSize: 20,
+              marginBottom: 4,
+            }
+          }, `${analyzedCount.toLocaleString()} of ${totalComments.toLocaleString()} comments`),
+          React.createElement('div', {
+            style: {
+              background: '#3B82F6',
+              color: 'white',
+              padding: '8px 20px',
+              borderRadius: 20,
+              fontSize: 16,
+              fontWeight: 'bold',
+              display: 'inline-block',
+            }
+          }, 'Analyze your video →')
+        )
+      )
     ),
     {
       width: 1200,
@@ -495,33 +398,39 @@ function createDefaultImage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#3B82F6',
-          backgroundImage: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+          backgroundColor: '#0F172A',
+          backgroundImage: `
+            radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%)
+          `,
         }
       },
       React.createElement(
         'div',
         {
           style: {
-            backgroundColor: 'white',
-            borderRadius: '20px',
+            backgroundColor: 'rgba(255,255,255,0.05)',
+            border: '2px solid rgba(255,255,255,0.1)',
+            borderRadius: '24px',
             padding: '80px',
             textAlign: 'center',
+            backdropFilter: 'blur(10px)',
           }
         },
         React.createElement(
           'div',
-          { style: { fontSize: '60px', marginBottom: '20px' } },
+          { style: { fontSize: '80px', marginBottom: '30px' } },
           '🔍'
         ),
         React.createElement(
           'div',
           {
             style: {
-              fontSize: '48px',
+              fontSize: '56px',
               fontWeight: 'bold',
-              color: '#1F2937',
+              color: '#F1F5F9',
               marginBottom: '20px',
+              textShadow: '0 2px 10px rgba(0,0,0,0.3)',
             }
           },
           'Senti-Meter'
@@ -530,9 +439,8 @@ function createDefaultImage() {
           'div',
           {
             style: {
-              fontSize: '32px',
-              fontWeight: 'bold',
-              color: '#3B82F6',
+              fontSize: '28px',
+              color: '#64748B',
             }
           },
           'YouTube Sentiment Analyzer'
@@ -558,22 +466,25 @@ function createErrorImage(message: string) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#EF4444',
+          backgroundColor: '#0F172A',
+          backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.2) 0%, transparent 50%)',
         }
       },
       React.createElement(
         'div',
         {
           style: {
-            backgroundColor: 'white',
-            borderRadius: '20px',
+            backgroundColor: 'rgba(255,255,255,0.05)',
+            border: '2px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '24px',
             padding: '80px',
             textAlign: 'center',
+            backdropFilter: 'blur(10px)',
           }
         },
         React.createElement(
           'div',
-          { style: { fontSize: '48px', marginBottom: '20px' } },
+          { style: { fontSize: '60px', marginBottom: '30px' } },
           '⚠️'
         ),
         React.createElement(
@@ -582,7 +493,7 @@ function createErrorImage(message: string) {
             style: {
               fontSize: '36px',
               fontWeight: 'bold',
-              color: '#DC2626',
+              color: '#EF4444',
             }
           },
           message
