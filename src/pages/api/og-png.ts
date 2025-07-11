@@ -462,7 +462,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
         height: 100,
         style: {
           position: 'absolute',
-          right: 10,
+          right: 5,
           bottom: 10,
           objectFit: 'contain',
           display: 'block',
