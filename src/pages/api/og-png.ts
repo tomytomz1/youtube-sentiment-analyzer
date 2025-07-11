@@ -383,74 +383,9 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             marginBottom: 16,
           }
         }, summary) : null;
-        
-        // Render comment box at the bottom, centered, just above bottom padding
-        const CARD_PADDING = 28; // same as top margin
-        const commentBox = mostLikedText ? React.createElement('div', {
-          style: {
-            background: '#d1d5db', // darker gray for more noticeability
-            borderRadius: 14,
-            padding: '10px 18px 10px 18px', // same top padding as bars
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            maxWidth: 1100,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginBottom: CARD_PADDING, // match card bottom padding
-            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.04)',
-          }
-        },
-          // Label and likes (inline)
-          React.createElement('div', {
-            style: {
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%',
-              marginBottom: 4,
-              alignSelf: 'flex-start', // left align the label/likes row
-            }
-          },
-            React.createElement('span', {
-              style: {
-                color: '#2563eb',
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: 0.5,
-                marginRight: 12,
-              }
-            }, 'Most Liked Comment'),
-            React.createElement('span', {
-              style: {
-                color: '#374151', // darker text for contrast
-                fontSize: 18,
-                fontWeight: 400,
-                marginLeft: 0,
-              }
-            }, `(${mostLikedLikes} likes)`),
-          ),
-          // Comment text (italic, in quotes, inline)
-          React.createElement('span', {
-            style: {
-              color: '#1f2937', // even darker text for main comment
-              fontSize: 24,
-              fontWeight: 500,
-              marginBottom: 0,
-              textAlign: 'left',
-              width: '100%',
-              maxWidth: '100%',
-              boxSizing: 'border-box',
-              lineHeight: 1.5,
-              alignSelf: 'flex-start',
-              fontStyle: 'italic',
-              fontFamily: 'Georgia, serif', // more pronounced italic
-            }
-          }, `"${mostLikedText}"`)
-        ) : null;
-        
-        // Return both blocks (filter out nulls)
-        return [analysisBlock, commentBox].filter(Boolean);
+        // Remove the commentBox entirely from the OG card
+        // Return only the analysis block
+        return [analysisBlock].filter(Boolean);
       })(),
       // More content can be added below
       React.createElement('img', {
