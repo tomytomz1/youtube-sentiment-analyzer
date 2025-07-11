@@ -157,19 +157,16 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
           paddingBottom: 0,
         }
       },
-        // Avatar + Channel Name (single cell, vertically stacked)
+        // Avatar + Channel Name (no box)
         React.createElement('div', {
           style: {
             minWidth: 220,
             minHeight: 160,
-            background: '#f8fafc',
-            borderRadius: 12,
-            padding: '16px 0',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px 0 rgba(59, 130, 246, 0.04)',
+            marginRight: 18, // keep spacing between avatar and stat boxes
           }
         },
           avatarBuffer && avatarUrl ?
@@ -202,7 +199,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
             }, getInitials(channelName)),
           React.createElement('span', {
             style: {
-              fontSize: 44,
+              fontSize: 28,
               color: '#374151',
               fontWeight: 700,
               textAlign: 'center',
