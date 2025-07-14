@@ -1,8 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 
-const title = "Senti-Meter's AI Sentiment Analyzer";
-const description = "Analyze YouTube comments instantly with our free AI-powered comment analyzer. Get sentiment breakdowns, viewer insights, and engagement metrics for any video.";
+const title = "YouTube Comment Analyzer - Advanced AI Analysis | Senti-Meter";
+const description = "Specialized YouTube comment analysis tool. Get detailed sentiment breakdowns, engagement metrics, and viewer insights for any video. Free AI-powered analysis.";
 const url = "https://www.senti-meter.com/youtube-comment-analyzer";
 ---
 <Layout>
@@ -32,6 +33,12 @@ const url = "https://www.senti-meter.com/youtube-comment-analyzer";
   <a href="#comment-analyzer-tool" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
     Skip to comment analyzer
   </a>
+
+  <!-- Breadcrumb Navigation -->
+  <Breadcrumb items={[
+    { label: 'Home', href: '/' },
+    { label: 'YouTube Comment Analyzer' }
+  ]} />
 
   <!-- Hero Section -->
   <section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">

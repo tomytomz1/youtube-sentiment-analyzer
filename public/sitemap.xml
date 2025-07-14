@@ -3,7 +3,7 @@
   <!-- Homepage - highest priority, updated daily -->
   <url>
     <loc>https://www.senti-meter.com/</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,14 +11,14 @@
   <!-- Landing Pages for Tools -->
   <url>
     <loc>https://www.senti-meter.com/youtube-comment-analyzer</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://www.senti-meter.com/video-sentiment-analysis</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

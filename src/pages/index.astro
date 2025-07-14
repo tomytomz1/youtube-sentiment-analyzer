@@ -1,8 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const title = "Senti-Meter's AI Sentiment Analyzer";
-const description = "Paste any YouTube video link and get an instant summary of comment sentiment: see if viewers love or hate a video in seconds. Free, no login needed.";
+const title = "Free YouTube Comment Analyzer - AI Sentiment Analysis Tool";
+const description = "Analyze YouTube comments instantly with AI. Get sentiment insights, viewer reactions, and engagement metrics for any video. Free, no signup required.";
 const url = "https://www.senti-meter.com";
 ---
 <Layout>
@@ -206,6 +206,119 @@ const url = "https://www.senti-meter.com";
     </div>
   </main>
 
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our YouTube Comment Analyzer Works</h2>
+        <p class="text-lg text-gray-600">Get instant sentiment insights in just three simple steps</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-blue-600">1</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Paste YouTube URL</h3>
+          <p class="text-gray-600">Simply copy any YouTube video link and paste it into our analyzer. We support all YouTube URL formats including standard watch URLs, shortened links, and embedded URLs.</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-purple-600">2</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">AI Analysis</h3>
+          <p class="text-gray-600">Our advanced AI (GPT-4o) analyzes up to 100 comments, understanding context, sarcasm, and emotional nuances. The process takes just 10-30 seconds.</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-green-600">3</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Get Insights</h3>
+          <p class="text-gray-600">Receive detailed sentiment breakdowns, percentage analysis, sample comments, and a comprehensive summary of audience reactions to the video.</p>
+        </div>
+      </div>
+      
+      <!-- Advanced Features -->
+      <div class="mt-16 bg-gray-50 rounded-2xl p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Advanced AI Technology</h3>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+              <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Context Understanding</h4>
+                <p class="text-gray-600 text-sm">Our AI understands cultural references, industry-specific language, and contextual nuances that simpler tools miss.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Sarcasm Detection</h4>
+                <p class="text-gray-600 text-sm">Advanced language models can detect sarcasm, irony, and subtle emotional expressions in comments.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Multi-language Support</h4>
+                <p class="text-gray-600 text-sm">Analyze comments in multiple languages including English, Spanish, French, German, and many others.</p>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Privacy-First Design</h4>
+                <p class="text-gray-600 text-sm">No data storage, no tracking, no personal information collected. All analysis is done in real-time and immediately discarded.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Instant Results</h4>
+                <p class="text-gray-600 text-sm">Get comprehensive sentiment analysis in seconds, not hours. Perfect for real-time content optimization and quick insights.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Shareable Results</h4>
+                <p class="text-gray-600 text-sm">Generate unique URLs to share your analysis results with team members, clients, or for presentations.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 <!-- Related Tools Section -->
 <section class="py-12 bg-white">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -225,7 +338,120 @@ const url = "https://www.senti-meter.com";
       </div>
     </div>
   </div>
-</section>
+  </section>
+
+  <!-- Use Cases Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Who Uses YouTube Sentiment Analysis?</h2>
+        <p class="text-lg text-gray-600">Discover how different professionals leverage sentiment insights</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Content Creators -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Content Creators</h3>
+          <p class="text-gray-600 mb-4">Understand audience reactions to optimize future content, identify trending topics, and improve engagement strategies.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Optimize video content based on feedback</li>
+            <li>• Identify what resonates with viewers</li>
+            <li>• Track audience sentiment over time</li>
+            <li>• Improve thumbnail and title strategies</li>
+          </ul>
+        </div>
+        
+        <!-- Marketers -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Marketing Teams</h3>
+          <p class="text-gray-600 mb-4">Measure campaign effectiveness, monitor brand perception, and track competitor performance with data-driven insights.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Measure campaign ROI and effectiveness</li>
+            <li>• Monitor brand perception and reputation</li>
+            <li>• Track competitor content performance</li>
+            <li>• Identify market trends and opportunities</li>
+          </ul>
+        </div>
+        
+        <!-- Researchers -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Researchers</h3>
+          <p class="text-gray-600 mb-4">Conduct social media research, analyze public opinion trends, and gather insights for academic or market research.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Study public opinion and trends</li>
+            <li>• Analyze social media behavior</li>
+            <li>• Gather data for academic research</li>
+            <li>• Monitor cultural and social shifts</li>
+          </ul>
+        </div>
+        
+        <!-- Business Owners -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Business Owners</h3>
+          <p class="text-gray-600 mb-4">Understand customer feedback, improve products based on user sentiment, and make data-driven business decisions.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Understand customer satisfaction</li>
+            <li>• Improve products and services</li>
+            <li>• Make data-driven decisions</li>
+            <li>• Monitor industry trends</li>
+          </ul>
+        </div>
+        
+        <!-- Social Media Managers -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Social Media Managers</h3>
+          <p class="text-gray-600 mb-4">Optimize social media strategies, improve engagement rates, and create more compelling content based on audience feedback.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Optimize content strategies</li>
+            <li>• Improve engagement rates</li>
+            <li>• Create compelling content</li>
+            <li>• Monitor brand mentions</li>
+          </ul>
+        </div>
+        
+        <!-- Educators -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Educators & Trainers</h3>
+          <p class="text-gray-600 mb-4">Evaluate educational content effectiveness, understand student engagement, and improve teaching materials based on feedback.</p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Evaluate educational content</li>
+            <li>• Understand student engagement</li>
+            <li>• Improve teaching materials</li>
+            <li>• Track learning outcomes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- AdSense Ad Placement -->
   <section class="py-8 bg-gray-50">
@@ -302,6 +528,170 @@ const url = "https://www.senti-meter.com";
             While no automated sentiment analysis is 100% perfect, our tool typically achieves accuracy rates comparable to human analysts. The AI considers factors like emoji usage, capitalization, punctuation patterns, and contextual clues to make informed sentiment classifications. For the most reliable results, we analyze multiple comments and provide sample comments so you can verify the classifications yourself.
           </p>
         </div>
+        <!-- FAQ Item 6 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">How many comments does the tool analyze?</h3>
+          <p class="text-gray-700 mb-4">
+            Our tool analyzes up to 100 of the most relevant comments from each YouTube video. We focus on comments that have received the most engagement (likes, replies) and recent comments to provide a balanced view of audience sentiment. This approach ensures we capture both the most impactful comments and current viewer reactions.
+          </p>
+          <p class="text-gray-700">
+            For videos with thousands of comments, we prioritize quality over quantity by selecting the most representative sample. This gives you accurate sentiment insights without overwhelming you with data, while still providing statistically significant results for most analysis purposes.
+          </p>
+        </div>
+        <!-- FAQ Item 7 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I analyze private or unlisted videos?</h3>
+          <p class="text-gray-700 mb-4">
+            No, our tool can only analyze public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data. This means private videos, unlisted videos, and videos with disabled comments cannot be analyzed.
+          </p>
+          <p class="text-gray-700">
+            This limitation ensures we comply with YouTube's Terms of Service and respect content creators' privacy preferences. If you're trying to analyze a video and it's not working, please check that the video is public and has comments enabled.
+          </p>
+        </div>
+        <!-- FAQ Item 8 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">What do the sentiment percentages mean?</h3>
+          <p class="text-gray-700 mb-4">
+            The sentiment percentages represent the proportion of comments that fall into each category: positive, neutral, and negative. For example, if you see 60% positive, 25% neutral, and 15% negative, it means 60% of the analyzed comments expressed positive sentiment, 25% were neutral, and 15% were negative.
+          </p>
+          <p class="text-gray-700">
+            These percentages help you quickly understand the overall audience reaction to a video. A high positive percentage indicates viewers generally enjoyed the content, while a high negative percentage suggests viewers had concerns or criticisms. The neutral percentage represents comments that don't clearly express positive or negative sentiment.
+          </p>
+        </div>
+        <!-- FAQ Item 9 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">How long does the analysis take?</h3>
+          <p class="text-gray-700 mb-4">
+            Most analyses complete within 10-30 seconds, depending on the number of comments and current system load. The process involves fetching comments from YouTube's API, processing them through our AI model, and generating the sentiment breakdown and summary.
+          </p>
+          <p class="text-gray-700">
+            During peak usage times, analysis might take slightly longer, but we've optimized our system to provide results as quickly as possible. You'll see a loading indicator while the analysis is in progress, and you can analyze multiple videos in succession without any delays.
+          </p>
+        </div>
+        <!-- FAQ Item 10 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I share my analysis results?</h3>
+          <p class="text-gray-700 mb-4">
+            Yes! You can easily share your analysis results using the "Share Results" button. This generates a unique URL that you can share with others, allowing them to view the same sentiment analysis results. The shared link includes all the sentiment percentages, summary, and sample comments.
+          </p>
+          <p class="text-gray-700">
+            This feature is perfect for content creators who want to share audience insights with their team, marketers presenting campaign results, or researchers sharing findings. The shared results are accessible to anyone with the link and don't require any login or registration.
+          </p>
+          <div class="mt-4 pt-4 border-t border-gray-200">
+            <p class="text-sm text-gray-600">
+              <strong>Related:</strong> 
+              <a href="#faq" class="text-blue-600 hover:text-blue-800">How accurate is the sentiment analysis?</a> • 
+              <a href="#faq" class="text-blue-600 hover:text-blue-800">How long does the analysis take?</a>
+            </p>
+          </div>
+        </div>
+        <!-- FAQ Item 11 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">What makes this tool different from other sentiment analyzers?</h3>
+          <p class="text-gray-700 mb-4">
+            Our tool stands out for several key reasons: First, we use OpenAI's GPT-4o model, which provides superior accuracy in understanding context, sarcasm, and nuanced language compared to simpler keyword-based tools. Second, we're completely free with no usage limits, unlike many paid alternatives.
+          </p>
+          <p class="text-gray-700">
+            Third, we prioritize privacy by not storing any data. Fourth, we provide comprehensive insights including sentiment percentages, detailed summaries, and sample comments from each category. Finally, our tool is specifically optimized for YouTube comments, understanding the unique language patterns and context of social media interactions.
+          </p>
+        </div>
+        <!-- FAQ Item 12 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Is there a limit to how many videos I can analyze?</h3>
+          <p class="text-gray-700 mb-4">
+            No, there are no limits on the number of videos you can analyze! You can use our tool as much as you want, analyzing hundreds or thousands of videos without any restrictions. This makes it perfect for content creators who want to analyze their entire video library or researchers conducting large-scale studies.
+          </p>
+          <p class="text-gray-700">
+            We believe in providing unlimited access to sentiment analysis tools, so you can get the insights you need without worrying about hitting usage limits or paying for additional analyses.
+          </p>
+        </div>
+        <!-- FAQ Item 13 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I analyze comments in different languages?</h3>
+          <p class="text-gray-700 mb-4">
+            Yes! Our AI model can analyze comments in multiple languages, including English, Spanish, French, German, Italian, Portuguese, and many others. The sentiment analysis works across different languages and cultural contexts, providing accurate insights regardless of the comment language.
+          </p>
+          <p class="text-gray-700">
+            This multilingual capability makes our tool valuable for international content creators and global brands who want to understand audience sentiment across different markets and languages.
+          </p>
+        </div>
+        <!-- FAQ Item 14 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">How can I use sentiment analysis for my business?</h3>
+          <p class="text-gray-700 mb-4">
+            Sentiment analysis is incredibly valuable for businesses in many ways: You can monitor brand perception by analyzing comments on your company's videos, track competitor performance by analyzing their content, measure campaign effectiveness, and understand customer feedback and concerns.
+          </p>
+          <p class="text-gray-700">
+            The insights can help you improve your products, optimize your marketing strategies, identify trending topics, and make data-driven decisions about your content and business direction. Many businesses use sentiment analysis to improve customer satisfaction and create more engaging content.
+          </p>
+          <div class="mt-4 pt-4 border-t border-gray-200">
+            <p class="text-sm text-gray-600">
+              <strong>Related:</strong> 
+              <a href="#faq" class="text-blue-600 hover:text-blue-800">What types of YouTube videos can I analyze?</a> • 
+              <a href="#faq" class="text-blue-600 hover:text-blue-800">Can I analyze comments in different languages?</a>
+            </p>
+          </div>
+        </div>
+        <!-- FAQ Item 15 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">What if the analysis seems inaccurate?</h3>
+          <p class="text-gray-700 mb-4">
+            While our AI is highly accurate, sentiment analysis can sometimes misinterpret sarcasm, cultural references, or complex language patterns. If you notice inaccuracies, you can review the sample comments provided to see how the AI classified specific comments.
+          </p>
+          <p class="text-gray-700">
+            We're constantly improving our model based on user feedback. If you encounter consistent issues, please contact us with specific examples so we can enhance the accuracy of our sentiment analysis for similar content types.
+          </p>
+        </div>
+        <!-- FAQ Item 16 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I analyze live streams or premieres?</h3>
+          <p class="text-gray-700 mb-4">
+            Yes, you can analyze comments from live streams and premieres, but only after they've ended and the comments are publicly available. During live streams, comments are often processed in real-time and may not be immediately accessible for analysis.
+          </p>
+          <p class="text-gray-700">
+            For the most comprehensive analysis of live content, we recommend waiting until the stream has ended and all comments have been processed by YouTube's systems. This ensures you get the complete picture of audience sentiment.
+          </p>
+        </div>
+        <!-- FAQ Item 17 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">How do you handle spam or irrelevant comments?</h3>
+          <p class="text-gray-700 mb-4">
+            Our AI model is trained to identify and filter out spam comments, irrelevant content, and automated responses. The sentiment analysis focuses on genuine viewer comments that provide meaningful insights about the video content.
+          </p>
+          <p class="text-gray-700">
+            This filtering ensures that your sentiment analysis results reflect actual viewer opinions rather than being skewed by spam or irrelevant content. The AI can distinguish between meaningful feedback and noise, providing you with cleaner, more accurate insights.
+          </p>
+        </div>
+        <!-- FAQ Item 18 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I export or download the analysis results?</h3>
+          <p class="text-gray-700 mb-4">
+            Currently, you can share your analysis results via a unique URL, but we don't offer direct export or download functionality. However, you can easily copy the sentiment percentages, summary, and sample comments from the results page.
+          </p>
+          <p class="text-gray-700">
+            We're working on adding export features in future updates, including the ability to download results as PDF reports or CSV files for further analysis in spreadsheet applications.
+          </p>
+        </div>
+        <!-- FAQ Item 19 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Is the tool available on mobile devices?</h3>
+          <p class="text-gray-700 mb-4">
+            Yes! Our YouTube sentiment analyzer is fully responsive and works perfectly on mobile devices, tablets, and desktop computers. The interface automatically adjusts to different screen sizes, making it easy to analyze videos on the go.
+          </p>
+          <p class="text-gray-700">
+            You can paste YouTube URLs, view analysis results, and share findings from any device with a web browser. The mobile experience is optimized for touch interactions and provides the same comprehensive insights as the desktop version.
+          </p>
+        </div>
+        <!-- FAQ Item 20 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">How can I get support or report issues?</h3>
+          <p class="text-gray-700 mb-4">
+            If you encounter any issues or have questions about using our tool, you can contact us through our contact page. We're committed to providing excellent support and responding to user feedback to improve our service.
+          </p>
+          <p class="text-gray-700">
+            We also welcome suggestions for new features or improvements. Your feedback helps us make the tool better for everyone, so don't hesitate to reach out if you have ideas or encounter any problems.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -314,7 +704,7 @@ const url = "https://www.senti-meter.com";
       "@type": "WebSite",
       "name": "YouTube Sentiment Analyzer",
       "url": "https://www.senti-meter.com",
-      "description": "Paste any YouTube video link and get an instant summary of comment sentiment: see if viewers love or hate a video in seconds. Free, no login needed.",
+      "description": "Analyze YouTube comments instantly with AI. Get sentiment insights, viewer reactions, and engagement metrics for any video. Free, no signup required.",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://www.senti-meter.com/?video={search_term_string}",
@@ -379,6 +769,137 @@ const url = "https://www.senti-meter.com";
         "bestRating": "5",
         "worstRating": "1"
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does this YouTube Sentiment Analyzer work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our YouTube sentiment analyzer uses advanced AI technology to analyze the emotional tone of video comments. When you paste a YouTube URL, our system first extracts the video ID and fetches up to 100 of the most relevant comments using the YouTube Data API v3. These comments are then processed through OpenAI's GPT-4o model, which has been specifically trained to understand context, sarcasm, and nuanced emotional expressions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this tool free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, our YouTube sentiment analyzer is completely free to use! We believe in providing accessible tools for content creators, marketers, and researchers who want to understand audience sentiment without any cost barriers. You can analyze as many YouTube videos as you need without any subscription fees, hidden charges, or usage limits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you store any of my data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, we do not store any of your data or the YouTube comments we analyze. Our sentiment analyzer processes everything in real-time and immediately discards the data once the analysis is complete. We prioritize your privacy and data security - the YouTube URLs you submit, the comments we fetch, and the sentiment analysis results are never saved to our servers or databases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What types of YouTube videos can I analyze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can analyze any public YouTube video that has comments enabled. Our sentiment analyzer works with all types of content including vlogs, tutorials, music videos, product reviews, educational content, and entertainment videos. The tool supports various YouTube URL formats including standard watch URLs, shortened URLs, and embedded URLs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is the sentiment analysis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our sentiment analyzer uses OpenAI's GPT-4o model, which is one of the most advanced AI language models available. This ensures high accuracy in understanding context, detecting sarcasm, and interpreting complex emotional expressions that simpler sentiment analysis tools might miss. While no automated sentiment analysis is 100% perfect, our tool typically achieves accuracy rates comparable to human analysts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many comments does the tool analyze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our tool analyzes up to 100 of the most relevant comments from each YouTube video. We focus on comments that have received the most engagement (likes, replies) and recent comments to provide a balanced view of audience sentiment. This approach ensures we capture both the most impactful comments and current viewer reactions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I analyze private or unlisted videos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, our tool can only analyze public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data. This means private videos, unlisted videos, and videos with disabled comments cannot be analyzed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does the analysis take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most analyses complete within 10-30 seconds, depending on the number of comments and current system load. The process involves fetching comments from YouTube's API, processing them through our AI model, and generating the sentiment breakdown and summary."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I share my analysis results?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can easily share your analysis results using the 'Share Results' button. This generates a unique URL that you can share with others, allowing them to view the same sentiment analysis results. The shared link includes all the sentiment percentages, summary, and sample comments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What makes this tool different from other sentiment analyzers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our tool stands out for several key reasons: First, we use OpenAI's GPT-4o model, which provides superior accuracy in understanding context, sarcasm, and nuanced language compared to simpler keyword-based tools. Second, we're completely free with no usage limits, unlike many paid alternatives. Third, we prioritize privacy by not storing any data."
+          }
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Use YouTube Sentiment Analyzer",
+      "description": "Learn how to analyze YouTube video comments with AI-powered sentiment analysis in three simple steps",
+      "image": "https://www.senti-meter.com/logo.svg",
+      "totalTime": "PT30S",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "USD",
+        "value": "0"
+      },
+      "supply": [
+        {
+          "@type": "HowToSupply",
+          "name": "YouTube video URL"
+        }
+      ],
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": "Senti-Meter YouTube Sentiment Analyzer"
+        }
+      ],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Paste YouTube URL",
+          "text": "Copy any YouTube video link and paste it into our analyzer. We support all YouTube URL formats including standard watch URLs, shortened links, and embedded URLs.",
+          "image": "https://www.senti-meter.com/logo.svg"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "AI Analysis",
+          "text": "Our advanced AI (GPT-4o) analyzes up to 100 comments, understanding context, sarcasm, and emotional nuances. The process takes just 10-30 seconds.",
+          "image": "https://www.senti-meter.com/logo.svg"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Get Insights",
+          "text": "Receive detailed sentiment breakdowns, percentage analysis, sample comments, and a comprehensive summary of audience reactions to the video.",
+          "image": "https://www.senti-meter.com/logo.svg"
+        }
+      ]
     }
   ]
   </script>
