@@ -34,4 +34,4 @@ pnpm-debug.log*
 
 # API Keys and Secrets
 config/secrets.json
-credentials.json
+credentials.json".env.development.local" 
