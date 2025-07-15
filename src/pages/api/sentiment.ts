@@ -4,11 +4,20 @@ interface SentimentMeta {
   analyzedCount?: number;
   totalComments?: number;
   mostLiked?: { text: string; likeCount: number };
+  mostUpvoted?: { text: string; score: number };
   videoInfo?: {
     title?: string;
     description?: string;
     channelId?: string;
     channelTitle?: string;
+  };
+  threadInfo?: {
+    title?: string;
+    subreddit?: string;
+    author?: string;
+    score?: number;
+    created?: number;
+    url?: string;
   };
   channelInfo?: {
     channelTitle?: string;
@@ -18,6 +27,7 @@ interface SentimentMeta {
     channelCustomUrl?: string;
     channelTopics?: string[];
   };
+  platform?: string;
 }
 
 interface SentimentRequest {
@@ -25,8 +35,11 @@ interface SentimentRequest {
   analyzedCount?: number;
   totalComments?: number;
   mostLiked?: { text: string; likeCount: number };
+  mostUpvoted?: { text: string; score: number };
   videoInfo?: any;
+  threadInfo?: any;
   channelInfo?: any;
+  platform?: string;
 }
 
 // Rate limiting (reuse from comments API)
@@ -98,6 +111,9 @@ function validateComments(comments: unknown): string[] {
 function validateMetadata(meta: any): SentimentMeta {
   const validated: SentimentMeta = {};
 
+  // Platform detection
+  validated.platform = sanitizeString(meta.platform || 'youtube', 20);
+
   if (typeof meta.analyzedCount === 'number' && meta.analyzedCount >= 0) {
     validated.analyzedCount = Math.min(meta.analyzedCount, 1000);
   }
@@ -106,10 +122,19 @@ function validateMetadata(meta: any): SentimentMeta {
     validated.totalComments = Math.min(meta.totalComments, 10000000);
   }
 
+  // YouTube-specific validation
   if (meta.mostLiked && typeof meta.mostLiked === 'object') {
     validated.mostLiked = {
       text: sanitizeString(meta.mostLiked.text || '', 500),
       likeCount: Math.max(0, Number(meta.mostLiked.likeCount) || 0)
+    };
+  }
+
+  // Reddit-specific validation
+  if (meta.mostUpvoted && typeof meta.mostUpvoted === 'object') {
+    validated.mostUpvoted = {
+      text: sanitizeString(meta.mostUpvoted.text || '', 500),
+      score: Math.max(0, Number(meta.mostUpvoted.score) || 0)
     };
   }
 
@@ -119,6 +144,17 @@ function validateMetadata(meta: any): SentimentMeta {
       description: sanitizeString(meta.videoInfo.description || '', 1000),
       channelId: sanitizeString(meta.videoInfo.channelId || '', 50),
       channelTitle: sanitizeString(meta.videoInfo.channelTitle || '', 100),
+    };
+  }
+
+  if (meta.threadInfo && typeof meta.threadInfo === 'object') {
+    validated.threadInfo = {
+      title: sanitizeString(meta.threadInfo.title || '', 200),
+      subreddit: sanitizeString(meta.threadInfo.subreddit || '', 50),
+      author: sanitizeString(meta.threadInfo.author || '', 50),
+      score: Math.max(0, Number(meta.threadInfo.score) || 0),
+      created: typeof meta.threadInfo.created === 'number' ? meta.threadInfo.created : null,
+      url: sanitizeString(meta.threadInfo.url || '', 500),
     };
   }
 
@@ -150,7 +186,7 @@ function validateThumbnails(thumbnails: any) {
         if (['ytimg.com', 'ggpht.com', 'googleusercontent.com'].some(domain => url.hostname.endsWith(domain))) {
           validated[size] = { url: url.toString() };
         }
-      } catch (e) {
+      } catch {
         // Invalid URL, skip
       }
     }
@@ -221,7 +257,7 @@ export const POST: APIRoute = async ({ request }) => {
     let body: SentimentRequest;
     try {
       body = await request.json();
-    } catch (error) {
+    } catch {
       return createErrorResponse('Invalid JSON', 400);
     }
 
@@ -233,19 +269,22 @@ export const POST: APIRoute = async ({ request }) => {
       analyzedCount: body.analyzedCount,
       totalComments: body.totalComments,
       mostLiked: body.mostLiked,
+      mostUpvoted: body.mostUpvoted,
       videoInfo: body.videoInfo,
+      threadInfo: body.threadInfo,
       channelInfo: body.channelInfo,
+      platform: body.platform || 'youtube',
     });
 
     // Validate API key
     const apiKey = import.meta.env.OPENAI_API_KEY;
     if (!apiKey || apiKey === 'your_openai_api_key_here' || !apiKey.startsWith('sk-')) {
-      console.error('OpenAI API key not configured or invalid');
+      console.error('OpenAI API key not configured properly');
       return createErrorResponse('OpenAI API key not configured', 500);
     }
 
-    // Detect channel niche
-    const channelNiche = detectChannelNiche(validatedMeta.channelInfo);
+    // Detect platform context
+    const platformContext = detectPlatformContext(validatedMeta);
 
     // Perform sentiment analysis with timeout
     const controller = new AbortController();
@@ -258,8 +297,10 @@ export const POST: APIRoute = async ({ request }) => {
         apiKey,
         {
           videoInfo: validatedMeta.videoInfo,
+          threadInfo: validatedMeta.threadInfo,
           channelInfo: validatedMeta.channelInfo,
-          channelNiche,
+          platformContext,
+          platform: validatedMeta.platform,
         },
         controller.signal
       );
@@ -290,7 +331,7 @@ export const POST: APIRoute = async ({ request }) => {
     const result = {
       ...sentimentAnalysis,
       ...validatedMeta,
-      ...(channelNiche && { channelNiche }),
+      ...(platformContext && { platformContext }),
     };
 
     return secureResponse(result);
@@ -333,68 +374,117 @@ function extractJSON(str: string): string {
   try {
     JSON.parse(match[0]);
     return match[0];
-  } catch (e) {
+  } catch {
     throw new Error('Invalid JSON in response');
   }
 }
 
 /**
- * Detects the niche/topic from channelInfo with sanitization
+ * Detects the platform context from metadata
  */
-function detectChannelNiche(channelInfo?: SentimentMeta['channelInfo']): string | undefined {
-  if (!channelInfo) return undefined;
+function detectPlatformContext(meta: SentimentMeta): string | undefined {
+  const platform = meta.platform || 'youtube';
   
-  if (Array.isArray(channelInfo.channelTopics) && channelInfo.channelTopics.length > 0) {
-    return channelInfo.channelTopics
-      .map((topic: string) => {
-        try {
-          // Extract meaningful part from YouTube topic URLs
-          const urlParts = topic.split('/');
-          return decodeURIComponent(urlParts[urlParts.length - 1] || topic);
-        } catch {
-          return topic;
-        }
-      })
-      .filter(Boolean)
-      .slice(0, 3) // Limit to first 3 topics
-      .join(', ');
+  if (platform === 'reddit') {
+    if (meta.threadInfo?.subreddit) {
+      return `r/${meta.threadInfo.subreddit}`;
+    }
+    return 'Reddit discussion';
   }
   
-  // Fallback: extract keywords from channel description
-  if (channelInfo.channelDescription) {
-    const words = channelInfo.channelDescription
-      .split(/\s+/)
-      .filter(word => word.length > 3 && word.length < 20)
-      .slice(0, 5);
-    return words.join(' ');
+  if (platform === 'youtube') {
+    if (meta.channelInfo?.channelTopics && Array.isArray(meta.channelInfo.channelTopics) && meta.channelInfo.channelTopics.length > 0) {
+      return meta.channelInfo.channelTopics
+        .map((topic: string) => {
+          try {
+            // Extract meaningful part from YouTube topic URLs
+            const urlParts = topic.split('/');
+            return decodeURIComponent(urlParts[urlParts.length - 1] || topic);
+          } catch {
+            return topic;
+          }
+        })
+        .filter(Boolean)
+        .slice(0, 3) // Limit to first 3 topics
+        .join(', ');
+    }
+    
+    // Fallback: extract keywords from channel description
+    if (meta.channelInfo?.channelDescription) {
+      const words = meta.channelInfo.channelDescription
+        .split(/\s+/)
+        .filter(word => word.length > 3 && word.length < 20)
+        .slice(0, 5);
+      return words.join(' ');
+    }
   }
   
   return undefined;
 }
 
 /**
- * Analyze sentiment using OpenAI GPT-4o with security measures
+ * Analyze sentiment using OpenAI GPT-4o with platform-specific context
  */
 async function analyzeSentiment(
   comments: string[],
   apiKey: string,
   meta: {
     videoInfo?: SentimentMeta['videoInfo'],
+    threadInfo?: SentimentMeta['threadInfo'],
     channelInfo?: SentimentMeta['channelInfo'],
-    channelNiche?: string,
+    platformContext?: string,
+    platform?: string,
   },
   signal?: AbortSignal
 ) {
+  const platform = meta.platform || 'youtube';
+  
   // Prepare context for the prompt (sanitized)
-  const videoTitle = sanitizeString(meta.videoInfo?.title || 'N/A', 100);
-  const channelTitle = sanitizeString(meta.channelInfo?.channelTitle || 'N/A', 50);
-  const channelNiche = sanitizeString(meta.channelNiche || 'N/A', 100);
+  let contentTitle = 'N/A';
+  let contentCreator = 'N/A';
+  let platformSpecificContext = 'N/A';
+  
+  if (platform === 'youtube') {
+    contentTitle = sanitizeString(meta.videoInfo?.title || 'N/A', 100);
+    contentCreator = sanitizeString(meta.channelInfo?.channelTitle || 'N/A', 50);
+    platformSpecificContext = sanitizeString(meta.platformContext || 'YouTube video', 100);
+  } else if (platform === 'reddit') {
+    contentTitle = sanitizeString(meta.threadInfo?.title || 'N/A', 100);
+    contentCreator = sanitizeString(meta.threadInfo?.author || 'N/A', 50);
+    platformSpecificContext = sanitizeString(meta.platformContext || 'Reddit discussion', 100);
+  }
 
   // Limit comments for prompt to prevent prompt injection
   const limitedComments = comments.slice(0, 200);
 
-  // Create a secure prompt that limits potential misuse
-  const prompt = `Analyze the sentiment of these YouTube comments for a video titled "${videoTitle}" from channel "${channelTitle}" in the ${channelNiche} category.
+  // Create a platform-specific prompt
+  let prompt = '';
+  
+  if (platform === 'reddit') {
+    prompt = `Analyze the sentiment of these Reddit comments for a thread titled "${contentTitle}" posted by u/${contentCreator} in ${platformSpecificContext}.
+
+Reddit Comments to analyze:
+${limitedComments.map((comment, index) => `${index + 1}. ${comment.slice(0, 200)}`).join('\n')}
+
+Consider Reddit culture, upvote/downvote patterns, and community discussion dynamics in your analysis.
+
+Respond ONLY with valid JSON. No markdown, no explanation, just JSON:
+
+{
+  "positive": <number 0-100>,
+  "neutral": <number 0-100>, 
+  "negative": <number 0-100>,
+  "summary": "<professional 2-3 sentence summary considering Reddit community context>",
+  "sampleComments": {
+    "positive": ["<comment1>", "<comment2>", "<comment3>"],
+    "neutral": ["<comment1>", "<comment2>", "<comment3>"],
+    "negative": ["<comment1>", "<comment2>", "<comment3>"]
+  }
+}
+
+Ensure percentages sum to 100.`;
+  } else {
+    prompt = `Analyze the sentiment of these YouTube comments for a video titled "${contentTitle}" from channel "${contentCreator}" in the ${platformSpecificContext} category.
 
 Comments to analyze:
 ${limitedComments.map((comment, index) => `${index + 1}. ${comment.slice(0, 200)}`).join('\n')}
@@ -414,6 +504,7 @@ Respond ONLY with valid JSON. No markdown, no explanation, just JSON:
 }
 
 Ensure percentages sum to 100.`;
+  }
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -422,14 +513,14 @@ Ensure percentages sum to 100.`;
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'User-Agent': 'YouTube-Sentiment-Analyzer/1.0',
+        'User-Agent': 'Sentiment-Analyzer/1.0',
       },
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
           {
             role: 'system',
-            content: 'You are a sentiment analysis expert. Respond only with valid JSON as requested. Do not include any explanations or markdown formatting.'
+            content: `You are a sentiment analysis expert specializing in ${platform} content. Respond only with valid JSON as requested. Do not include any explanations or markdown formatting. Understand the cultural context and communication patterns specific to ${platform}.`
           },
           {
             role: 'user',
@@ -465,7 +556,7 @@ Ensure percentages sum to 100.`;
     let cleanJSON: string;
     try {
       cleanJSON = extractJSON(content);
-    } catch (extractErr) {
+    } catch {
       console.error('Failed to extract JSON from OpenAI response:', content);
       throw new Error('Invalid response format from AI');
     }
@@ -473,7 +564,7 @@ Ensure percentages sum to 100.`;
     let sentimentData;
     try {
       sentimentData = JSON.parse(cleanJSON);
-    } catch (parseErr) {
+    } catch {
       console.error('Failed to parse extracted JSON:', cleanJSON);
       throw new Error('Invalid response format from AI');
     }

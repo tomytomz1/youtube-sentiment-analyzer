@@ -115,7 +115,7 @@ function decodeHtmlEntities(str: string): string {
   return str.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
             .replace(/&#x([\da-fA-F]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
             .replace(/&quot;/g, '"')
-            .replace(/&apos;/g, "'")
+            .replace(/&apos;/g, '\'')
             .replace(/&amp;/g, '&')
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
@@ -589,4 +589,4 @@ function getRandomSample<T>(arr: T[], n: number): T[] {
     [result[i], result[j]] = [result[j], result[i]];
   }
   return result.slice(0, n);
-}
+} 

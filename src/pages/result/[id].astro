@@ -604,7 +604,7 @@ function createShareModal(shareUrl, videoTitle, positive, neutral, negative) {
   // Event listeners
   document.getElementById('close-share-modal')?.addEventListener('click', () => modal.remove());
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.remove());
+    if (e.target === modal) modal.remove();
   });
   // Platform-specific share handlers
   modal.querySelectorAll('.share-option').forEach(button => {

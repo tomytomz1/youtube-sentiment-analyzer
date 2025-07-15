@@ -1,0 +1,20 @@
+---
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+const { faqs } = Astro.props as { faqs: FaqItem[] };
+---
+<div class="space-y-4">
+  {faqs.map((faq: FaqItem, i: number) => (
+    <details class="group bg-gray-50 rounded-lg shadow-sm p-0 transition-all" {...(i === 0 ? { open: true } : {})}>
+      <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-xl font-semibold text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors group-open:bg-blue-50 group-open:text-blue-700">
+        {faq.question}
+        <svg class="w-5 h-5 ml-2 text-gray-400 transition-transform duration-300 group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+      </summary>
+      <div class="px-6 pb-5 pt-0 text-gray-700 transition-all">
+        {faq.answer}
+      </div>
+    </details>
+  ))}
+</div> 

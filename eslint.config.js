@@ -2,6 +2,7 @@ import astro from 'eslint-plugin-astro';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
+import astroParser from 'astro-eslint-parser'; // <-- import parser object
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
@@ -10,17 +11,19 @@ export default [
       '**/.astro/**',
       '**/.vercel/**',
       '**/dist/**',
-      '**/node_modules/**'
+      '**/node_modules/**',
     ],
   },
   {
     files: ['**/*.astro'],
     plugins: { astro },
     languageOptions: {
-      parser: astro.parser,
+      parser: astroParser, // <-- parser object here!
       parserOptions: {
+        parser: tsParser,   // for <script lang="ts"> support
         ecmaVersion: 2021,
         sourceType: 'module',
+        extraFileExtensions: ['.astro'],
       },
     },
     rules: {
@@ -44,4 +47,4 @@ export default [
       'import/order': ['warn', { alphabetize: { order: 'asc' } }],
     },
   },
-]; 
+];

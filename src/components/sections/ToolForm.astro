@@ -1,0 +1,161 @@
+---
+// Tool Form Component - Main sentiment analysis form and results
+---
+
+<!-- Recent History -->
+<div id="history-container" class="hidden mb-6">
+  <h3 class="text-sm font-medium text-gray-700 mb-2">Recently Analyzed</h3>
+  <div id="history-list" class="flex flex-wrap gap-2"></div>
+</div>
+
+<form id="analysis-form" class="space-y-6">
+  <div>
+    <label for="youtube-url" class="block text-sm font-medium text-gray-700 mb-2">
+      YouTube Video URL
+    </label>
+    <input
+      type="url"
+      id="youtube-url"
+      name="youtube-url"
+      placeholder="https://www.youtube.com/watch?v=..."
+      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
+      required
+      aria-describedby="url-error"
+    />
+    <span id="url-error" class="hidden text-red-600 text-sm mt-1" role="alert"></span>
+  </div>
+  <button
+    type="submit"
+    id="analyze-button"
+    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    Analyze Sentiment
+  </button>
+</form>
+
+<!-- Loading State -->
+<div id="loading-state" class="hidden mt-8 text-center" role="status" aria-live="polite">
+  <div class="inline-flex items-center space-x-2">
+    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" aria-hidden="true"></div>
+    <span class="text-gray-600" id="loading-text">Fetching comments...</span>
+  </div>
+  <div id="progress-bar" class="mt-4 w-full bg-gray-200 rounded-full h-2 hidden">
+    <div id="progress-fill" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div id="error-state" class="hidden mt-8 p-4 bg-red-50 border border-red-200 rounded-lg" role="alert" aria-live="assertive">
+  <div class="flex items-center">
+    <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+    </svg>
+    <span class="text-red-800 font-medium">Error:</span>
+    <span class="text-red-700 ml-1" id="error-message"></span>
+  </div>
+  <div id="error-suggestions" class="mt-2 text-sm text-red-600"></div>
+</div>
+
+<!-- Video & Channel Info Card -->
+<div id="video-info" class="mb-8 flex items-center space-x-4 hidden">
+  <div class="w-40 aspect-video rounded shadow overflow-hidden">
+    <img id="video-thumb" class="object-cover w-full h-full" alt="Video thumbnail" loading="lazy" />
+  </div>
+  <div class="flex-1">
+    <h2 id="video-title" class="font-semibold text-lg"></h2>
+    <a id="channel-link" href="#" class="text-blue-600 font-medium flex items-center" target="_blank" rel="noopener">
+      <img id="channel-thumb" class="w-8 h-8 rounded-full mr-2 object-cover" alt="Channel thumbnail" loading="lazy">
+      <span id="channel-title"></span>
+    </a>
+    <p id="channel-desc" class="text-gray-500 text-xs mt-1 line-clamp-2"></p>
+  </div>
+</div>
+
+<!-- Results -->
+<div id="results-container" class="hidden mt-8 space-y-6">
+  <div id="sample-info" class="mb-4 text-sm text-blue-700 font-medium hidden"></div>
+  <div id="most-liked-callout" class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded shadow hidden">
+    <div class="flex items-center mb-2">
+      <span class="text-xl mr-2">👍</span>
+      <span class="font-bold text-gray-800" id="most-liked-label"></span>
+    </div>
+    <blockquote class="text-gray-700 italic" id="most-liked-text"></blockquote>
+  </div>
+  <div class="bg-gray-50 rounded-xl p-6">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Sentiment Analysis</h3>
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-medium text-green-700">Positive</span>
+        <span class="text-sm font-bold text-green-700" id="positive-percentage">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="bg-green-500 h-3 rounded-full transition-all duration-500" id="positive-bar" style="width: 0%"></div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-medium text-gray-700">Neutral</span>
+        <span class="text-sm font-bold text-gray-700" id="neutral-percentage">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="bg-gray-500 h-3 rounded-full transition-all duration-500" id="neutral-bar" style="width: 0%"></div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-medium text-red-700">Negative</span>
+        <span class="text-sm font-bold text-red-700" id="negative-percentage">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="bg-red-500 h-3 rounded-full transition-all duration-500" id="negative-bar" style="width: 0%"></div>
+      </div>
+    </div>
+    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+      <h4 class="text-sm font-medium text-blue-900 mb-2">Summary</h4>
+      <p class="text-blue-800" id="sentiment-summary" style="white-space: pre-line;"></p>
+    </div>
+  </div>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="bg-green-50 rounded-lg p-4">
+      <h4 class="text-lg font-semibold text-green-800 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        Positive
+      </h4>
+      <div id="positive-comments" class="space-y-2"></div>
+    </div>
+    <div class="bg-gray-50 rounded-lg p-4">
+      <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-9a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z" clip-rule="evenodd"></path>
+        </svg>
+        Neutral
+      </h4>
+      <div id="neutral-comments" class="space-y-2"></div>
+    </div>
+    <div class="bg-red-50 rounded-lg p-4">
+      <h4 class="text-lg font-semibold text-red-800 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        Negative
+      </h4>
+      <div id="negative-comments" class="space-y-2"></div>
+    </div>
+  </div>
+  <!-- Action Buttons -->
+  <div class="flex flex-col sm:flex-row gap-3 mt-6">
+    <button id="analyze-another" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+      Analyze Another Video
+    </button>
+    <button id="share-results" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.632 4.316C18.114 15.062 18 14.518 18 14c0-.482.114-.938.316-1.342m0 2.684a3 3 0 110-2.684M9 10a1 1 0 100-2 1 1 0 000 2zm6 12a1 1 0 100-2 1 1 0 000 2zM9 21a1 1 0 100-2 1 1 0 000 2z"></path>
+      </svg>
+      Share Results
+    </button>
+  </div>
+</div>
+
+<div class="mt-8 text-center">
+  <p class="text-sm text-gray-500">
+    Powered by AI • Fast • Accurate • Free
+  </p>
+</div>

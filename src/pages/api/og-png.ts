@@ -122,10 +122,7 @@ function createSentimentImage(data: any, channelName: string, avatarBuffer: Arra
   const analyzedCount = Math.max(0, meta.analyzedCount || 0);
   const totalComments = Math.max(0, meta.totalComments || 0);
   
-  // FIXED: Safer extraction of mostLiked data (matches [id].astro structure)
-  const mostLiked = meta.mostLiked || {};
-  const mostLikedText = typeof mostLiked.text === 'string' ? mostLiked.text : '';
-  const mostLikedLikes = Math.max(0, mostLiked.likeCount || 0);
+  // FIXED: Safer extraction of summary data
   const summary = typeof sentiment.summary === 'string' ? sentiment.summary : '';
 
   return new ImageResponse(

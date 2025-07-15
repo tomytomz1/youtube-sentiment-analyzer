@@ -1,5 +1,8 @@
 import type { APIRoute } from 'astro';
 
+const clientId = import.meta.env.REDDIT_CLIENT_ID;
+const clientSecret = import.meta.env.REDDIT_CLIENT_SECRET;
+
 type RedditCommentObj = { text: string, score: number };
 
 // Rate limiting (simple in-memory implementation)
@@ -263,28 +266,52 @@ function extractThreadInfo(url: string): { subreddit: string; threadId: string; 
   return null;
 }
 
+async function getRedditAccessToken(clientId: string, clientSecret: string): Promise<string> {
+  const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+  const response = await fetch('https://www.reddit.com/api/v1/access_token', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${basicAuth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'SentiMeterBot/1.0 by u/Optimal_Ring1535',
+    },
+    body: 'grant_type=client_credentials',
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Reddit OAuth2 error: ${response.status} - ${errorText}`);
+  }
+  const data = await response.json();
+  return data.access_token;
+}
+
 /**
  * Fetch Reddit thread data and comments
  */
 async function fetchRedditData(threadInfo: { subreddit: string; threadId: string; slug?: string }, signal?: AbortSignal) {
-  // Construct Reddit JSON API URL
-  const jsonUrl = `https://www.reddit.com/r/${threadInfo.subreddit}/comments/${threadInfo.threadId}.json?limit=500&sort=top`;
-  
-  console.log('Fetching Reddit data from:', jsonUrl);
-  
+  // Get Reddit OAuth2 token using your credentials
+  const token = await getRedditAccessToken(clientId, clientSecret);
+
+  // Now use the OAuth API endpoint!
+  const jsonUrl = `https://oauth.reddit.com/r/${threadInfo.subreddit}/comments/${threadInfo.threadId}?limit=500&sort=top`;
+
+  console.log('Fetching Reddit data from (OAuth):', jsonUrl);
+
   const response = await fetch(jsonUrl, { 
     signal,
     headers: {
-      'User-Agent': 'Reddit-Sentiment-Analyzer/1.0 (Contact: contact@senti-meter.com)'
+      'Authorization': `Bearer ${token}`,
+      'User-Agent': 'SentiMeterBot/1.0 by u/Optimal_Ring1535'
     }
   });
-  
+
   console.log('Reddit data response status:', response.status);
-  
+
   if (!response.ok) {
     const errorText = await response.text();
     console.error('Reddit data error response:', errorText);
-    
+
     if (response.status === 429) {
       throw new Error('Reddit API rate limit exceeded');
     }
@@ -296,7 +323,7 @@ async function fetchRedditData(threadInfo: { subreddit: string; threadId: string
     }
     throw new Error(`Reddit API error: ${response.status} - ${errorText}`);
   }
-  
+    
   const data = await response.json();
   console.log('Reddit data structure:', {
     hasData: !!data,

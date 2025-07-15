@@ -1,10 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
 
 const title = "YouTube Comment Analyzer - Advanced AI Analysis | Senti-Meter";
 const description = "Specialized YouTube comment analysis tool. Get detailed sentiment breakdowns, engagement metrics, and viewer insights for any video. Free AI-powered analysis.";
 const url = "https://www.senti-meter.com/youtube-comment-analyzer";
+
+const faqs = [
+  {
+    question: 'How many YouTube comments can I analyze?',
+    answer: `Our tool analyzes up to 300 comments per video for comprehensive insights. We fetch both the most relevant and recent comments to give you a balanced view of audience sentiment.`
+  },
+  {
+    question: 'Is the YouTube comment analyzer really free?',
+    answer: `Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited YouTube videos.`
+  },
+  {
+    question: 'How accurate is the sentiment analysis of comments?',
+    answer: `We use OpenAI's GPT-4o model, which provides human-level accuracy in understanding context, sarcasm, and emotional nuances that simpler tools miss. Our AI analyzes emoji usage, capitalization, and contextual clues for highly accurate results.`
+  },
+  {
+    question: 'Can I analyze comments on private or unlisted videos?',
+    answer: `No, our tool only works with public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data.`
+  }
+];
 ---
 <Layout>
   <head>
@@ -297,28 +317,7 @@ const url = "https://www.senti-meter.com/youtube-comment-analyzer";
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
         <p class="text-lg text-gray-600">Everything you need to know about YouTube comment analysis</p>
       </div>
-      <div class="space-y-6">
-        <!-- FAQ Item 1 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">How many YouTube comments can I analyze?</h3>
-          <p class="text-gray-600">Our tool analyzes up to 300 comments per video for comprehensive insights. We fetch both the most relevant and recent comments to give you a balanced view of audience sentiment.</p>
-        </div>
-        <!-- FAQ Item 2 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">Is the YouTube comment analyzer really free?</h3>
-          <p class="text-gray-600">Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited YouTube videos.</p>
-        </div>
-        <!-- FAQ Item 3 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">How accurate is the sentiment analysis of comments?</h3>
-          <p class="text-gray-600">We use OpenAI's GPT-4o model, which provides human-level accuracy in understanding context, sarcasm, and emotional nuances that simpler tools miss. Our AI analyzes emoji usage, capitalization, and contextual clues for highly accurate results.</p>
-        </div>
-        <!-- FAQ Item 4 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">Can I analyze comments on private or unlisted videos?</h3>
-          <p class="text-gray-600">No, our tool only works with public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data.</p>
-        </div>
-      </div>
+      <FaqAccordion faqs={faqs} />
     </div>
   </section>
 
@@ -342,6 +341,56 @@ const url = "https://www.senti-meter.com/youtube-comment-analyzer";
         }
       }
     }
+  </script>
+
+  <!-- FAQ Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many YouTube comments can I analyze?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our tool analyzes up to 300 comments per video for comprehensive insights. We fetch both the most relevant and recent comments to give you a balanced view of audience sentiment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the YouTube comment analyzer really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited YouTube videos."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the sentiment analysis of comments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We use OpenAI's GPT-4o model, which provides human-level accuracy in understanding context, sarcasm, and nuanced language. The AI considers emoji usage, capitalization, and contextual clues for accurate sentiment classification."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What types of YouTube videos can I analyze?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can analyze any public YouTube video with comments enabled, including vlogs, tutorials, music videos, product reviews, educational content, and entertainment videos. We support various YouTube URL formats."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you store or track my analysis data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, we do not store any YouTube URLs, comments, or analysis results. Everything is processed in real-time and immediately discarded after analysis. We prioritize your privacy and data security."
+        }
+      }
+    ]
+  }
   </script>
 
   <!-- JavaScript for tool functionality -->

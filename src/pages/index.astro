@@ -1,9 +1,98 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import Hero from '../components/sections/Hero.astro';
+import ToolForm from '../components/sections/ToolForm.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import RelatedTools from '../components/sections/RelatedTools.astro';
+import UseCases from '../components/sections/UseCases.astro';
 
 const title = "Free YouTube Comment Analyzer - AI Sentiment Analysis Tool";
 const description = "Analyze YouTube comments instantly with AI. Get sentiment insights, viewer reactions, and engagement metrics for any video. Free, no signup required.";
 const url = "https://www.senti-meter.com";
+
+const faqs = [
+  {
+    question: 'How does this YouTube Sentiment Analyzer work?',
+    answer: `Our YouTube sentiment analyzer uses advanced AI technology to analyze the emotional tone of video comments. When you paste a YouTube URL, our system first extracts the video ID and fetches up to 100 of the most relevant comments using the YouTube Data API v3. These comments are then processed through OpenAI's GPT-4o model, which has been specifically trained to understand context, sarcasm, and nuanced emotional expressions. The AI analyzes each comment and categorizes it as positive, neutral, or negative sentiment. It then provides you with percentage breakdowns, a summary of the overall sentiment, and sample comments from each category. This process typically takes just a few seconds and gives you instant insights into how viewers are responding to the video content.`
+  },
+  {
+    question: 'Is this tool free to use?',
+    answer: `Yes, our YouTube sentiment analyzer is completely free to use! We believe in providing accessible tools for content creators, marketers, and researchers who want to understand audience sentiment without any cost barriers. You can analyze as many YouTube videos as you need without any subscription fees, hidden charges, or usage limits. Our goal is to democratize sentiment analysis and make it available to everyone, from individual YouTubers looking to understand their audience better to businesses conducting market research. Simply paste any YouTube URL and get instant, professional-grade sentiment analysis results at no cost.`
+  },
+  {
+    question: 'Do you store any of my data?',
+    answer: `No, we do not store any of your data or the YouTube comments we analyze. Our sentiment analyzer processes everything in real-time and immediately discards the data once the analysis is complete. We prioritize your privacy and data security - the YouTube URLs you submit, the comments we fetch, and the sentiment analysis results are never saved to our servers or databases. Each analysis is completely independent and temporary. When you submit a YouTube URL, we fetch the comments, analyze the sentiment, return the results to you, and then all data is automatically purged from our system. This ensures complete privacy and means that your analysis activity cannot be tracked or stored by us.`
+  },
+  {
+    question: 'What types of YouTube videos can I analyze?',
+    answer: `You can analyze any public YouTube video that has comments enabled. Our sentiment analyzer works with all types of content including vlogs, tutorials, music videos, product reviews, educational content, and entertainment videos. The tool supports various YouTube URL formats including standard watch URLs (youtube.com/watch?v=), shortened URLs (youtu.be/), and embedded URLs. For best results, we recommend analyzing videos that have at least 10-20 comments, as this provides a more representative sample for sentiment analysis. Videos with thousands of comments will give you the most comprehensive insights into audience sentiment and engagement patterns.`
+  },
+  {
+    question: 'How accurate is the sentiment analysis?',
+    answer: `Our sentiment analyzer uses OpenAI's GPT-4o model, which is one of the most advanced AI language models available. This ensures high accuracy in understanding context, detecting sarcasm, and interpreting complex emotional expressions that simpler sentiment analysis tools might miss. The AI has been trained on vast amounts of text data and can understand nuanced language patterns. While no automated sentiment analysis is 100% perfect, our tool typically achieves accuracy rates comparable to human analysts. The AI considers factors like emoji usage, capitalization, punctuation patterns, and contextual clues to make informed sentiment classifications. For the most reliable results, we analyze multiple comments and provide sample comments so you can verify the classifications yourself.`
+  },
+  {
+    question: 'How many comments does the tool analyze?',
+    answer: `Our tool analyzes up to 100 of the most relevant comments from each YouTube video. We focus on comments that have received the most engagement (likes, replies) and recent comments to provide a balanced view of audience sentiment. This approach ensures we capture both the most impactful comments and current viewer reactions. For videos with thousands of comments, we prioritize quality over quantity by selecting the most representative sample. This gives you accurate sentiment insights without overwhelming you with data, while still providing statistically significant results for most analysis purposes.`
+  },
+  {
+    question: 'Can I analyze private or unlisted videos?',
+    answer: `No, our tool can only analyze public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data. This means private videos, unlisted videos, and videos with disabled comments cannot be analyzed. This limitation ensures we comply with YouTube's Terms of Service and respect content creators' privacy preferences. If you're trying to analyze a video and it's not working, please check that the video is public and has comments enabled.`
+  },
+  {
+    question: 'What do the sentiment percentages mean?',
+    answer: `The sentiment percentages represent the proportion of comments that fall into each category: positive, neutral, and negative. For example, if you see 60% positive, 25% neutral, and 15% negative, it means 60% of the analyzed comments expressed positive sentiment, 25% were neutral, and 15% were negative. These percentages help you quickly understand the overall audience reaction to a video. A high positive percentage indicates viewers generally enjoyed the content, while a high negative percentage suggests viewers had concerns or criticisms. The neutral percentage represents comments that don't clearly express positive or negative sentiment.`
+  },
+  {
+    question: 'How long does the analysis take?',
+    answer: `Most analyses complete within 10-30 seconds, depending on the number of comments and current system load. The process involves fetching comments from YouTube's API, processing them through our AI model, and generating the sentiment breakdown and summary. During peak usage times, analysis might take slightly longer, but we've optimized our system to provide results as quickly as possible. You'll see a loading indicator while the analysis is in progress, and you can analyze multiple videos in succession without any delays.`
+  },
+  {
+    question: 'Can I share my analysis results?',
+    answer: `Yes! You can easily share your analysis results using the "Share Results" button. This generates a unique URL that you can share with others, allowing them to view the same sentiment analysis results. The shared link includes all the sentiment percentages, summary, and sample comments. This feature is perfect for content creators who want to share audience insights with their team, marketers presenting campaign results, or researchers sharing findings. The shared results are accessible to anyone with the link and don't require any login or registration.`
+  },
+  {
+    question: 'What makes this tool different from other sentiment analyzers?',
+    answer: `Our tool stands out for several key reasons: First, we use OpenAI's GPT-4o model, which provides superior accuracy in understanding context, sarcasm, and nuanced language compared to simpler keyword-based tools. Second, we're completely free with no usage limits, unlike many paid alternatives. Third, we prioritize privacy by not storing any data. Fourth, we provide comprehensive insights including sentiment percentages, detailed summaries, and sample comments from each category. Finally, our tool is specifically optimized for YouTube comments, understanding the unique language patterns and context of social media interactions.`
+  },
+  {
+    question: 'Is there a limit to how many videos I can analyze?',
+    answer: `No, there are no limits on the number of videos you can analyze! You can use our tool as much as you want, analyzing hundreds or thousands of videos without any restrictions. This makes it perfect for content creators who want to analyze their entire video library or researchers conducting large-scale studies. We believe in providing unlimited access to sentiment analysis tools, so you can get the insights you need without worrying about hitting usage limits or paying for additional analyses.`
+  },
+  {
+    question: 'Can I analyze comments in different languages?',
+    answer: `Yes! Our AI model can analyze comments in multiple languages, including English, Spanish, French, German, Italian, Portuguese, and many others. The sentiment analysis works across different languages and cultural contexts, providing accurate insights regardless of the comment language. This multilingual capability makes our tool valuable for international content creators and global brands who want to understand audience sentiment across different markets and languages.`
+  },
+  {
+    question: 'How can I use sentiment analysis for my business?',
+    answer: `Sentiment analysis is incredibly valuable for businesses in many ways: You can monitor brand perception by analyzing comments on your company's videos, track competitor performance by analyzing their content, measure campaign effectiveness, and understand customer feedback and concerns. The insights can help you improve your products, optimize your marketing strategies, identify trending topics, and make data-driven decisions about your content and business direction. Many businesses use sentiment analysis to improve customer satisfaction and create more engaging content.`
+  },
+  {
+    question: 'What if the analysis seems inaccurate?',
+    answer: `While our AI is highly accurate, sentiment analysis can sometimes misinterpret sarcasm, cultural references, or complex language patterns. If you notice inaccuracies, you can review the sample comments provided to see how the AI classified specific comments. We're constantly improving our model based on user feedback. If you encounter consistent issues, please contact us with specific examples so we can enhance the accuracy of our sentiment analysis for similar content types.`
+  },
+  {
+    question: 'Can I analyze live streams or premieres?',
+    answer: `Yes, you can analyze comments from live streams and premieres, but only after they've ended and the comments are publicly available. During live streams, comments are often processed in real-time and may not be immediately accessible for analysis. For the most comprehensive analysis of live content, we recommend waiting until the stream has ended and all comments have been processed by YouTube's systems. This ensures you get the complete picture of audience sentiment.`
+  },
+  {
+    question: 'How do you handle spam or irrelevant comments?',
+    answer: `Our AI model is trained to identify and filter out spam comments, irrelevant content, and automated responses. The sentiment analysis focuses on genuine viewer comments that provide meaningful insights about the video content. This filtering ensures that your sentiment analysis results reflect actual viewer opinions rather than being skewed by spam or irrelevant content. The AI can distinguish between meaningful feedback and noise, providing you with cleaner, more accurate insights.`
+  },
+  {
+    question: 'Can I export or download the analysis results?',
+    answer: `Currently, you can share your analysis results via a unique URL, but we don't offer direct export or download functionality. However, you can easily copy the sentiment percentages, summary, and sample comments from the results page. We're working on adding export features in future updates, including the ability to download results as PDF reports or CSV files for further analysis in spreadsheet applications.`
+  },
+  {
+    question: 'Is the tool available on mobile devices?',
+    answer: `Yes! Our YouTube sentiment analyzer is fully responsive and works perfectly on mobile devices, tablets, and desktop computers. The interface automatically adjusts to different screen sizes, making it easy to analyze videos on the go. You can paste YouTube URLs, view analysis results, and share findings from any device with a web browser. The mobile experience is optimized for touch interactions and provides the same comprehensive insights as the desktop version.`
+  },
+  {
+    question: 'How can I get support or report issues?',
+    answer: `If you encounter any issues or have questions about using our tool, you can contact us through our contact page. We're committed to providing excellent support and responding to user feedback to improve our service. We also welcome suggestions for new features or improvements. Your feedback helps us make the tool better for everyone, so don't hesitate to reach out if you have ideas or encounter any problems.`
+  }
+];
 ---
 <Layout>
   <head>
@@ -26,6 +115,15 @@ const url = "https://www.senti-meter.com";
     <meta name="author" content="YouTube Sentiment Analyzer" />
     <meta name="keywords" content="youtube, sentiment analysis, comment analysis, video sentiment, ai analysis, free tool" />
     <link rel="canonical" href={url} />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Senti-Meter" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="msapplication-TileImage" content="/icon-192.png" />
   </head>
 
   <!-- Skip Link for Accessibility -->
@@ -33,425 +131,25 @@ const url = "https://www.senti-meter.com";
     Skip to analyzer
   </a>
 
-  <main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
+  <main id="main-content" class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8" role="main">
     <div class="max-w-4xl w-full mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-        <div class="text-center mb-8">
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            YouTube Sentiment Analyzer
-          </h1>
-          <p class="text-lg text-gray-600 leading-relaxed">
-            Paste any YouTube video link below to get instant sentiment analysis of the comments.
-            Discover what viewers really think about the content with AI-powered insights.
-          </p>
-        </div>
+        <Hero 
+          title="YouTube Sentiment Analyzer"
+          description="Paste any YouTube video link below to get instant sentiment analysis of the comments. Discover what viewers really think about the content with AI-powered insights."
+        />
 
-        <!-- Recent History -->
-        <div id="history-container" class="hidden mb-6">
-          <h3 class="text-sm font-medium text-gray-700 mb-2">Recently Analyzed</h3>
-          <div id="history-list" class="flex flex-wrap gap-2"></div>
-        </div>
-
-        <form id="analysis-form" class="space-y-6">
-          <div>
-            <label for="youtube-url" class="block text-sm font-medium text-gray-700 mb-2">
-              YouTube Video URL
-            </label>
-            <input
-              type="url"
-              id="youtube-url"
-              name="youtube-url"
-              placeholder="https://www.youtube.com/watch?v=..."
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
-              required
-              aria-describedby="url-error"
-            />
-            <span id="url-error" class="hidden text-red-600 text-sm mt-1" role="alert"></span>
-          </div>
-          <button
-            type="submit"
-            id="analyze-button"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Analyze Sentiment
-          </button>
-        </form>
-
-        <!-- Loading State -->
-        <div id="loading-state" class="hidden mt-8 text-center" role="status" aria-live="polite">
-          <div class="inline-flex items-center space-x-2">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" aria-hidden="true"></div>
-            <span class="text-gray-600" id="loading-text">Fetching comments...</span>
-          </div>
-          <div id="progress-bar" class="mt-4 w-full bg-gray-200 rounded-full h-2 hidden">
-            <div id="progress-fill" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <!-- Error State -->
-        <div id="error-state" class="hidden mt-8 p-4 bg-red-50 border border-red-200 rounded-lg" role="alert" aria-live="assertive">
-          <div class="flex items-center">
-            <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-            </svg>
-            <span class="text-red-800 font-medium">Error:</span>
-            <span class="text-red-700 ml-1" id="error-message"></span>
-          </div>
-          <div id="error-suggestions" class="mt-2 text-sm text-red-600"></div>
-        </div>
-
-        <!-- Video & Channel Info Card -->
-        <div id="video-info" class="mb-8 flex items-center space-x-4 hidden">
-          <div class="w-40 aspect-video rounded shadow overflow-hidden">
-            <img id="video-thumb" class="object-cover w-full h-full" alt="Video thumbnail" loading="lazy" />
-          </div>
-          <div class="flex-1">
-            <h2 id="video-title" class="font-semibold text-lg"></h2>
-            <a id="channel-link" href="#" class="text-blue-600 font-medium flex items-center" target="_blank" rel="noopener">
-              <img id="channel-thumb" class="w-8 h-8 rounded-full mr-2 object-cover" alt="Channel thumbnail" loading="lazy">
-              <span id="channel-title"></span>
-            </a>
-            <p id="channel-desc" class="text-gray-500 text-xs mt-1 line-clamp-2"></p>
-          </div>
-        </div>
-
-        <!-- Results -->
-        <div id="results-container" class="hidden mt-8 space-y-6">
-          <div id="sample-info" class="mb-4 text-sm text-blue-700 font-medium hidden"></div>
-          <div id="most-liked-callout" class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded shadow hidden">
-            <div class="flex items-center mb-2">
-              <span class="text-xl mr-2">👍</span>
-              <span class="font-bold text-gray-800" id="most-liked-label"></span>
-            </div>
-            <blockquote class="text-gray-700 italic" id="most-liked-text"></blockquote>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Sentiment Analysis</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-green-700">Positive</span>
-                <span class="text-sm font-bold text-green-700" id="positive-percentage">0%</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-green-500 h-3 rounded-full transition-all duration-500" id="positive-bar" style="width: 0%"></div>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">Neutral</span>
-                <span class="text-sm font-bold text-gray-700" id="neutral-percentage">0%</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-gray-500 h-3 rounded-full transition-all duration-500" id="neutral-bar" style="width: 0%"></div>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-red-700">Negative</span>
-                <span class="text-sm font-bold text-red-700" id="negative-percentage">0%</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-red-500 h-3 rounded-full transition-all duration-500" id="negative-bar" style="width: 0%"></div>
-              </div>
-            </div>
-            <div class="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h4 class="text-sm font-medium text-blue-900 mb-2">Summary</h4>
-              <p class="text-blue-800" id="sentiment-summary" style="white-space: pre-line;"></p>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-green-50 rounded-lg p-4">
-              <h4 class="text-lg font-semibold text-green-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                </svg>
-                Positive
-              </h4>
-              <div id="positive-comments" class="space-y-2"></div>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-4">
-              <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-9a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z" clip-rule="evenodd"></path>
-                </svg>
-                Neutral
-              </h4>
-              <div id="neutral-comments" class="space-y-2"></div>
-            </div>
-            <div class="bg-red-50 rounded-lg p-4">
-              <h4 class="text-lg font-semibold text-red-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                </svg>
-                Negative
-              </h4>
-              <div id="negative-comments" class="space-y-2"></div>
-            </div>
-          </div>
-          <!-- Action Buttons -->
-          <div class="flex flex-col sm:flex-row gap-3 mt-6">
-            <button id="analyze-another" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-              Analyze Another Video
-            </button>
-            <button id="share-results" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.632 4.316C18.114 15.062 18 14.518 18 14c0-.482.114-.938.316-1.342m0 2.684a3 3 0 110-2.684M9 10a1 1 0 100-2 1 1 0 000 2zm6 12a1 1 0 100-2 1 1 0 000 2zM9 21a1 1 0 100-2 1 1 0 000 2z"></path>
-              </svg>
-              Share Results
-            </button>
-          </div>
-        </div>
-        <div class="mt-8 text-center">
-          <p class="text-sm text-gray-500">
-            Powered by AI • Fast • Accurate • Free
-          </p>
-        </div>
+        <ToolForm />
       </div>
     </div>
   </main>
 
-  <!-- How It Works Section -->
-  <section id="how-it-works" class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our YouTube Comment Analyzer Works</h2>
-        <p class="text-lg text-gray-600">Get instant sentiment insights in just three simple steps</p>
-      </div>
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- Step 1 -->
-        <div class="text-center">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl font-bold text-blue-600">1</span>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Paste YouTube URL</h3>
-          <p class="text-gray-600">Simply copy any YouTube video link and paste it into our analyzer. We support all YouTube URL formats including standard watch URLs, shortened links, and embedded URLs. <a href="https://support.google.com/youtube/answer/9706180?hl=en" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 underline">Learn about YouTube comment policies</a>.</p>
-        </div>
-        <!-- Step 2 -->
-        <div class="text-center">
-          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl font-bold text-purple-600">2</span>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">AI Analysis</h3>
-          <p class="text-gray-600">Our advanced AI (<a href="https://platform.openai.com/docs/guides/gpt" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 underline">OpenAI GPT-4o</a>) analyzes up to 100 comments, understanding context, sarcasm, and emotional nuances. The process takes just 10-30 seconds.</p>
-        </div>
-        <!-- Step 3 -->
-        <div class="text-center">
-          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-2xl font-bold text-green-600">3</span>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Get Insights</h3>
-          <p class="text-gray-600">Receive detailed sentiment breakdowns, percentage analysis, sample comments, and a comprehensive summary of audience reactions to the video. <a href="https://en.wikipedia.org/wiki/Sentiment_analysis" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 underline">What is sentiment analysis?</a></p>
-        </div>
-      </div>
-      
-      <!-- Advanced Features -->
-      <div class="mt-16 bg-gray-50 rounded-2xl p-8">
-        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Advanced AI Technology</h3>
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="space-y-4">
-            <div class="flex items-start space-x-3">
-              <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900">Context Understanding</h4>
-                <p class="text-gray-600 text-sm">Our AI understands cultural references, industry-specific language, and contextual nuances that simpler tools miss.</p>
-              </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900">Sarcasm Detection</h4>
-                <p class="text-gray-600 text-sm">Advanced language models can detect sarcasm, irony, and subtle emotional expressions in comments.</p>
-              </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900">Multi-language Support</h4>
-                <p class="text-gray-600 text-sm">Analyze comments in multiple languages including English, Spanish, French, German, and many others.</p>
-              </div>
-            </div>
-          </div>
-          <div class="space-y-4">
-            <div class="flex items-start space-x-3">
-              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900">Privacy-First Design</h4>
-                <p class="text-gray-600 text-sm">No data storage, no tracking, no personal information collected. All analysis is done in real-time and immediately discarded.</p>
-              </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900">Instant Results</h4>
-                <p class="text-gray-600 text-sm">Get comprehensive sentiment analysis in seconds, not hours. Perfect for real-time content optimization and quick insights.</p>
-              </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900">Shareable Results</h4>
-                <p class="text-gray-600 text-sm">Generate unique URLs to share your analysis results with team members, clients, or for presentations.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <HowItWorks />
 
-<!-- Related Tools Section -->
-<section class="py-12 bg-white">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">Specialized Analysis Tools</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <a href="/youtube-comment-analyzer/" class="block p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-        <h3 class="font-semibold text-blue-900 mb-2">YouTube Comment Analyzer</h3>
-        <p class="text-blue-700 text-sm">Specialized tool for analyzing YouTube video comments with detailed insights</p>
-      </a>
-      <a href="/video-sentiment-analysis/" class="block p-6 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-        <h3 class="font-semibold text-purple-900 mb-2">Video Sentiment Analysis</h3>
-        <p class="text-purple-700 text-sm">Comprehensive video sentiment analysis with advanced AI insights and metrics</p>
-      </a>
-      <div class="block p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-        <h3 class="font-semibold text-gray-500 mb-2">More Tools Coming</h3>
-        <p class="text-gray-400 text-sm">Additional specialized analysis tools launching soon</p>
-      </div>
-    </div>
-  </div>
-  </section>
+  <RelatedTools />
 
-  <!-- Use Cases Section -->
-  <section class="py-16 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Who Uses YouTube Sentiment Analysis?</h2>
-        <p class="text-lg text-gray-600">Discover how different professionals leverage sentiment insights</p>
-      </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Content Creators -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Content Creators</h3>
-          <p class="text-gray-600 mb-4">Understand audience reactions to optimize future content, identify trending topics, and improve engagement strategies.</p>
-          <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Optimize video content based on feedback</li>
-            <li>• Identify what resonates with viewers</li>
-            <li>• Track audience sentiment over time</li>
-            <li>• Improve thumbnail and title strategies</li>
-          </ul>
-        </div>
-        
-        <!-- Marketers -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Marketing Teams</h3>
-          <p class="text-gray-600 mb-4">Measure campaign effectiveness, monitor brand perception, and track competitor performance with data-driven insights.</p>
-          <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Measure campaign ROI and effectiveness</li>
-            <li>• Monitor brand perception and reputation</li>
-            <li>• Track competitor content performance</li>
-            <li>• Identify market trends and opportunities</li>
-          </ul>
-        </div>
-        
-        <!-- Researchers -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Researchers</h3>
-          <p class="text-gray-600 mb-4">Conduct social media research, analyze public opinion trends, and gather insights for academic or market research.</p>
-          <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Study public opinion and trends</li>
-            <li>• Analyze social media behavior</li>
-            <li>• Gather data for academic research</li>
-            <li>• Monitor cultural and social shifts</li>
-          </ul>
-        </div>
-        
-        <!-- Business Owners -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Business Owners</h3>
-          <p class="text-gray-600 mb-4">Understand customer feedback, improve products based on user sentiment, and make data-driven business decisions.</p>
-          <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Understand customer satisfaction</li>
-            <li>• Improve products and services</li>
-            <li>• Make data-driven decisions</li>
-            <li>• Monitor industry trends</li>
-          </ul>
-        </div>
-        
-        <!-- Social Media Managers -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Social Media Managers</h3>
-          <p class="text-gray-600 mb-4">Optimize social media strategies, improve engagement rates, and create more compelling content based on audience feedback.</p>
-          <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Optimize content strategies</li>
-            <li>• Improve engagement rates</li>
-            <li>• Create compelling content</li>
-            <li>• Monitor brand mentions</li>
-          </ul>
-        </div>
-        
-        <!-- Educators -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Educators & Trainers</h3>
-          <p class="text-gray-600 mb-4">Evaluate educational content effectiveness, understand student engagement, and improve teaching materials based on feedback.</p>
-          <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Evaluate educational content</li>
-            <li>• Understand student engagement</li>
-            <li>• Improve teaching materials</li>
-            <li>• Track learning outcomes</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  <UseCases />
+
 
   <!-- AdSense Ad Placement -->
   <section class="py-8 bg-gray-50">
@@ -477,222 +175,7 @@ const url = "https://www.senti-meter.com";
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
         <p class="text-lg text-gray-600">Everything you need to know about our YouTube sentiment analyzer</p>
       </div>
-      <div class="space-y-8">
-        <!-- FAQ Item 1 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How does this YouTube Sentiment Analyzer work?</h3>
-          <p class="text-gray-700 mb-4">
-            Our YouTube sentiment analyzer uses advanced AI technology to analyze the emotional tone of video comments. When you paste a YouTube URL, our system first extracts the video ID and fetches up to 100 of the most relevant comments using the <a href="https://developers.google.com/youtube/v3" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 underline">YouTube Data API v3</a>. These comments are then processed through <a href="https://platform.openai.com/docs/guides/gpt" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 underline">OpenAI's GPT-4o model</a>, which has been specifically trained to understand context, sarcasm, and nuanced emotional expressions.
-          </p>
-          <p class="text-gray-700">
-            The AI analyzes each comment and categorizes it as positive, neutral, or negative sentiment. It then provides you with percentage breakdowns, a summary of the overall sentiment, and sample comments from each category. This process typically takes just a few seconds and gives you instant insights into how viewers are responding to the video content. <a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 underline">Learn more about SEO best practices</a>.
-          </p>
-        </div>
-        <!-- FAQ Item 2 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Is this tool free to use?</h3>
-          <p class="text-gray-700 mb-4">
-            Yes, our YouTube sentiment analyzer is completely free to use! We believe in providing accessible tools for content creators, marketers, and researchers who want to understand audience sentiment without any cost barriers. You can analyze as many YouTube videos as you need without any subscription fees, hidden charges, or usage limits.
-          </p>
-          <p class="text-gray-700">
-            Our goal is to democratize sentiment analysis and make it available to everyone, from individual YouTubers looking to understand their audience better to businesses conducting market research. Simply paste any YouTube URL and get instant, professional-grade sentiment analysis results at no cost.
-          </p>
-        </div>
-        <!-- FAQ Item 3 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Do you store any of my data?</h3>
-          <p class="text-gray-700 mb-4">
-            No, we do not store any of your data or the YouTube comments we analyze. Our sentiment analyzer processes everything in real-time and immediately discards the data once the analysis is complete. We prioritize your privacy and data security - the YouTube URLs you submit, the comments we fetch, and the sentiment analysis results are never saved to our servers or databases.
-          </p>
-          <p class="text-gray-700">
-            Each analysis is completely independent and temporary. When you submit a YouTube URL, we fetch the comments, analyze the sentiment, return the results to you, and then all data is automatically purged from our system. This ensures complete privacy and means that your analysis activity cannot be tracked or stored by us.
-          </p>
-        </div>
-        <!-- FAQ Item 4 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">What types of YouTube videos can I analyze?</h3>
-          <p class="text-gray-700 mb-4">
-            You can analyze any public YouTube video that has comments enabled. Our sentiment analyzer works with all types of content including vlogs, tutorials, music videos, product reviews, educational content, and entertainment videos. The tool supports various YouTube URL formats including standard watch URLs (youtube.com/watch?v=), shortened URLs (youtu.be/), and embedded URLs.
-          </p>
-          <p class="text-gray-700">
-            For best results, we recommend analyzing videos that have at least 10-20 comments, as this provides a more representative sample for sentiment analysis. Videos with thousands of comments will give you the most comprehensive insights into audience sentiment and engagement patterns.
-          </p>
-        </div>
-        <!-- FAQ Item 5 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How accurate is the sentiment analysis?</h3>
-          <p class="text-gray-700 mb-4">
-            Our sentiment analyzer uses OpenAI's GPT-4o model, which is one of the most advanced AI language models available. This ensures high accuracy in understanding context, detecting sarcasm, and interpreting complex emotional expressions that simpler sentiment analysis tools might miss. The AI has been trained on vast amounts of text data and can understand nuanced language patterns.
-          </p>
-          <p class="text-gray-700">
-            While no automated sentiment analysis is 100% perfect, our tool typically achieves accuracy rates comparable to human analysts. The AI considers factors like emoji usage, capitalization, punctuation patterns, and contextual clues to make informed sentiment classifications. For the most reliable results, we analyze multiple comments and provide sample comments so you can verify the classifications yourself.
-          </p>
-        </div>
-        <!-- FAQ Item 6 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How many comments does the tool analyze?</h3>
-          <p class="text-gray-700 mb-4">
-            Our tool analyzes up to 100 of the most relevant comments from each YouTube video. We focus on comments that have received the most engagement (likes, replies) and recent comments to provide a balanced view of audience sentiment. This approach ensures we capture both the most impactful comments and current viewer reactions.
-          </p>
-          <p class="text-gray-700">
-            For videos with thousands of comments, we prioritize quality over quantity by selecting the most representative sample. This gives you accurate sentiment insights without overwhelming you with data, while still providing statistically significant results for most analysis purposes.
-          </p>
-        </div>
-        <!-- FAQ Item 7 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I analyze private or unlisted videos?</h3>
-          <p class="text-gray-700 mb-4">
-            No, our tool can only analyze public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data. This means private videos, unlisted videos, and videos with disabled comments cannot be analyzed.
-          </p>
-          <p class="text-gray-700">
-            This limitation ensures we comply with YouTube's Terms of Service and respect content creators' privacy preferences. If you're trying to analyze a video and it's not working, please check that the video is public and has comments enabled.
-          </p>
-        </div>
-        <!-- FAQ Item 8 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">What do the sentiment percentages mean?</h3>
-          <p class="text-gray-700 mb-4">
-            The sentiment percentages represent the proportion of comments that fall into each category: positive, neutral, and negative. For example, if you see 60% positive, 25% neutral, and 15% negative, it means 60% of the analyzed comments expressed positive sentiment, 25% were neutral, and 15% were negative.
-          </p>
-          <p class="text-gray-700">
-            These percentages help you quickly understand the overall audience reaction to a video. A high positive percentage indicates viewers generally enjoyed the content, while a high negative percentage suggests viewers had concerns or criticisms. The neutral percentage represents comments that don't clearly express positive or negative sentiment.
-          </p>
-        </div>
-        <!-- FAQ Item 9 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How long does the analysis take?</h3>
-          <p class="text-gray-700 mb-4">
-            Most analyses complete within 10-30 seconds, depending on the number of comments and current system load. The process involves fetching comments from YouTube's API, processing them through our AI model, and generating the sentiment breakdown and summary.
-          </p>
-          <p class="text-gray-700">
-            During peak usage times, analysis might take slightly longer, but we've optimized our system to provide results as quickly as possible. You'll see a loading indicator while the analysis is in progress, and you can analyze multiple videos in succession without any delays.
-          </p>
-        </div>
-        <!-- FAQ Item 10 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I share my analysis results?</h3>
-          <p class="text-gray-700 mb-4">
-            Yes! You can easily share your analysis results using the "Share Results" button. This generates a unique URL that you can share with others, allowing them to view the same sentiment analysis results. The shared link includes all the sentiment percentages, summary, and sample comments.
-          </p>
-          <p class="text-gray-700">
-            This feature is perfect for content creators who want to share audience insights with their team, marketers presenting campaign results, or researchers sharing findings. The shared results are accessible to anyone with the link and don't require any login or registration.
-          </p>
-          <div class="mt-4 pt-4 border-t border-gray-200">
-            <p class="text-sm text-gray-600">
-              <strong>Related:</strong> 
-              <a href="#faq" class="text-blue-600 hover:text-blue-800">How accurate is the sentiment analysis?</a> • 
-              <a href="#faq" class="text-blue-600 hover:text-blue-800">How long does the analysis take?</a>
-            </p>
-          </div>
-        </div>
-        <!-- FAQ Item 11 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">What makes this tool different from other sentiment analyzers?</h3>
-          <p class="text-gray-700 mb-4">
-            Our tool stands out for several key reasons: First, we use OpenAI's GPT-4o model, which provides superior accuracy in understanding context, sarcasm, and nuanced language compared to simpler keyword-based tools. Second, we're completely free with no usage limits, unlike many paid alternatives.
-          </p>
-          <p class="text-gray-700">
-            Third, we prioritize privacy by not storing any data. Fourth, we provide comprehensive insights including sentiment percentages, detailed summaries, and sample comments from each category. Finally, our tool is specifically optimized for YouTube comments, understanding the unique language patterns and context of social media interactions.
-          </p>
-        </div>
-        <!-- FAQ Item 12 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Is there a limit to how many videos I can analyze?</h3>
-          <p class="text-gray-700 mb-4">
-            No, there are no limits on the number of videos you can analyze! You can use our tool as much as you want, analyzing hundreds or thousands of videos without any restrictions. This makes it perfect for content creators who want to analyze their entire video library or researchers conducting large-scale studies.
-          </p>
-          <p class="text-gray-700">
-            We believe in providing unlimited access to sentiment analysis tools, so you can get the insights you need without worrying about hitting usage limits or paying for additional analyses.
-          </p>
-        </div>
-        <!-- FAQ Item 13 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I analyze comments in different languages?</h3>
-          <p class="text-gray-700 mb-4">
-            Yes! Our AI model can analyze comments in multiple languages, including English, Spanish, French, German, Italian, Portuguese, and many others. The sentiment analysis works across different languages and cultural contexts, providing accurate insights regardless of the comment language.
-          </p>
-          <p class="text-gray-700">
-            This multilingual capability makes our tool valuable for international content creators and global brands who want to understand audience sentiment across different markets and languages.
-          </p>
-        </div>
-        <!-- FAQ Item 14 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How can I use sentiment analysis for my business?</h3>
-          <p class="text-gray-700 mb-4">
-            Sentiment analysis is incredibly valuable for businesses in many ways: You can monitor brand perception by analyzing comments on your company's videos, track competitor performance by analyzing their content, measure campaign effectiveness, and understand customer feedback and concerns.
-          </p>
-          <p class="text-gray-700">
-            The insights can help you improve your products, optimize your marketing strategies, identify trending topics, and make data-driven decisions about your content and business direction. Many businesses use sentiment analysis to improve customer satisfaction and create more engaging content.
-          </p>
-          <div class="mt-4 pt-4 border-t border-gray-200">
-            <p class="text-sm text-gray-600">
-              <strong>Related:</strong> 
-              <a href="#faq" class="text-blue-600 hover:text-blue-800">What types of YouTube videos can I analyze?</a> • 
-              <a href="#faq" class="text-blue-600 hover:text-blue-800">Can I analyze comments in different languages?</a>
-            </p>
-          </div>
-        </div>
-        <!-- FAQ Item 15 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">What if the analysis seems inaccurate?</h3>
-          <p class="text-gray-700 mb-4">
-            While our AI is highly accurate, sentiment analysis can sometimes misinterpret sarcasm, cultural references, or complex language patterns. If you notice inaccuracies, you can review the sample comments provided to see how the AI classified specific comments.
-          </p>
-          <p class="text-gray-700">
-            We're constantly improving our model based on user feedback. If you encounter consistent issues, please contact us with specific examples so we can enhance the accuracy of our sentiment analysis for similar content types.
-          </p>
-        </div>
-        <!-- FAQ Item 16 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I analyze live streams or premieres?</h3>
-          <p class="text-gray-700 mb-4">
-            Yes, you can analyze comments from live streams and premieres, but only after they've ended and the comments are publicly available. During live streams, comments are often processed in real-time and may not be immediately accessible for analysis.
-          </p>
-          <p class="text-gray-700">
-            For the most comprehensive analysis of live content, we recommend waiting until the stream has ended and all comments have been processed by YouTube's systems. This ensures you get the complete picture of audience sentiment.
-          </p>
-        </div>
-        <!-- FAQ Item 17 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How do you handle spam or irrelevant comments?</h3>
-          <p class="text-gray-700 mb-4">
-            Our AI model is trained to identify and filter out spam comments, irrelevant content, and automated responses. The sentiment analysis focuses on genuine viewer comments that provide meaningful insights about the video content.
-          </p>
-          <p class="text-gray-700">
-            This filtering ensures that your sentiment analysis results reflect actual viewer opinions rather than being skewed by spam or irrelevant content. The AI can distinguish between meaningful feedback and noise, providing you with cleaner, more accurate insights.
-          </p>
-        </div>
-        <!-- FAQ Item 18 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Can I export or download the analysis results?</h3>
-          <p class="text-gray-700 mb-4">
-            Currently, you can share your analysis results via a unique URL, but we don't offer direct export or download functionality. However, you can easily copy the sentiment percentages, summary, and sample comments from the results page.
-          </p>
-          <p class="text-gray-700">
-            We're working on adding export features in future updates, including the ability to download results as PDF reports or CSV files for further analysis in spreadsheet applications.
-          </p>
-        </div>
-        <!-- FAQ Item 19 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Is the tool available on mobile devices?</h3>
-          <p class="text-gray-700 mb-4">
-            Yes! Our YouTube sentiment analyzer is fully responsive and works perfectly on mobile devices, tablets, and desktop computers. The interface automatically adjusts to different screen sizes, making it easy to analyze videos on the go.
-          </p>
-          <p class="text-gray-700">
-            You can paste YouTube URLs, view analysis results, and share findings from any device with a web browser. The mobile experience is optimized for touch interactions and provides the same comprehensive insights as the desktop version.
-          </p>
-        </div>
-        <!-- FAQ Item 20 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">How can I get support or report issues?</h3>
-          <p class="text-gray-700 mb-4">
-            If you encounter any issues or have questions about using our tool, you can contact us through our contact page. We're committed to providing excellent support and responding to user feedback to improve our service.
-          </p>
-          <p class="text-gray-700">
-            We also welcome suggestions for new features or improvements. Your feedback helps us make the tool better for everyone, so don't hesitate to reach out if you have ideas or encounter any problems.
-          </p>
-        </div>
-      </div>
+      <FaqAccordion faqs={faqs} />
     </div>
   </section>
 
@@ -904,928 +387,306 @@ const url = "https://www.senti-meter.com";
   ]
   </script>
 
-  <!-- SECURE JAVASCRIPT - Replace the existing script section with this -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Security utilities
-    const SecurityUtils = {
-      // Escape HTML to prevent XSS
-      escapeHtml: (text: string) => {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      },
+  <!-- Import modular JavaScript -->
+  <script type="module">
+    import { SecurityUtils } from '/src/scripts/security.js';
+    import { UIManager } from '/src/scripts/ui.js';
+    import { APIManager } from '/src/scripts/api.js';
+    import { ShareManager } from '/src/scripts/share.js';
+    import { StorageManager } from '/src/scripts/storage.js';
+    import { errorHandler } from '/src/scripts/errorHandler.js';
+    import { accessibilityManager } from '/src/scripts/accessibility.js';
+    import { monitoringManager } from '/src/scripts/monitoring.js';
+    import { pwaManager } from '/src/scripts/pwa.js';
 
-      // Sanitize URL to prevent XSS
-      isValidUrl: (string: string) => {
-        try {
-          const url = new URL(string);
-          return ['http:', 'https:'].includes(url.protocol);
-        } catch (_) {
-          return false;
+    // Initialize the YouTube Sentiment Analyzer
+    document.addEventListener('DOMContentLoaded', () => {
+      class YouTubeSentimentAnalyzer {
+        constructor() {
+          this.isAnalyzing = false;
+          this.lastAnalyzedUrl = '';
+          this.currentVideoUrl = '';
+          this.currentSummary = '';
+          this.lastSharedResultId = null;
+          this.lastSharedResultData = null;
+          
+          this.init();
         }
-      },
 
-      // Validate YouTube URL format
-      isValidYouTubeUrl: (url: string) => {
-        if (!SecurityUtils.isValidUrl(url)) return false;
-        const patterns = [
-          /^https?:\/\/(www\.)?youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}/,
-          /^https?:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}/,
-          /^https?:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]{11}/,
-          /^https?:\/\/(www\.)?youtube\.com\/v\/[a-zA-Z0-9_-]{11}/
-        ];
-        return patterns.some(pattern => pattern.test(url));
-      },
+        init() {
+          // Initialize managers
+          this.elements = this.cacheElements();
+          this.uiManager = new UIManager(this.elements);
+          this.apiManager = new APIManager();
+          this.shareManager = new ShareManager();
+          this.storageManager = new StorageManager();
 
-      // Safely set text content (no HTML)
-      safeSetText: (element: HTMLElement | null, text: string) => {
-        if (element && typeof text === 'string') {
-          element.textContent = text;
+          // Set up event listeners
+          this.setupEventListeners();
+          
+          // Load history and check for shared videos
+          this.loadHistory();
+          this.checkSharedVideo();
+          
+          // Set up cleanup
+          this.setupCleanup();
         }
-      },
 
-      // Safely set HTML with escaping
-      safeSetHtml: (element: HTMLElement | null, html: string) => {
-        if (element && typeof html === 'string') {
-          element.innerHTML = SecurityUtils.escapeHtml(html);
+        cacheElements() {
+          return {
+            form: document.getElementById('analysis-form'),
+            urlInput: document.getElementById('youtube-url'),
+            urlError: document.getElementById('url-error'),
+            analyzeButton: document.getElementById('analyze-button'),
+            loadingState: document.getElementById('loading-state'),
+            loadingText: document.getElementById('loading-text'),
+            progressBar: document.getElementById('progress-bar'),
+            progressFill: document.getElementById('progress-fill'),
+            errorState: document.getElementById('error-state'),
+            errorMessage: document.getElementById('error-message'),
+            errorSuggestions: document.getElementById('error-suggestions'),
+            resultsContainer: document.getElementById('results-container'),
+            positivePercentage: document.getElementById('positive-percentage'),
+            neutralPercentage: document.getElementById('neutral-percentage'),
+            negativePercentage: document.getElementById('negative-percentage'),
+            positiveBar: document.getElementById('positive-bar'),
+            neutralBar: document.getElementById('neutral-bar'),
+            negativeBar: document.getElementById('negative-bar'),
+            sentimentSummary: document.getElementById('sentiment-summary'),
+            positiveComments: document.getElementById('positive-comments'),
+            neutralComments: document.getElementById('neutral-comments'),
+            negativeComments: document.getElementById('negative-comments'),
+            sampleInfo: document.getElementById('sample-info'),
+            mostLikedCallout: document.getElementById('most-liked-callout'),
+            mostLikedLabel: document.getElementById('most-liked-label'),
+            mostLikedText: document.getElementById('most-liked-text'),
+            videoInfoCard: document.getElementById('video-info'),
+            videoThumb: document.getElementById('video-thumb'),
+            videoTitle: document.getElementById('video-title'),
+            channelLink: document.getElementById('channel-link'),
+            channelThumb: document.getElementById('channel-thumb'),
+            channelTitle: document.getElementById('channel-title'),
+            channelDesc: document.getElementById('channel-desc'),
+            analyzeAnother: document.getElementById('analyze-another'),
+            shareResults: document.getElementById('share-results'),
+            historyContainer: document.getElementById('history-container'),
+            historyList: document.getElementById('history-list')
+          };
         }
-      },
 
-      // Validate image URL
-      isValidImageUrl: (url: string) => {
-        if (!SecurityUtils.isValidUrl(url)) return false;
-        try {
-          const parsed = new URL(url);
-          const allowedDomains = ['ytimg.com', 'ggpht.com', 'googleusercontent.com'];
-          return allowedDomains.some(domain => parsed.hostname.endsWith(domain));
-        } catch {
-          return false;
+        setupEventListeners() {
+          // Form submission
+          this.elements.form?.addEventListener('submit', (e) => this.handleFormSubmit(e));
+          
+          // Analyze Another button
+          this.elements.analyzeAnother?.addEventListener('click', () => this.analyzeAnother());
+          
+          // Share Results button
+          this.elements.shareResults?.addEventListener('click', () => this.shareResults());
+          
+          // Keyboard shortcuts
+          document.addEventListener('keydown', (e) => this.handleKeyboard(e));
         }
-      },
 
-      // Rate limiting for client-side requests
-      rateLimiter: (() => {
-        const requests = new Map();
-        const WINDOW_MS = 60000; // 1 minute
-        const MAX_REQUESTS = 5;
+        async handleFormSubmit(e) {
+          e.preventDefault();
+          
+          if (this.isAnalyzing) return;
+          
+          if (!this.elements.urlInput) return;
+          
+          const youtubeUrl = this.elements.urlInput.value.trim();
+          
+          // Input validation
+          if (!this.validateInput(youtubeUrl)) return;
+          
+          // Rate limiting
+          if (!SecurityUtils.rateLimiter.isAllowed()) {
+            this.uiManager.showError('Too many requests. Please wait a minute before trying again.');
+            return;
+          }
 
-        return {
-          isAllowed: () => {
-            const now = Date.now();
-            const windowStart = now - WINDOW_MS;
-            
-            // Clean old requests
-            for (const [time, count] of requests.entries()) {
-              if (time < windowStart) {
-                requests.delete(time);
-              }
+          // Check if re-analyzing same URL
+          if (youtubeUrl === this.lastAnalyzedUrl && 
+              this.elements.resultsContainer && 
+              !this.elements.resultsContainer.classList.contains('hidden')) {
+            return;
+          }
+
+          // Check cache
+          const cached = this.apiManager.getCachedAnalysis(youtubeUrl);
+          if (cached) {
+            this.uiManager.showResults(cached.sentiment, cached.meta);
+            return;
+          }
+
+          await this.performAnalysis(youtubeUrl);
+        }
+
+        validateInput(youtubeUrl) {
+          this.elements.urlError?.classList.add('hidden');
+
+          if (!youtubeUrl) {
+            SecurityUtils.safeSetText(this.elements.urlError, 'Please enter a YouTube URL');
+            this.elements.urlError?.classList.remove('hidden');
+            return false;
+          }
+
+          if (youtubeUrl.length > 2048) {
+            SecurityUtils.safeSetText(this.elements.urlError, 'URL is too long');
+            this.elements.urlError?.classList.remove('hidden');
+            return false;
+          }
+
+          if (!SecurityUtils.isValidYouTubeUrl(youtubeUrl)) {
+            SecurityUtils.safeSetText(this.elements.urlError, 'Please enter a valid YouTube URL');
+            this.elements.urlError?.classList.remove('hidden');
+            return false;
+          }
+
+          return true;
+        }
+
+        async performAnalysis(youtubeUrl) {
+          this.isAnalyzing = true;
+          this.lastAnalyzedUrl = youtubeUrl;
+          this.currentVideoUrl = youtubeUrl;
+          
+          // Set global reference for UI manager
+          window.currentVideoUrl = youtubeUrl;
+
+          try {
+            // Fetch comments
+            this.uiManager.showLoading('Fetching comments...');
+            const commentsData = await this.apiManager.fetchComments(youtubeUrl);
+
+            if (!commentsData.comments || commentsData.comments.length === 0) {
+              throw new Error('No comments found for this video');
             }
 
-            // Count recent requests
-            let recentRequests = 0;
-            for (const [time, count] of requests.entries()) {
-              if (time >= windowStart) {
-                recentRequests += count;
-              }
-            }
-
-            if (recentRequests >= MAX_REQUESTS) {
-              return false;
-            }
-
-            // Add current request
-            const minute = Math.floor(now / WINDOW_MS) * WINDOW_MS;
-            requests.set(minute, (requests.get(minute) || 0) + 1);
-            return true;
-          }
-        };
-      })()
-    };
-
-    // Cache all DOM elements with null checks
-    const elements = {
-      form: document.getElementById('analysis-form'),
-      urlInput: document.getElementById('youtube-url'),
-      urlError: document.getElementById('url-error'),
-      analyzeButton: document.getElementById('analyze-button'),
-      loadingState: document.getElementById('loading-state'),
-      loadingText: document.getElementById('loading-text'),
-      progressBar: document.getElementById('progress-bar'),
-      progressFill: document.getElementById('progress-fill'),
-      errorState: document.getElementById('error-state'),
-      errorMessage: document.getElementById('error-message'),
-      errorSuggestions: document.getElementById('error-suggestions'),
-      resultsContainer: document.getElementById('results-container'),
-      positivePercentage: document.getElementById('positive-percentage'),
-      neutralPercentage: document.getElementById('neutral-percentage'),
-      negativePercentage: document.getElementById('negative-percentage'),
-      positiveBar: document.getElementById('positive-bar'),
-      neutralBar: document.getElementById('neutral-bar'),
-      negativeBar: document.getElementById('negative-bar'),
-      sentimentSummary: document.getElementById('sentiment-summary'),
-      positiveComments: document.getElementById('positive-comments'),
-      neutralComments: document.getElementById('neutral-comments'),
-      negativeComments: document.getElementById('negative-comments'),
-      sampleInfo: document.getElementById('sample-info'),
-      mostLikedCallout: document.getElementById('most-liked-callout'),
-      mostLikedLabel: document.getElementById('most-liked-label'),
-      mostLikedText: document.getElementById('most-liked-text'),
-      videoInfoCard: document.getElementById('video-info'),
-      videoThumb: document.getElementById('video-thumb'),
-      videoTitle: document.getElementById('video-title'),
-      channelLink: document.getElementById('channel-link'),
-      channelThumb: document.getElementById('channel-thumb'),
-      channelTitle: document.getElementById('channel-title'),
-      channelDesc: document.getElementById('channel-desc'),
-      analyzeAnother: document.getElementById('analyze-another'),
-      shareResults: document.getElementById('share-results'),
-      historyContainer: document.getElementById('history-container'),
-      historyList: document.getElementById('history-list')
-    };
-
-    // Application state
-    let isAnalyzing = false;
-    let lastAnalyzedUrl = '';
-    let currentVideoUrl = '';
-    let currentSummary = '';
-    let progressInterval: ReturnType<typeof setInterval> | null = null;
-    let progressStage = 0;
-
-    const progressMessages = [
-      'Validating URL...',
-      'Connecting to YouTube...',
-      'Fetching comments...',
-      'Preparing for analysis...',
-      'Analyzing sentiment with AI...',
-      'Generating results...'
-    ];
-
-    // Results cache with expiration
-    const analysisCache = new Map();
-    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
-    // Utility functions
-    function hideAllStates() {
-      [
-        elements.loadingState,
-        elements.errorState,
-        elements.resultsContainer,
-        elements.sampleInfo,
-        elements.mostLikedCallout,
-        elements.videoInfoCard,
-        elements.progressBar,
-        elements.urlError
-      ].forEach(el => el?.classList.add('hidden'));
-      
-      clearProgress();
-    }
-
-    function showLoading(message: string) {
-      hideAllStates();
-      SecurityUtils.safeSetText(elements.loadingText, message);
-      elements.loadingState?.classList.remove('hidden');
-      elements.progressBar?.classList.remove('hidden');
-      
-      if (elements.analyzeButton) {
-        (elements.analyzeButton as HTMLButtonElement).disabled = true;
-      }
-      
-      startProgress();
-    }
-
-    function showError(message: string) {
-      hideAllStates();
-      SecurityUtils.safeSetText(elements.errorMessage, message);
-      elements.errorState?.classList.remove('hidden');
-      
-      if (elements.analyzeButton) {
-        (elements.analyzeButton as HTMLButtonElement).disabled = false;
-      }
-
-      // Add helpful suggestions based on error type
-      let suggestion = '';
-      if (message.toLowerCase().includes('url') || message.toLowerCase().includes('format')) {
-        suggestion = 'Tip: Copy the complete URL from your browser\'s address bar.';
-      } else if (message.toLowerCase().includes('comments') || message.toLowerCase().includes('disabled')) {
-        suggestion = 'Tip: Make sure the video is public and allows comments.';
-      } else if (message.toLowerCase().includes('quota') || message.toLowerCase().includes('limit')) {
-        suggestion = 'Tip: Wait a few minutes before trying again.';
-      }
-      
-      SecurityUtils.safeSetText(elements.errorSuggestions, suggestion);
-    }
-
-    function startProgress() {
-      progressStage = 0;
-      if (elements.progressFill) {
-        (elements.progressFill as HTMLElement).style.width = '0%';
-      }
-      updateProgress();
-      progressInterval = setInterval(updateProgress, 1000);
-    }
-
-    function updateProgress() {
-      if (progressStage < progressMessages.length) {
-        SecurityUtils.safeSetText(elements.loadingText, progressMessages[progressStage]);
-        const progress = ((progressStage + 1) / progressMessages.length) * 90;
-        if (elements.progressFill) {
-          (elements.progressFill as HTMLElement).style.width = `${progress}%`;
-        }
-        progressStage++;
-      }
-    }
-
-    function clearProgress() {
-      if (progressInterval) {
-        clearInterval(progressInterval);
-        progressInterval = null;
-      }
-      progressStage = 0;
-    }
-
-    function showResults(data: any, meta: any) {
-      hideAllStates();
-      
-      if (elements.progressFill) {
-        (elements.progressFill as HTMLElement).style.width = '100%';
-      }
-
-      // Safely display video and channel info
-      if (meta.videoInfo && meta.channelInfo) {
-        displayVideoInfo(meta);
-      }
-
-      // Display sample size info
-      if (meta.analyzedCount && meta.totalComments) {
-        displaySampleInfo(meta);
-      }
-
-      // Display most liked comment
-      if (meta.mostLiked) {
-        displayMostLikedComment(meta.mostLiked);
-      }
-
-      // Update sentiment data with validation
-      displaySentimentData(data);
-      
-      // Display sample comments
-      displaySampleComments(data.sampleComments);
-
-      elements.resultsContainer?.classList.remove('hidden');
-      
-      if (elements.analyzeButton) {
-        (elements.analyzeButton as HTMLButtonElement).disabled = false;
-      }
-
-      currentSummary = data.summary || '';
-      
-      // Add to history
-      if (meta.videoInfo?.title) {
-        addToHistory(currentVideoUrl, meta.videoInfo.title);
-      }
-    }
-
-    function displayVideoInfo(meta: any) {
-      const videoId = extractVideoId(currentVideoUrl);
-      
-      if (videoId && elements.videoThumb) {
-        const thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-        (elements.videoThumb as HTMLImageElement).src = thumbUrl;
-        (elements.videoThumb as HTMLImageElement).alt = SecurityUtils.escapeHtml(meta.videoInfo.title || 'Video thumbnail');
-      }
-
-      SecurityUtils.safeSetText(elements.videoTitle, meta.videoInfo.title || '');
-
-      if (elements.channelLink && meta.channelInfo) {
-        let channelUrl = '#';
-        if (meta.channelInfo.channelCustomUrl) {
-          channelUrl = `https://www.youtube.com/${SecurityUtils.escapeHtml(meta.channelInfo.channelCustomUrl)}`;
-        } else if (meta.videoInfo.channelId) {
-          channelUrl = `https://www.youtube.com/channel/${SecurityUtils.escapeHtml(meta.videoInfo.channelId)}`;
-        }
-        (elements.channelLink as HTMLAnchorElement).href = channelUrl;
-        (elements.channelLink as HTMLAnchorElement).target = '_blank';
-        (elements.channelLink as HTMLAnchorElement).rel = 'noopener noreferrer';
-      }
-
-      if (elements.channelThumb && meta.channelInfo?.channelThumbnails) {
-        const thumbUrl = meta.channelInfo.channelThumbnails.high?.url ||
-                        meta.channelInfo.channelThumbnails.default?.url ||
-                        meta.channelInfo.channelThumbnails.medium?.url;
-        
-        if (thumbUrl && SecurityUtils.isValidImageUrl(thumbUrl)) {
-          (elements.channelThumb as HTMLImageElement).src = thumbUrl;
-          (elements.channelThumb as HTMLImageElement).alt = SecurityUtils.escapeHtml(meta.channelInfo.channelTitle || 'Channel thumbnail');
-        } else {
-          (elements.channelThumb as HTMLImageElement).style.display = 'none';
-        }
-      }
-
-      SecurityUtils.safeSetText(elements.channelTitle, meta.channelInfo?.channelTitle || '');
-      SecurityUtils.safeSetText(elements.channelDesc, meta.channelInfo?.channelDescription || '');
-
-      elements.videoInfoCard?.classList.remove('hidden');
-    }
-
-    function displaySampleInfo(meta: any) {
-      let infoText = '';
-      if (meta.totalComments <= meta.analyzedCount) {
-        infoText = `Analyzed all ${meta.analyzedCount} comments for this video.`;
-      } else {
-        infoText = `Analyzed a randomized sample of ${meta.analyzedCount} out of ${meta.totalComments} comments.`;
-      }
-      
-      SecurityUtils.safeSetText(elements.sampleInfo, infoText);
-      elements.sampleInfo?.classList.remove('hidden');
-    }
-
-    function displayMostLikedComment(mostLiked: any) {
-      if (mostLiked.text && typeof mostLiked.likeCount === 'number') {
-        SecurityUtils.safeSetText(elements.mostLikedLabel, `Most liked comment (${mostLiked.likeCount} likes):`);
-        SecurityUtils.safeSetText(elements.mostLikedText, `"${mostLiked.text}"`);
-        elements.mostLikedCallout?.classList.remove('hidden');
-      }
-    }
-
-    function displaySentimentData(data: any) {
-      // Validate and display percentages
-      const positive = Math.max(0, Math.min(100, Math.round(Number(data.positive) || 0)));
-      const neutral = Math.max(0, Math.min(100, Math.round(Number(data.neutral) || 0)));
-      const negative = Math.max(0, Math.min(100, Math.round(Number(data.negative) || 0)));
-
-      SecurityUtils.safeSetText(elements.positivePercentage, `${positive}%`);
-      SecurityUtils.safeSetText(elements.neutralPercentage, `${neutral}%`);
-      SecurityUtils.safeSetText(elements.negativePercentage, `${negative}%`);
-
-      // Animate bars
-      setTimeout(() => {
-        if (elements.positiveBar) (elements.positiveBar as HTMLElement).style.width = `${positive}%`;
-        if (elements.neutralBar) (elements.neutralBar as HTMLElement).style.width = `${neutral}%`;
-        if (elements.negativeBar) (elements.negativeBar as HTMLElement).style.width = `${negative}%`;
-      }, 100);
-
-      // Display summary safely
-      SecurityUtils.safeSetText(elements.sentimentSummary, data.summary || '');
-    }
-
-    function displaySampleComments(sampleComments: any) {
-      if (!sampleComments) return;
-
-      updateCommentsContainer(elements.positiveComments, sampleComments.positive, 'text-green-700');
-      updateCommentsContainer(elements.neutralComments, sampleComments.neutral, 'text-gray-700');
-      updateCommentsContainer(elements.negativeComments, sampleComments.negative, 'text-red-700');
-    }
-
-    function updateCommentsContainer(container: HTMLElement | null, comments: any[], textColor: string) {
-      if (!container || !Array.isArray(comments)) return;
-      
-      // Clear existing content
-      container.innerHTML = '';
-      
-      comments.forEach(comment => {
-        if (typeof comment === 'string' && comment.trim()) {
-          const commentDiv = document.createElement('div');
-          commentDiv.className = `text-sm ${textColor} bg-white p-3 rounded-lg border border-gray-200`;
-          SecurityUtils.safeSetText(commentDiv, `"${comment.trim()}"`);
-          container.appendChild(commentDiv);
-        }
-      });
-    }
-
-    function extractVideoId(url: string) {
-      if (!SecurityUtils.isValidYouTubeUrl(url)) return null;
-      
-      const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
-        /youtube\.com\/watch\?.*&v=([a-zA-Z0-9_-]{11})/
-      ];
-      
-      for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match && match[1] && match[1].length === 11) {
-          return match[1];
-        }
-      }
-      
-      return null;
-    }
-
-    // Enhanced fetch with security measures
-    async function secureFetch(url: string, options: RequestInit = {}) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-      try {
-        const response = await fetch(url, {
-          ...options,
-          signal: controller.signal,
-          headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-          }
-        });
-
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-          throw new Error(errorData.error || `HTTP ${response.status}`);
-        }
-
-        return response;
-      } catch (error: unknown) {
-        clearTimeout(timeoutId);
-        if (error && typeof error === 'object' && 'message' in error) {
-          showError((error as { message?: string }).message || 'An unexpected error occurred');
-        } else {
-          showError('An unexpected error occurred');
-        }
-        throw error;
-      }
-    }
-
-    // History management
-    function loadHistory() {
-      try {
-        const history = JSON.parse(localStorage.getItem('analyzedVideos') || '[]');
-        if (history.length > 0 && elements.historyContainer && elements.historyList) {
-          elements.historyContainer.classList.remove('hidden');
-          elements.historyList.innerHTML = '';
-          history.slice(0, 5).forEach((item: any) => {
-            if (item && typeof item.title === 'string' && typeof item.url === 'string') {
-              const button = document.createElement('button');
-              button.className = 'text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-gray-700 truncate max-w-xs';
-              SecurityUtils.safeSetText(button, item.title);
-              button.title = SecurityUtils.escapeHtml(item.url);
-              button.onclick = () => {
-                if (elements.urlInput && elements.form) {
-                  (elements.urlInput as HTMLInputElement).value = item.url;
-                  elements.form.dispatchEvent(new Event('submit'));
-                }
-              };
-              if (elements.historyList && button) {
-                elements.historyList.appendChild(button);
-              }
-            }
-          });
-        }
-      } catch (error: unknown) {
-        console.warn('Could not load history:', error);
-      }
-    }
-
-    function addToHistory(url: string, title: string) {
-      try {
-        const history = JSON.parse(localStorage.getItem('analyzedVideos') || '[]');
-        const existing = history.findIndex((item: any) => item.url === url);
-        if (existing !== -1) {
-          history.splice(existing, 1);
-        }
-        history.unshift({ url, title, date: Date.now() });
-        localStorage.setItem('analyzedVideos', JSON.stringify(history.slice(0, 10)));
-        loadHistory();
-      } catch (error: unknown) {
-        console.warn('Could not save to history:', error);
-      }
-    }
-
-    // Store the last shared result to avoid re-saving
-    let lastSharedResultId: string | null = null;
-    let lastSharedResultData: any = null;
-
-    // Enhanced share functionality that saves to Redis and creates beautiful social previews
-    async function shareResults() {
-      if (!currentVideoUrl || !currentSummary) return;
-      try {
-        let shareUrl = '';
-        if (lastSharedResultId && lastSharedResultData && lastAnalyzedUrl === currentVideoUrl) {
-          shareUrl = `${window.location.origin}/result/${lastSharedResultId}`;
-        } else {
-          const sentimentData = analysisCache.get(currentVideoUrl)?.data.sentiment;
-          const meta = analysisCache.get(currentVideoUrl)?.data.meta;
-          if (sentimentData && meta) {
-            const response = await secureFetch('/api/save-result', {
-              method: 'POST',
-              body: JSON.stringify({
-                sentimentData,
-                meta,
-                videoUrl: currentVideoUrl,
-              }),
-            });
-            const result = await response.json();
-            lastSharedResultId = result.id;
-            lastSharedResultData = { sentimentData, meta, videoUrl: currentVideoUrl };
-            shareUrl = result.shareUrl;
-          } else {
-            shareUrl = `${window.location.origin}?video=${encodeURIComponent(currentVideoUrl)}`;
-          }
-        }
-        const videoTitle = elements.videoTitle?.textContent || 'this video';
-        const positive = elements.positivePercentage?.textContent || '0%';
-        const neutral = elements.neutralPercentage?.textContent || '0%';
-        const negative = elements.negativePercentage?.textContent || '0%';
-        createShareModal(shareUrl, videoTitle, positive, neutral, negative);
-      } catch (error: unknown) {
-        console.error('Error sharing results:', error);
-        const fallbackUrl = `${window.location.origin}?video=${encodeURIComponent(currentVideoUrl)}`;
-        copyToClipboard(fallbackUrl);
-      }
-    }
-
-    // Enhanced share modal with social media platform options
-    function createShareModal(shareUrl: string, videoTitle: string, positive: string, neutral: string, negative: string) {
-      // Remove any existing modal
-      const existingModal = document.getElementById('share-modal');
-      if (existingModal) existingModal.remove();
-
-      const modal = document.createElement('div');
-      modal.id = 'share-modal';
-      modal.className = 'fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4';
-      modal.innerHTML = `
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative animate-fade-in">
-          <button id="close-share-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-          
-          <h3 class="text-xl font-bold text-gray-800 mb-6">Share Results</h3>
-          
-          <div class="grid grid-cols-3 gap-4 mb-6">
-            <!-- Twitter/X -->
-            <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="twitter">
-              <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">X (Twitter)</span>
-            </button>
-            
-            <!-- Facebook -->
-            <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="facebook">
-              <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">Facebook</span>
-            </button>
-            
-            <!-- LinkedIn -->
-            <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="linkedin">
-              <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">LinkedIn</span>
-            </button>
-            
-            <!-- WhatsApp -->
-            <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="whatsapp">
-              <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">WhatsApp</span>
-            </button>
-            
-            <!-- Reddit -->
-            <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="reddit">
-              <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">Reddit</span>
-            </button>
-            
-            <!-- Copy Link -->
-            <button class="share-option flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition-colors" data-platform="copy">
-              <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">Copy Link</span>
-            </button>
-          </div>
-          
-          <div class="border-t pt-4">
-            <p class="text-xs text-gray-500 text-center">Share your YouTube sentiment analysis results</p>
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(modal);
-
-      // Add animation styles if not already present
-      if (!document.getElementById('share-modal-styles')) {
-        const style = document.createElement('style');
-        style.id = 'share-modal-styles';
-        style.textContent = `
-          @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-          }
-          .animate-fade-in {
-            animation: fadeIn 0.2s ease-out;
-          }
-        `;
-        document.head.appendChild(style);
-      }
-
-      // Event listeners
-      document.getElementById('close-share-modal')?.addEventListener('click', () => modal.remove());
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
-      });
-
-      // Platform-specific share handlers
-      modal.querySelectorAll('.share-option').forEach(button => {
-        button.addEventListener('click', () => {
-          const platform = button.getAttribute('data-platform');
-          handlePlatformShare(platform ?? '', shareUrl ?? '', videoTitle ?? '', positive ?? '', neutral ?? '', negative ?? '', modal);
-        });
-      });
-    }
-
-    function handlePlatformShare(platform: string, shareUrl: string, videoTitle: string, positive: string, neutral: string, negative: string, modal: HTMLElement) {
-      const shareMessages = {
-        twitter: `🎥 "${videoTitle}" sentiment analysis:\n✅ ${positive} positive\n➖ ${neutral} neutral\n❌ ${negative} negative\n\nAnalyze any YouTube video instantly! 🚀`,
-        facebook: `I just analyzed the sentiment of "${videoTitle}" on YouTube!\n\n📊 Results:\n• Positive: ${positive}\n• Neutral: ${neutral}\n• Negative: ${negative}\n\nTry it yourself with any YouTube video!`,
-        linkedin: `Interesting sentiment analysis of "${videoTitle}":\n\n📈 ${positive} positive comments\n➖ ${neutral} neutral comments\n📉 ${negative} negative comments\n\nGreat tool for content creators and marketers!`,
-        whatsapp: `Check out this YouTube sentiment analysis!\n\n"${videoTitle}"\n✅ Positive: ${positive}\n➖ Neutral: ${neutral}\n❌ ${negative}\n\nTry it yourself:`,
-        reddit: `[Tool] I analyzed the sentiment of "${videoTitle}" - ${positive} positive, ${neutral} neutral, ${negative} negative comments`
-      };
-
-      const hashtags = 'YouTubeSentiment,SentimentAnalysis,YouTube';
-
-      switch(platform) {
-        case 'twitter':
-          window.open(
-            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessages.twitter)}&url=${encodeURIComponent(shareUrl)}&hashtags=${hashtags}`,
-            '_blank',
-            'width=550,height=420'
-          );
-          break;
-          
-        case 'facebook':
-          window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareMessages.facebook)}`,
-            '_blank',
-            'width=550,height=420'
-          );
-          break;
-          
-        case 'linkedin':
-          window.open(
-            `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&summary=${encodeURIComponent(shareMessages.linkedin)}`,
-            '_blank',
-            'width=550,height=520'
-          );
-          break;
-          
-        case 'whatsapp':
-          window.open(
-            `https://wa.me/?text=${encodeURIComponent(shareMessages.whatsapp + ' ' + shareUrl)}`,
-            '_blank'
-          );
-          break;
-          
-        case 'reddit':
-          window.open(
-            `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareMessages.reddit)}`,
-            '_blank',
-            'width=850,height=550'
-          );
-          break;
-          
-        case 'copy':
-          copyToClipboard(shareUrl);
-          // Show success feedback
-          const copyButton = modal.querySelector('[data-platform="copy"]');
-          if (copyButton) {
-            const originalHTML = copyButton.innerHTML;
-            copyButton.innerHTML = `
-              <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <span class="text-sm text-gray-700">Copied!</span>
-            `;
-            setTimeout(() => {
-              if (copyButton) copyButton.innerHTML = originalHTML;
-            }, 2000);
-          }
-          break;
-      }
-      
-      // Close modal after sharing (except for copy)
-      if (platform !== 'copy') {
-        setTimeout(() => {
-          modal.remove();
-        }, 500);
-      }
-    }
-
-    function copyToClipboard(text: string) {
-      navigator.clipboard.writeText(text).then(() => {
-        if (elements.shareResults) {
-          const originalText = (elements.shareResults as HTMLElement)?.textContent ?? '';
-          SecurityUtils.safeSetText(elements.shareResults, originalText ?? '');
-        }
-      }).catch(() => {
-        // Fallback for browsers that don't support clipboard API
-        console.warn('Could not copy to clipboard');
-      });
-    }
-
-    // Main form submission handler
-    if (elements.form) {
-      elements.form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (isAnalyzing) return;
-        
-        if (!elements.urlInput) return;
-        
-        const youtubeUrl = (elements.urlInput as HTMLInputElement).value.trim();
-        
-        // Input validation
-        if (!youtubeUrl) {
-          SecurityUtils.safeSetText(elements.urlError, 'Please enter a YouTube URL');
-          (elements.urlError as HTMLElement).classList.remove('hidden');
-          return;
-        }
-
-        if (youtubeUrl.length > 2048) {
-          SecurityUtils.safeSetText(elements.urlError, 'URL is too long');
-          (elements.urlError as HTMLElement).classList.remove('hidden');
-          return;
-        }
-
-        if (!SecurityUtils.isValidYouTubeUrl(youtubeUrl)) {
-          SecurityUtils.safeSetText(elements.urlError, 'Please enter a valid YouTube URL');
-          (elements.urlError as HTMLElement).classList.remove('hidden');
-          return;
-        }
-
-        (elements.urlError as HTMLElement).classList.add('hidden');
-
-        // Rate limiting
-        if (!SecurityUtils.rateLimiter.isAllowed()) {
-          showError('Too many requests. Please wait a minute before trying again.');
-          return;
-        }
-
-        // Check if we're re-analyzing the same URL
-        if (youtubeUrl === lastAnalyzedUrl && 
-            elements.resultsContainer && 
-            !elements.resultsContainer.classList.contains('hidden')) {
-          return;
-        }
-
-        // Check cache
-        const cached = analysisCache.get(youtubeUrl);
-        if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-          showResults(cached.data.sentiment, cached.data.meta);
-          return;
-        }
-
-        isAnalyzing = true;
-        lastAnalyzedUrl = youtubeUrl;
-        currentVideoUrl = youtubeUrl;
-
-        try {
-          // Fetch comments
-          showLoading('Fetching comments...');
-          
-          const commentsResponse = await secureFetch('/api/comments', {
-            method: 'POST',
-            body: JSON.stringify({ youtubeUrl })
-          });
-
-          const commentsData = await commentsResponse.json();
-
-          if (!commentsData.comments || commentsData.comments.length === 0) {
-            throw new Error('No comments found for this video');
-          }
-
-          // Analyze sentiment
-          showLoading('Analyzing sentiment...');
-          
-          const sentimentResponse = await secureFetch('/api/sentiment', {
-            method: 'POST',
-            body: JSON.stringify({
-              comments: commentsData.comments,
+            // Analyze sentiment
+            this.uiManager.showLoading('Analyzing sentiment...');
+            const sentimentData = await this.apiManager.analyzeSentiment(commentsData);
+
+            const meta = {
               analyzedCount: commentsData.analyzedCount,
               totalComments: commentsData.totalComments,
               mostLiked: commentsData.mostLiked,
-              videoInfo: commentsData.videoInfo,
-              channelInfo: commentsData.channelInfo,
-            })
-          });
+              videoInfo: sentimentData.videoInfo,
+              channelInfo: sentimentData.channelInfo,
+            };
 
-          const sentimentData = await sentimentResponse.json();
+            // Cache results
+            this.apiManager.cacheAnalysis(youtubeUrl, { sentiment: sentimentData, meta });
 
-          const meta = {
-            analyzedCount: commentsData.analyzedCount,
-            totalComments: commentsData.totalComments,
-            mostLiked: commentsData.mostLiked,
-            videoInfo: sentimentData.videoInfo,
-            channelInfo: sentimentData.channelInfo,
-          };
+            // Display results
+            this.uiManager.showResults(sentimentData, meta);
+            
+            this.currentSummary = sentimentData.summary || '';
+            
+            // Add to history
+            if (meta.videoInfo?.title) {
+              this.storageManager.addToHistory(this.currentVideoUrl, meta.videoInfo.title);
+              this.loadHistory();
+            }
 
-          // Cache results
-          analysisCache.set(youtubeUrl, {
-            data: { sentiment: sentimentData, meta },
-            timestamp: Date.now()
-          });
-
-          showResults(sentimentData, meta);
-
-        } catch (error: unknown) {
-          console.error('Analysis error:', error);
-          if (error && typeof error === 'object' && 'message' in error) {
-            showError((error as { message?: string }).message || 'An unexpected error occurred');
-          } else {
-            showError('An unexpected error occurred');
+          } catch (error) {
+            console.error('Analysis error:', error);
+            this.uiManager.showError(error.message || 'An unexpected error occurred');
+          } finally {
+            this.isAnalyzing = false;
           }
-        } finally {
-          isAnalyzing = false;
         }
-      });
-    }
 
-    // Analyze Another button
-    elements.analyzeAnother?.addEventListener('click', () => {
-      if (elements.urlInput) {
-        (elements.urlInput as HTMLInputElement).value = '';
-      }
-      hideAllStates();
-      elements.urlInput?.focus();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+        analyzeAnother() {
+          if (this.elements.urlInput) {
+            this.elements.urlInput.value = '';
+          }
+          this.uiManager.hideAllStates();
+          this.elements.urlInput?.focus();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-    // Share Results button
-    elements.shareResults?.addEventListener('click', shareResults);
+        async shareResults() {
+          if (!this.currentVideoUrl || !this.currentSummary) return;
+          
+          try {
+            let shareUrl = '';
+            
+            if (this.lastSharedResultId && this.lastSharedResultData && this.lastAnalyzedUrl === this.currentVideoUrl) {
+              shareUrl = `${window.location.origin}/result/${this.lastSharedResultId}`;
+            } else {
+              const cached = this.apiManager.getCachedAnalysis(this.currentVideoUrl);
+              if (cached) {
+                const result = await this.apiManager.saveResults(cached.sentiment, cached.meta, this.currentVideoUrl);
+                this.lastSharedResultId = result.id;
+                this.lastSharedResultData = { sentimentData: cached.sentiment, meta: cached.meta, videoUrl: this.currentVideoUrl };
+                shareUrl = result.shareUrl;
+              } else {
+                shareUrl = `${window.location.origin}?video=${encodeURIComponent(this.currentVideoUrl)}`;
+              }
+            }
+            
+            const videoTitle = this.elements.videoTitle?.textContent || 'this video';
+            const positive = this.elements.positivePercentage?.textContent || '0%';
+            const neutral = this.elements.neutralPercentage?.textContent || '0%';
+            const negative = this.elements.negativePercentage?.textContent || '0%';
+            
+            this.shareManager.createShareModal(shareUrl, videoTitle, positive, neutral, negative);
+            
+          } catch (error) {
+            console.error('Error sharing results:', error);
+            const fallbackUrl = `${window.location.origin}?video=${encodeURIComponent(this.currentVideoUrl)}`;
+            this.shareManager.copyToClipboard(fallbackUrl);
+          }
+        }
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      // Ctrl/Cmd + Enter to analyze
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && 
-          document.activeElement === elements.urlInput && elements.form) {
-        e.preventDefault();
-        elements.form.dispatchEvent(new Event('submit'));
-      }
-      
-      // Escape to clear results
-      if (e.key === 'Escape' && elements.resultsContainer && 
-          !elements.resultsContainer.classList.contains('hidden')) {
-        hideAllStates();
-        if (elements.urlInput) {
-          (elements.urlInput as HTMLInputElement).value = '';
-          elements.urlInput.focus();
+        handleKeyboard(e) {
+          // Ctrl/Cmd + Enter to analyze
+          if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && 
+              document.activeElement === this.elements.urlInput && this.elements.form) {
+            e.preventDefault();
+            this.elements.form.dispatchEvent(new Event('submit'));
+          }
+          
+          // Escape to clear results
+          if (e.key === 'Escape' && this.elements.resultsContainer && 
+              !this.elements.resultsContainer.classList.contains('hidden')) {
+            this.uiManager.hideAllStates();
+            if (this.elements.urlInput) {
+              this.elements.urlInput.value = '';
+              this.elements.urlInput.focus();
+            }
+          }
+        }
+
+        loadHistory() {
+          this.storageManager.displayHistory(
+            this.elements.historyContainer,
+            this.elements.historyList,
+            this.elements
+          );
+        }
+
+        checkSharedVideo() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const sharedVideo = urlParams.get('video');
+          if (sharedVideo && SecurityUtils.isValidYouTubeUrl(sharedVideo) && 
+              this.elements.urlInput && this.elements.form) {
+            this.elements.urlInput.value = sharedVideo;
+            this.elements.form.dispatchEvent(new Event('submit'));
+          }
+        }
+
+        setupCleanup() {
+          window.addEventListener('beforeunload', () => {
+            this.uiManager.clearProgress();
+          });
         }
       }
+
+      // Initialize the application
+      new YouTubeSentimentAnalyzer();
     });
-
-    // Check URL params for shared videos (with validation)
-    const urlParams = new URLSearchParams(window.location.search);
-    const sharedVideo = urlParams.get('video');
-    if (sharedVideo && SecurityUtils.isValidYouTubeUrl(sharedVideo) && 
-        elements.urlInput && elements.form) {
-      (elements.urlInput as HTMLInputElement).value = sharedVideo;
-      elements.form.dispatchEvent(new Event('submit'));
-    }
-
-    // Load history on startup
-    loadHistory();
-
-    // Clean up intervals on page unload
-    window.addEventListener('beforeunload', () => {
-      clearProgress();
-    });
-
-    // Find the share results button and wire it up to always open the custom modal
-    // Remove navigator.share logic
-    const shareBtn = document.getElementById('share-results');
-    if (shareBtn) {
-      shareBtn.addEventListener('click', () => {
-        // Prepare data for sharing
-        const shareUrl = window.location.href;
-        const videoTitle = document.getElementById('video-title')?.textContent || 'YouTube Video';
-        const positive = document.getElementById('positive-percentage')?.textContent?.trim() || '0%';
-        const neutral = document.getElementById('neutral-percentage')?.textContent?.trim() || '0%';
-        const negative = document.getElementById('negative-percentage')?.textContent?.trim() || '0%';
-        createShareModal(shareUrl, videoTitle, positive, neutral, negative);
-      });
-    }
-  });
   </script>
 </Layout>

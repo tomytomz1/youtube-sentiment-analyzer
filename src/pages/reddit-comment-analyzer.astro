@@ -1,0 +1,518 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+
+const title = "Reddit Comment Analyzer - Advanced AI Analysis | Senti-Meter";
+const description = "Specialized Reddit comment analysis tool. Get detailed sentiment breakdowns, engagement metrics, and community insights for any thread. Free AI-powered analysis.";
+const url = "https://www.senti-meter.com/reddit-comment-analyzer";
+const faqs = [
+  {
+    question: 'How many Reddit comments can I analyze?',
+    answer: `Our tool analyzes up to 300 comments per Reddit thread for comprehensive insights. We fetch both top-level comments and highly-rated replies to give you a complete view of community sentiment.`
+  },
+  {
+    question: 'Is the Reddit comment analyzer really free?',
+    answer: `Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited Reddit threads.`
+  },
+  {
+    question: 'How does it understand Reddit-specific context?',
+    answer: `Our AI is specifically trained to understand Reddit culture, including memes, common phrases, subreddit-specific language, and the unique communication patterns found in Reddit communities.`
+  },
+  {
+    question: 'Can I analyze comments from private subreddits?',
+    answer: `No, our tool only works with public Reddit threads that are accessible without login. We respect Reddit's privacy settings and can only access publicly available comment data.`
+  }
+];
+---
+<Layout>
+  <head>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/logo.svg" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/logo.svg" />
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Reddit Comment Analyzer" />
+    <meta name="keywords" content="reddit comment analyzer, comment analysis, reddit comments, thread feedback analysis, comment sentiment" />
+    <link rel="canonical" href={url} />
+  </head>
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#comment-analyzer-tool" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-orange-600 text-white px-4 py-2 rounded z-50">
+    Skip to comment analyzer
+  </a>
+
+  <!-- Breadcrumb Navigation -->
+  <Breadcrumb items={[
+    { label: 'Home', href: '/' },
+    { label: 'Reddit Comment Analyzer' }
+  ]} />
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-orange-50 to-red-100 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        Reddit Comment Analyzer
+      </h1>
+      <p class="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
+        Analyze Reddit thread comments instantly with our free AI-powered tool. Understand what the community really thinks about any discussion with detailed sentiment analysis, engagement insights, and comment breakdowns.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#comment-analyzer-tool" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+          Analyze Comments Now
+        </a>
+        <a href="#how-it-works" class="border border-orange-600 text-orange-600 hover:bg-orange-50 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          Learn How It Works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Benefits -->
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use Our Reddit Comment Analyzer?</h2>
+        <p class="text-lg text-gray-600">Get deep insights into community sentiment and discussion patterns</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Benefit 1 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Deep Community Analysis</h3>
+          <p class="text-gray-600">Analyze up to 300 Reddit comments with advanced AI that understands community context, Reddit culture, and discussion nuances.</p>
+        </div>
+        <!-- Benefit 2 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Privacy-First & Free</h3>
+          <p class="text-gray-600">No registration required. We don't store your data or track your activity. Analyze unlimited Reddit threads with complete privacy.</p>
+        </div>
+        <!-- Benefit 3 -->
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Reddit-Specific Intelligence</h3>
+          <p class="text-gray-600">Specialized for Reddit's unique culture, understanding upvote patterns, comment threading, and community-specific language patterns.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Integration -->
+  <section id="comment-analyzer-tool" class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Analyze Reddit Comments</h2>
+          <p class="text-lg text-gray-600">Paste any Reddit thread URL below to start analyzing comments</p>
+        </div>
+        
+        <!-- Tool Form -->
+        <form id="comment-analysis-form" class="space-y-6">
+          <div>
+            <label for="reddit-url-input" class="block text-sm font-medium text-gray-700 mb-2">
+              Reddit Thread URL
+            </label>
+            <input
+              type="url"
+              id="reddit-url-input"
+              name="reddit-url"
+              placeholder="https://www.reddit.com/r/AskReddit/comments/..."
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            id="analyze-comments-button"
+            class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:outline-none"
+          >
+            Analyze Reddit Comments
+          </button>
+        </form>
+
+        <!-- Sample Results Preview -->
+        <div class="mt-12 p-6 bg-orange-50 rounded-xl">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Sample Analysis Preview</h3>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="text-center p-4 bg-green-100 rounded-lg">
+              <div class="text-2xl font-bold text-green-700">72%</div>
+              <div class="text-sm text-green-600">Positive Sentiment</div>
+            </div>
+            <div class="text-center p-4 bg-gray-100 rounded-lg">
+              <div class="text-2xl font-bold text-gray-700">18%</div>
+              <div class="text-sm text-gray-600">Neutral Sentiment</div>
+            </div>
+            <div class="text-center p-4 bg-red-100 rounded-lg">
+              <div class="text-2xl font-bold text-red-700">10%</div>
+              <div class="text-sm text-red-600">Negative Sentiment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our Reddit Comment Analyzer Works</h2>
+        <p class="text-lg text-gray-600">Advanced AI technology for accurate Reddit comment sentiment analysis</p>
+      </div>
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Paste Reddit URL</h3>
+          <p class="text-gray-600">Simply copy and paste any Reddit thread URL into our analyzer tool.</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Fetch Comments</h3>
+          <p class="text-gray-600">We securely retrieve up to 300 public comments and replies using Reddit's official API.</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">AI Analysis</h3>
+          <p class="text-gray-600">Advanced GPT-4o AI analyzes sentiment, context, and emotional tone specific to Reddit culture.</p>
+        </div>
+        <!-- Step 4 -->
+        <div class="text-center">
+          <div class="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">4</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Get Insights</h3>
+          <p class="text-gray-600">Receive detailed sentiment breakdowns, sample comments, and community engagement insights.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reddit-Specific Features -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Reddit-Specific Analysis Features</h2>
+        <p class="text-lg text-gray-600">Specialized insights tailored for Reddit communities</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3.5M18 15v2a1.5 1.5 0 01-3 0v-2m0 0v-3.5a1.5 1.5 0 013 0V15z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Upvote Pattern Analysis</h3>
+          <p class="text-gray-600 mb-4">Understand how comment sentiment correlates with upvote scores and community approval patterns.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Most upvoted comment sentiment analysis</li>
+            <li>• Correlation between sentiment and scores</li>
+            <li>• Community consensus identification</li>
+            <li>• Controversial opinion detection</li>
+          </ul>
+        </div>
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Thread Context Understanding</h3>
+          <p class="text-gray-600 mb-4">AI analyzes comments within the full context of the Reddit thread, subreddit culture, and discussion flow.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Subreddit-specific language patterns</li>
+            <li>• Thread topic relevance analysis</li>
+            <li>• Comment hierarchy understanding</li>
+            <li>• Cultural context awareness</li>
+          </ul>
+        </div>
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Community Sentiment Trends</h3>
+          <p class="text-gray-600 mb-4">Track how sentiment flows through comment threads and identify emerging community opinions.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Top-level vs reply sentiment comparison</li>
+            <li>• Early vs late comment analysis</li>
+            <li>• Sentiment evolution tracking</li>
+            <li>• Community consensus measurement</li>
+          </ul>
+        </div>
+        <!-- Feature 4 -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Engagement Quality Metrics</h3>
+          <p class="text-gray-600 mb-4">Measure not just sentiment, but the quality and depth of community engagement in discussions.</p>
+          <ul class="text-sm text-gray-500 space-y-2">
+            <li>• Discussion depth analysis</li>
+            <li>• Constructive vs toxic comment detection</li>
+            <li>• Community participation quality</li>
+            <li>• Meaningful conversation identification</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Perfect for Reddit Research & Analysis</h2>
+        <p class="text-lg text-gray-600">Understand community sentiment and discussion patterns</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Use Case 1 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🔬 Market Researchers</h3>
+          <p class="text-gray-600">Track public opinion on products, brands, and trends through Reddit community discussions and sentiment patterns.</p>
+        </div>
+        <!-- Use Case 2 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📊 Data Scientists</h3>
+          <p class="text-gray-600">Gather sentiment data from Reddit for machine learning models, social research, and behavioral analysis studies.</p>
+        </div>
+        <!-- Use Case 3 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">🏢 Brand Managers</h3>
+          <p class="text-gray-600">Monitor brand mentions and sentiment in Reddit communities to understand public perception and manage reputation.</p>
+        </div>
+        <!-- Use Case 4 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📚 Academic Researchers</h3>
+          <p class="text-gray-600">Study social phenomena, public opinion, and community behavior through Reddit sentiment analysis for academic research.</p>
+        </div>
+        <!-- Use Case 5 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">💼 Product Managers</h3>
+          <p class="text-gray-600">Analyze user feedback and feature requests from Reddit communities to inform product development decisions.</p>
+        </div>
+        <!-- Use Case 6 -->
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">📺 Content Creators</h3>
+          <p class="text-gray-600">Understand audience reactions to content ideas and topics by analyzing relevant Reddit discussions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Reddit Comment Analyzer?</h2>
+        <p class="text-lg text-gray-600">See how we compare to other Reddit analysis tools</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-orange-50">
+            <tr>
+              <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Feature</th>
+              <th class="border border-gray-300 px-4 py-3 text-center font-semibold text-orange-600">Our Tool</th>
+              <th class="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-600">Basic Tools</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white">
+              <td class="border border-gray-300 px-4 py-3">AI-Powered Analysis</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ GPT-4o</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Basic algorithms</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="border border-gray-300 px-4 py-3">Reddit Culture Understanding</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ Specialized</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Generic</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="border border-gray-300 px-4 py-3">Comments Analyzed</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ Up to 300</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">⚠️ 10-50</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="border border-gray-300 px-4 py-3">Upvote Pattern Analysis</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ Advanced</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Not available</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="border border-gray-300 px-4 py-3">Privacy Protection</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ No data stored</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">❌ Data collected</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="border border-gray-300 px-4 py-3">Cost</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ 100% Free</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">💰 Paid plans</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-orange-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">Ready to Analyze Reddit Comments?</h2>
+      <p class="text-xl text-orange-100 mb-8">Start understanding Reddit communities better with AI-powered comment analysis</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#comment-analyzer-tool" class="bg-white text-orange-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          Analyze Comments Now
+        </a>
+        <a href="/reddit-sentiment-analyzer" class="border border-white text-white hover:bg-orange-700 font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+          View Main Tool
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+        <p class="text-lg text-gray-600">Everything you need to know about Reddit comment analysis</p>
+      </div>
+      <FaqAccordion faqs={faqs} />
+    </div>
+  </section>
+
+  <!-- Related Tools -->
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Related Analysis Tools</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <a href="/reddit-sentiment-analyzer" class="block p-6 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+          <h3 class="font-semibold text-orange-900 mb-2">Reddit Sentiment Analyzer</h3>
+          <p class="text-orange-700 text-sm">Main Reddit sentiment analysis tool with comprehensive thread insights</p>
+        </a>
+        <a href="/youtube-comment-analyzer/" class="block p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+          <h3 class="font-semibold text-blue-900 mb-2">YouTube Comment Analyzer</h3>
+          <p class="text-blue-700 text-sm">Specialized tool for YouTube video comment sentiment analysis</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json" is:inline>
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Reddit Comment Analyzer - Free AI Tool",
+      "description": "Analyze Reddit comments instantly with our free AI-powered comment analyzer. Get sentiment breakdowns, community insights, and engagement metrics for any thread.",
+      "url": "https://www.senti-meter.com/reddit-comment-analyzer",
+      "mainEntity": {
+        "@type": "WebApplication",
+        "name": "Reddit Comment Analyzer",
+        "applicationCategory": "AnalyticsApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    }
+  </script>
+
+  <!-- FAQ Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many Reddit comments can I analyze?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our tool analyzes up to 300 comments per Reddit thread for comprehensive insights. We fetch both top-level comments and highly-rated replies to give you a complete view of community sentiment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the Reddit comment analyzer really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited Reddit threads."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does it understand Reddit-specific context?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our AI is specifically trained to understand Reddit culture, including upvote patterns, subreddit-specific language, meme references, and community dynamics. This ensures accurate sentiment analysis tailored to Reddit's unique environment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I analyze comments from private subreddits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, our tool can only analyze public Reddit threads that are accessible without login. We respect Reddit's privacy settings and can only access publicly available comment data."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you store Reddit data or track my usage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, we do not store any Reddit URLs, comments, or analysis results. Everything is processed in real-time and immediately discarded after analysis. We prioritize your privacy and do not track user activity."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JavaScript for tool functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('comment-analysis-form');
+      const urlInput = document.getElementById('reddit-url-input');
+      
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = (urlInput as HTMLInputElement)?.value?.trim();
+        if (url) {
+          // Redirect to main tool with the URL pre-filled
+          window.location.href = `/reddit-sentiment-analyzer?thread=${encodeURIComponent(url)}`;
+        }
+      });
+    });
+  </script>
+</Layout>
