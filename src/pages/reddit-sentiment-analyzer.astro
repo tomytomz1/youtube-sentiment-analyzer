@@ -804,12 +804,14 @@ const faqs = [
     }
 
     function displaySampleInfo(meta: any) {
+      console.log('displaySampleInfo called with:', meta);
       let infoText = '';
       if (meta.totalComments <= meta.analyzedCount) {
         infoText = `Analyzed all ${meta.analyzedCount} comments for this thread.`;
       } else {
         infoText = `Analyzed a sample of ${meta.analyzedCount} out of ${meta.totalComments} comments.`;
       }
+      console.log('Sample info text:', infoText);
       SecurityUtils.safeSetText(elements.sampleInfo, infoText);
       elements.sampleInfo?.classList.remove('hidden');
     }
@@ -830,6 +832,12 @@ const faqs = [
       const negative = Math.max(0, Math.min(100, Math.round(Number(data.negative) || 0)));
 
       console.log('Calculated percentages:', { positive, neutral, negative });
+      console.log('Elements found:', {
+        positivePercentage: elements.positivePercentage,
+        neutralPercentage: elements.neutralPercentage,
+        negativePercentage: elements.negativePercentage,
+        sentimentSummary: elements.sentimentSummary
+      });
       
       SecurityUtils.safeSetText(elements.positivePercentage, `${positive}%`);
       SecurityUtils.safeSetText(elements.neutralPercentage, `${neutral}%`);
@@ -1104,6 +1112,7 @@ const faqs = [
       }
 
       // Display sample size info
+      console.log('Meta data:', meta);
       if (meta.analyzedCount && meta.totalComments) {
         displaySampleInfo(meta);
       }
