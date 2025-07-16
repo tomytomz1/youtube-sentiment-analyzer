@@ -1182,7 +1182,11 @@ const faqs = [
 
       setTimeout(() => {
         // Show advanced features after 2000ms
+        console.log('About to call displayAdvancedAnalysis with:', analysisData);
         displayAdvancedAnalysis(analysisData);
+        
+        // Always reveal the advanced section container, even if individual subsections might be empty
+        console.log('Revealing advanced-section container');
         revealSectionWithAnimation('advanced-section');
       }, 2000);
 
@@ -1200,21 +1204,29 @@ const faqs = [
 
     // Reveal section with smooth animation
     function revealSectionWithAnimation(sectionId: string) {
+      console.log('revealSectionWithAnimation called for:', sectionId);
       const section = document.getElementById(sectionId);
+      console.log('Section element found:', !!section);
       if (section) {
-        console.log('Revealing section:', sectionId);
+        console.log('Section classes before revealing:', section.className);
+        console.log('Section innerHTML length:', section.innerHTML.length);
+        
         section.classList.remove('hidden');
         section.style.opacity = '1';
         section.style.transform = 'translateY(0)';
         section.style.transition = 'all 0.6s ease-out';
         
+        console.log('Section classes after revealing:', section.className);
+        console.log('Section styles applied - opacity:', section.style.opacity, 'transform:', section.style.transform);
+        
         // Ensure it's fully visible
         setTimeout(() => {
           section.style.opacity = '1';
           section.style.transform = 'translateY(0)';
+          console.log('Section animation completed for:', sectionId);
         }, 100);
       } else {
-        console.log('Section not found:', sectionId);
+        console.error('Section not found:', sectionId);
       }
     }
 
@@ -1277,34 +1289,73 @@ const faqs = [
 
     // Display advanced analysis features
     function displayAdvancedAnalysis(analysisData: any) {
+      console.log('displayAdvancedAnalysis called with data:', analysisData);
+      console.log('Available keys in analysisData:', Object.keys(analysisData));
+      
       // Display sentiment by depth
-      if (analysisData.sentiment_by_depth) {
+      console.log('Checking sentiment_by_depth:', analysisData.sentiment_by_depth);
+      if (analysisData.sentiment_by_depth && analysisData.sentiment_by_depth.length > 0) {
+        console.log('Displaying sentiment by depth...');
         displaySentimentByDepth(analysisData.sentiment_by_depth);
+      } else {
+        console.log('No sentiment_by_depth data to display');
       }
 
       // Display emerging topics
-      if (analysisData.emerging_topics) {
+      console.log('Checking emerging_topics:', analysisData.emerging_topics);
+      if (analysisData.emerging_topics && analysisData.emerging_topics.length > 0) {
+        console.log('Displaying emerging topics...');
         displayEmergingTopics(analysisData.emerging_topics);
+      } else {
+        console.log('No emerging_topics data to display');
       }
 
       // Display risk alerts
-      if (analysisData.risk_alerts) {
+      console.log('Checking risk_alerts:', analysisData.risk_alerts);
+      if (analysisData.risk_alerts && analysisData.risk_alerts.length > 0) {
+        console.log('Displaying risk alerts...');
         displayRiskAlerts(analysisData.risk_alerts);
+      } else {
+        console.log('No risk_alerts data to display');
       }
 
       // Display community language
-      if (analysisData.community_lingo) {
+      console.log('Checking community_lingo:', analysisData.community_lingo);
+      if (analysisData.community_lingo && analysisData.community_lingo.length > 0) {
+        console.log('Displaying community lingo...');
         displayCommunityLingo(analysisData.community_lingo);
+      } else {
+        console.log('No community_lingo data to display');
       }
 
       // Display demographic insights
+      console.log('Checking demographic_insights:', analysisData.demographic_insights);
       if (analysisData.demographic_insights) {
+        console.log('Displaying demographic insights...');
         displayDemographicInsights(analysisData.demographic_insights);
+      } else {
+        console.log('No demographic_insights data - showing placeholder');
+        // Always show the section with placeholder content
+        const container = document.getElementById('demographic-insights-display');
+        if (container) {
+          container.innerHTML = '<div class="text-center text-gray-500 py-4">No demographic insights available for this analysis</div>';
+          console.log('Demographic insights placeholder set');
+        }
       }
 
       // Display technical metrics
+      console.log('Checking technical_metrics:', analysisData.technical_metrics);
       if (analysisData.technical_metrics) {
+        console.log('Displaying technical metrics...');
         displayTechnicalMetrics(analysisData.technical_metrics);
+      } else {
+        console.log('No technical_metrics data - showing placeholder');
+        // Always show the section with placeholder content
+        const container = document.getElementById('technical-metrics-display');
+        if (container) {
+          container.innerHTML = '<div class="text-center text-gray-500 py-4">No technical metrics available for this analysis</div>';
+          console.log('Technical metrics placeholder set');
+        }
       }
     }
 
@@ -1337,8 +1388,13 @@ const faqs = [
 
     // Display sentiment by depth analysis
     function displaySentimentByDepth(sentimentByDepth: any[]) {
+      console.log('displaySentimentByDepth called with:', sentimentByDepth);
       const container = document.getElementById('depth-analysis-display');
-      if (!container || !Array.isArray(sentimentByDepth) || sentimentByDepth.length === 0) return;
+      console.log('depth-analysis-display container:', container);
+      if (!container || !Array.isArray(sentimentByDepth) || sentimentByDepth.length === 0) {
+        console.log('displaySentimentByDepth early return - container:', !!container, 'isArray:', Array.isArray(sentimentByDepth), 'length:', sentimentByDepth?.length);
+        return;
+      }
       
       const depthHtml = sentimentByDepth.map(depth => `
         <div class="depth-analysis mb-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -1367,12 +1423,18 @@ const faqs = [
       `).join('');
 
       container.innerHTML = depthHtml;
+      console.log('displaySentimentByDepth completed - HTML set:', depthHtml.length > 0);
     }
 
     // Display emerging topics
     function displayEmergingTopics(emergingTopics: any[]) {
+      console.log('displayEmergingTopics called with:', emergingTopics);
       const container = document.getElementById('emerging-topics-display');
-      if (!container || !Array.isArray(emergingTopics) || emergingTopics.length === 0) return;
+      console.log('emerging-topics-display container:', container);
+      if (!container || !Array.isArray(emergingTopics) || emergingTopics.length === 0) {
+        console.log('displayEmergingTopics early return - container:', !!container, 'isArray:', Array.isArray(emergingTopics), 'length:', emergingTopics?.length);
+        return;
+      }
       
       const topicsHtml = emergingTopics.slice(0, 8).map(topic => `
         <div class="topic-item mb-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
@@ -1390,12 +1452,16 @@ const faqs = [
       `).join('');
 
       container.innerHTML = topicsHtml;
+      console.log('displayEmergingTopics completed - HTML set:', topicsHtml.length > 0);
     }
 
     // Display risk alerts
     function displayRiskAlerts(riskAlerts: any[]) {
+      console.log('displayRiskAlerts called with:', riskAlerts);
       const container = document.getElementById('risk-alerts-display');
+      console.log('risk-alerts-display container:', container);
       if (!container || !Array.isArray(riskAlerts) || riskAlerts.length === 0) {
+        console.log('displayRiskAlerts early return - container:', !!container, 'isArray:', Array.isArray(riskAlerts), 'length:', riskAlerts?.length);
         if (container) container.innerHTML = '<div class="text-center text-gray-500 py-4">No significant risks detected in this discussion</div>';
         return;
       }
@@ -1425,12 +1491,18 @@ const faqs = [
       }).join('');
 
       container.innerHTML = alertsHtml;
+      console.log('displayRiskAlerts completed - HTML set:', alertsHtml.length > 0);
     }
 
     // Display community language and lingo
     function displayCommunityLingo(communityLingo: any[]) {
+      console.log('displayCommunityLingo called with:', communityLingo);
       const container = document.getElementById('community-lingo-display');
-      if (!container || !Array.isArray(communityLingo) || communityLingo.length === 0) return;
+      console.log('community-lingo-display container:', container);
+      if (!container || !Array.isArray(communityLingo) || communityLingo.length === 0) {
+        console.log('displayCommunityLingo early return - container:', !!container, 'isArray:', Array.isArray(communityLingo), 'length:', communityLingo?.length);
+        return;
+      }
       
       const lingoHtml = communityLingo.slice(0, 10).map(lingo => `
         <div class="lingo-item mb-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
@@ -1454,12 +1526,18 @@ const faqs = [
       `).join('');
 
       container.innerHTML = lingoHtml;
+      console.log('displayCommunityLingo completed - HTML set:', lingoHtml.length > 0);
     }
 
     // Display demographic insights
     function displayDemographicInsights(demographicInsights: any) {
+      console.log('displayDemographicInsights called with:', demographicInsights);
       const container = document.getElementById('demographic-insights-display');
-      if (!container || !demographicInsights) return;
+      console.log('demographic-insights-display container:', container);
+      if (!container || !demographicInsights) {
+        console.log('displayDemographicInsights early return - container:', !!container, 'data:', !!demographicInsights);
+        return;
+      }
 
       let insightsHtml = '';
 
@@ -1514,12 +1592,18 @@ const faqs = [
       }
 
       container.innerHTML = insightsHtml || '<div class="text-center text-gray-500 py-4">No demographic insights available</div>';
+      console.log('displayDemographicInsights completed - HTML set:', insightsHtml ? insightsHtml.length > 0 : false);
     }
 
     // Display technical metrics
     function displayTechnicalMetrics(technicalMetrics: any) {
+      console.log('displayTechnicalMetrics called with:', technicalMetrics);
       const container = document.getElementById('technical-metrics-display');
-      if (!container || !technicalMetrics) return;
+      console.log('technical-metrics-display container:', container);
+      if (!container || !technicalMetrics) {
+        console.log('displayTechnicalMetrics early return - container:', !!container, 'data:', !!technicalMetrics);
+        return;
+      }
 
       let metricsHtml = '';
 
@@ -1576,6 +1660,7 @@ const faqs = [
       }
 
       container.innerHTML = metricsHtml || '<div class="text-center text-gray-500 py-4">No technical metrics available</div>';
+      console.log('displayTechnicalMetrics completed - HTML set:', metricsHtml ? metricsHtml.length > 0 : false);
     }
 
     // Helper function for severity styling
