@@ -547,8 +547,12 @@ const faqs = [
         return patterns.some(pattern => pattern.test(url));
       },
       safeSetText: (element: HTMLElement | null, text: string) => {
+        console.log('safeSetText called with element:', element, 'text:', text);
         if (element && typeof text === 'string') {
           element.textContent = text;
+          console.log('Text set successfully on element:', element.id || element.className);
+        } else {
+          console.log('safeSetText failed - element or text invalid');
         }
       },
       rateLimiter: (() => {
@@ -645,6 +649,7 @@ const faqs = [
 
     // Utility functions
     function hideAllStates() {
+      console.log('hideAllStates called');
       [
         elements.loadingState,
         elements.errorState,
@@ -654,7 +659,12 @@ const faqs = [
         elements.threadInfo,
         elements.progressBar,
         elements.urlError
-      ].forEach(el => el?.classList.add('hidden'));
+      ].forEach(el => {
+        if (el) {
+          console.log('Hiding element:', el.id || el.className);
+          el.classList.add('hidden');
+        }
+      });
       clearProgress();
     }
 
@@ -1101,6 +1111,7 @@ const faqs = [
       console.log('analysisData structure:', Object.keys(analysisData));
       
       // First show basic sentiment
+      console.log('Hiding all states before showing results');
       hideAllStates();
       if (elements.progressFill) {
         (elements.progressFill as HTMLElement).style.width = '100%';
@@ -1124,7 +1135,11 @@ const faqs = [
       } else {
         console.error('No overall_sentiment data found in analysisData');
       }
+      
+      console.log('Results container element:', elements.resultsContainer);
+      console.log('Results container classes before:', elements.resultsContainer?.className);
       elements.resultsContainer?.classList.remove('hidden');
+      console.log('Results container classes after:', elements.resultsContainer?.className);
 
       // Progressive reveals with delays for better UX
       setTimeout(() => {
