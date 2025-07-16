@@ -1078,9 +1078,13 @@ const faqs = [
 
     // Handle completion message
     function handleCompleteMessage(message: any, analysisData: any) {
+      console.log('handleCompleteMessage called with message:', message);
       if (message.data) {
         // Use the same processing as the regular API
         const analysisResult = message.data;
+        console.log('Analysis result from streaming:', analysisResult);
+        console.log('Analysis result keys:', Object.keys(analysisResult));
+        console.log('Overall sentiment from analysis result:', analysisResult.overall_sentiment);
         
         const meta = {
           analyzedCount: analysisResult.analyzed_count,
