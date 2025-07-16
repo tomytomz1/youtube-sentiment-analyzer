@@ -127,7 +127,7 @@ const faqs = [
         <!-- Thread Info Card -->
         <div id="thread-info" class="mb-8 p-6 bg-orange-50 rounded-lg border border-orange-200 hidden">
           <div class="flex items-start space-x-4">
-            <div id="thread-image-container" class="w-16 h-16 md:w-24 md:h-16 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <div id="thread-image-container" class="w-16 h-16 md:w-20 md:h-16 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
               <!-- Reddit post image will be inserted here by JS -->
             </div>
             <div class="flex-1">
@@ -213,6 +213,100 @@ const faqs = [
               <div id="negative-comments" class="space-y-2"></div>
             </div>
           </div>
+
+          <!-- Advanced Analysis Sections - Hidden by default and progressively revealed -->
+          
+          <!-- Themes Section -->
+          <div id="themes-section" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200 mt-6">
+            <h3 class="text-xl font-semibold text-blue-900 mb-4 flex items-center">
+              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+              </svg>
+              Discussion Themes
+            </h3>
+            <div id="themes-display" class="min-h-[100px]"></div>
+          </div>
+
+          <!-- Sarcasm Detection Section -->
+          <div id="sarcasm-section" class="hidden bg-yellow-50 rounded-xl p-6 border border-yellow-200">
+            <h3 class="text-xl font-semibold text-yellow-900 mb-4 flex items-center">
+              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4l1 8-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+              </svg>
+              Sarcasm Detection
+            </h3>
+            <div id="sarcasm-display"></div>
+          </div>
+
+          <!-- Advanced Features Section -->
+          <div id="advanced-section" class="hidden space-y-6">
+            <!-- Sentiment by Comment Depth -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                </svg>
+                Sentiment by Comment Depth
+              </h3>
+              <div id="depth-analysis-display"></div>
+            </div>
+
+            <!-- Emerging Topics -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                Emerging Topics
+              </h3>
+              <div id="emerging-topics-display"></div>
+            </div>
+
+            <!-- Risk Alerts -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.348 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                Risk Alerts
+              </h3>
+              <div id="risk-alerts-display"></div>
+            </div>
+
+            <!-- Community Language -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                </svg>
+                Community Language
+              </h3>
+              <div id="community-lingo-display"></div>
+            </div>
+
+            <!-- Demographic Insights -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Demographic Insights
+              </h3>
+              <div id="demographic-insights-display"></div>
+            </div>
+
+            <!-- Technical Metrics -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                Technical Analysis
+              </h3>
+              <div id="technical-metrics-display"></div>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-3 mt-6">
             <button id="analyze-another" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
@@ -534,6 +628,7 @@ const faqs = [
     let currentSummary = '';
     let progressInterval: ReturnType<typeof setInterval> | null = null;
     let progressStage = 0;
+    let lastProgress = 0;
 
     const progressMessages = [
       'Validating URL...',
@@ -563,13 +658,20 @@ const faqs = [
       clearProgress();
     }
 
-    function showLoading(message: string) {
+    function showLoading(message: string, progress?: number) {
       hideAllStates();
       SecurityUtils.safeSetText(elements.loadingText, message);
       elements.loadingState?.classList.remove('hidden');
       elements.progressBar?.classList.remove('hidden');
       if (elements.analyzeButton) {
         (elements.analyzeButton as HTMLButtonElement).disabled = true;
+      }
+      // Only update if progress increases or stays the same
+      if (typeof progress === 'number' && progress >= lastProgress) {
+        lastProgress = progress;
+        if (elements.progressFill) {
+          (elements.progressFill as HTMLElement).style.width = `${progress}%`;
+        }
       }
       startProgress();
     }
@@ -593,6 +695,7 @@ const faqs = [
     }
 
     function startProgress() {
+      lastProgress = 0;
       progressStage = 0;
       if (elements.progressFill) {
         (elements.progressFill as HTMLElement).style.width = '0%';
@@ -620,7 +723,7 @@ const faqs = [
       progressStage = 0;
     }
 
-    function showResults(data: any, meta: any) {
+    function showResults(data: any, meta: any, fullAnalysis?: any) {
       hideAllStates();
       if (elements.progressFill) {
         (elements.progressFill as HTMLElement).style.width = '100%';
@@ -643,14 +746,23 @@ const faqs = [
 
       // Update sentiment data
       displaySentimentData(data);
-      displaySampleComments(data.sampleComments);
+      
+      // Display sample comments from the comprehensive analysis
+      if (fullAnalysis?.top_positive_comments || fullAnalysis?.top_negative_comments) {
+        const sampleComments = {
+          positive: (fullAnalysis.top_positive_comments || []).map((c: any) => c.text || c),
+          neutral: [], // Add neutral comments if available
+          negative: (fullAnalysis.top_negative_comments || []).map((c: any) => c.text || c)
+        };
+        displaySampleComments(sampleComments);
+      }
 
       elements.resultsContainer?.classList.remove('hidden');
       if (elements.analyzeButton) {
         (elements.analyzeButton as HTMLButtonElement).disabled = false;
       }
 
-      currentSummary = data.summary || '';
+      currentSummary = data.explainability || fullAnalysis?.overall_sentiment?.explainability || '';
       if (meta.threadInfo?.title) {
         addToHistory(currentRedditUrl, meta.threadInfo.title);
       }
@@ -670,7 +782,9 @@ const faqs = [
           const img = document.createElement('img');
           img.src = threadInfo.imageUrl;
           img.alt = `Reddit post image for "${threadInfo.title || 'thread'}"`;
-          img.className = 'object-cover w-full h-full rounded-lg border border-gray-200 bg-white';
+          img.className = 'object-contain max-w-full max-h-full rounded-lg border border-gray-200 bg-white';
+          img.style.width = '';
+          img.style.height = '';
           img.onerror = function() { 
             console.error('Image failed to load:', threadInfo.imageUrl);
             this.style.display = 'none'; 
@@ -709,10 +823,14 @@ const faqs = [
     }
 
     function displaySentimentData(data: any) {
+      console.log('displaySentimentData called with:', data);
+      
       const positive = Math.max(0, Math.min(100, Math.round(Number(data.positive) || 0)));
       const neutral = Math.max(0, Math.min(100, Math.round(Number(data.neutral) || 0)));
       const negative = Math.max(0, Math.min(100, Math.round(Number(data.negative) || 0)));
 
+      console.log('Calculated percentages:', { positive, neutral, negative });
+      
       SecurityUtils.safeSetText(elements.positivePercentage, `${positive}%`);
       SecurityUtils.safeSetText(elements.neutralPercentage, `${neutral}%`);
       SecurityUtils.safeSetText(elements.negativePercentage, `${negative}%`);
@@ -723,11 +841,14 @@ const faqs = [
         if (elements.negativeBar) (elements.negativeBar as HTMLElement).style.width = `${negative}%`;
       }, 100);
 
-      SecurityUtils.safeSetText(elements.sentimentSummary, data.summary || '');
+      console.log('Setting summary:', data.summary || data.explainability || '');
+      SecurityUtils.safeSetText(elements.sentimentSummary, data.summary || data.explainability || '');
     }
 
     function displaySampleComments(sampleComments: any) {
       if (!sampleComments) return;
+      console.log('Displaying sample comments:', sampleComments);
+      
       updateCommentsContainer(elements.positiveComments, sampleComments.positive, 'text-green-700');
       updateCommentsContainer(elements.neutralComments, sampleComments.neutral, 'text-gray-700');
       updateCommentsContainer(elements.negativeComments, sampleComments.negative, 'text-red-700');
@@ -749,7 +870,7 @@ const faqs = [
     // Enhanced fetch with security measures
     async function secureFetch(url: string, options: RequestInit = {}) {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased to 60s for comprehensive analysis
 
       try {
         const response = await fetch(url, {
@@ -777,6 +898,693 @@ const faqs = [
           showError('An unexpected error occurred');
         }
         throw error;
+      }
+    }
+
+    // Streaming analysis function
+    async function analyzeWithStreaming(redditUrl: string, maxComments: number) {
+      const timeoutDuration = 120000; // 2 minutes timeout
+      let timeoutId;
+      
+      try {
+        isAnalyzing = true;
+        lastAnalyzedUrl = redditUrl;
+        currentRedditUrl = redditUrl;
+
+        // Reset progress
+        let progressStage = 0;
+        const stages = ['validating', 'parsing_url', 'fetching_reddit', 'reddit_fetched', 'ai_analysis', 'ai_processing', 'ai_complete', 'finalizing', 'complete'];
+        
+        // Set up timeout for the entire operation
+        const timeoutPromise = new Promise((_, reject) => {
+          timeoutId = setTimeout(() => {
+            reject(new Error('Analysis timed out. Please try again.'));
+          }, timeoutDuration);
+        });
+        
+        // Start streaming request
+        const fetchPromise = fetch('/api/reddit-sentiment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            redditUrl: redditUrl,
+            maxComments: maxComments,
+            stream: true
+          })
+        });
+
+        const response = await Promise.race([fetchPromise, timeoutPromise]) as Response;
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error('No response stream available');
+        }
+
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let analysisData: any = {};
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) {
+              console.log('Stream reading completed');
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            console.log('Received stream chunk:', buffer);
+            
+            // Process complete SSE messages
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6).trim();
+                
+                if (data) {
+                  try {
+                    const message = JSON.parse(data);
+                    console.log('Parsed streaming message:', message);
+                    await handleStreamingMessage(message, analysisData);
+                    
+                    // If it's an error message, break out of the streaming loop
+                    if (message.type === 'error') {
+                      break;
+                    }
+                  } catch (e) {
+                    console.warn('Failed to parse streaming message:', data, e);
+                  }
+                }
+              }
+            }
+          }
+        } finally {
+          reader.releaseLock();
+        }
+
+      } catch (error: any) {
+        console.error('Streaming analysis error:', error);
+        showError(error.message || 'Streaming analysis failed');
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        isAnalyzing = false;
+      }
+    }
+
+    // Handle individual streaming messages
+    async function handleStreamingMessage(message: any, analysisData: any) {
+      switch (message.type) {
+        case 'progress':
+          handleProgressMessage(message);
+          break;
+
+        case 'complete':
+          handleCompleteMessage(message, analysisData);
+          break;
+
+        case 'error':
+          showError(message.error || 'Analysis failed');
+          return; // Exit the streaming handler gracefully
+
+        default:
+          console.log('Streaming message:', message);
+      }
+    }
+
+    // Handle progress messages
+    function handleProgressMessage(message: any) {
+      const progressMessages: { [key: string]: string } = {
+        'validating': 'Validating request...',
+        'parsing_url': 'Extracting thread information...',
+        'fetching_reddit': 'Fetching Reddit comments...',
+        'reddit_fetched': `Fetched ${message.data?.commentCount || 0} comments from r/${message.data?.subreddit || 'unknown'}`,
+        'ai_analysis': 'Starting comprehensive AI analysis...',
+        'openai_request': 'Sending analysis request to OpenAI...',
+        'ai_processing': 'AI is analyzing sentiment and themes...',
+        'sentiment_detected': 'Overall sentiment analysis detected...',
+        'advanced_analysis': 'Advanced analysis (themes, sarcasm) in progress...',
+        'ai_complete': 'AI analysis complete, processing results...',
+        'finalizing': 'Finalizing analysis...'
+      };
+
+      const displayMessage = progressMessages[message.stage] || message.message || 'Processing...';
+      showLoading(displayMessage);
+
+      // Update progress bar if we have progress percentage
+      if (message.progress && elements.progressFill) {
+        (elements.progressFill as HTMLElement).style.width = `${message.progress}%`;
+      }
+
+      // Show thread info when available
+      if (message.data?.threadTitle && message.stage === 'reddit_fetched') {
+        displayThreadInfo({
+          title: message.data.threadTitle,
+          subreddit: message.data.subreddit,
+          author: message.data.author,
+          score: message.data.score,
+          imageUrl: message.data.imageUrl
+        });
+      }
+    }
+
+    // Handle completion message
+    function handleCompleteMessage(message: any, analysisData: any) {
+      if (message.data) {
+        // Use the same processing as the regular API
+        const analysisResult = message.data;
+        
+        const meta = {
+          analyzedCount: analysisResult.analyzed_count,
+          totalComments: analysisResult.sampling_quality?.total_comments_available || analysisResult.analyzed_count,
+          threadInfo: {
+            title: analysisResult.thread_title,
+            subreddit: analysisResult.subreddit,
+            author: analysisResult.thread_post_author?.replace('u/', ''),
+            score: analysisResult.thread_score,
+            imageUrl: analysisResult.thread_image_url || analysisResult.thread_url // Use the image URL or thread URL as fallback
+          }
+        };
+
+        // Cache results
+        analysisCache.set(currentRedditUrl, {
+          data: { sentiment: analysisResult.overall_sentiment, meta, fullAnalysis: analysisResult },
+          timestamp: Date.now()
+        });
+
+        // Show results with progressive enhancements for streaming
+        showStreamingResults(analysisResult, meta);
+      }
+    }
+
+    // Enhanced results display for streaming with progressive reveals
+    function showStreamingResults(analysisData: any, meta: any) {
+      console.log('showStreamingResults called with:', analysisData, meta);
+      console.log('analysisData structure:', Object.keys(analysisData));
+      
+      // First show basic sentiment
+      hideAllStates();
+      if (elements.progressFill) {
+        (elements.progressFill as HTMLElement).style.width = '100%';
+      }
+
+      // Display thread info
+      if (meta.threadInfo) {
+        displayThreadInfo(meta.threadInfo);
+      }
+
+      // Display sample size info
+      if (meta.analyzedCount && meta.totalComments) {
+        displaySampleInfo(meta);
+      }
+
+      // Start with sentiment analysis
+      console.log('Displaying sentiment data:', analysisData.overall_sentiment);
+      if (analysisData.overall_sentiment) {
+        displaySentimentData(analysisData.overall_sentiment);
+      } else {
+        console.error('No overall_sentiment data found in analysisData');
+      }
+      elements.resultsContainer?.classList.remove('hidden');
+
+      // Progressive reveals with delays for better UX
+      setTimeout(() => {
+        // Show themes after 500ms
+        console.log('Attempting to show themes:', analysisData.themes);
+        if (analysisData.themes && analysisData.themes.length > 0) {
+          displayAdvancedThemes(analysisData.themes);
+          revealSectionWithAnimation('themes-section');
+        } else {
+          console.log('No themes to display');
+        }
+      }, 500);
+
+      setTimeout(() => {
+        // Show sample comments after 1000ms  
+        if (analysisData.top_positive_comments || analysisData.top_negative_comments) {
+          const sampleComments = {
+            positive: (analysisData.top_positive_comments || []).map((c: any) => c.text || c),
+            neutral: [], // Add neutral comments if they exist
+            negative: (analysisData.top_negative_comments || []).map((c: any) => c.text || c)
+          };
+          displaySampleComments(sampleComments);
+        }
+      }, 1000);
+
+      setTimeout(() => {
+        // Show sarcasm detection after 1500ms
+        console.log('Attempting to show sarcasm flags:', analysisData.sarcasm_flags);
+        if (analysisData.sarcasm_flags && analysisData.sarcasm_flags.length > 0) {
+          displaySarcasmFlags(analysisData.sarcasm_flags);
+          revealSectionWithAnimation('sarcasm-section');
+        } else {
+          console.log('No sarcasm flags to display');
+        }
+      }, 1500);
+
+      setTimeout(() => {
+        // Show advanced features after 2000ms
+        displayAdvancedAnalysis(analysisData);
+        revealSectionWithAnimation('advanced-section');
+      }, 2000);
+
+      // Enable analyze button
+      if (elements.analyzeButton) {
+        (elements.analyzeButton as HTMLButtonElement).disabled = false;
+      }
+
+      // Set summary
+      currentSummary = analysisData.overall_sentiment?.explainability || '';
+      if (meta.threadInfo?.title) {
+        addToHistory(currentRedditUrl, meta.threadInfo.title);
+      }
+    }
+
+    // Reveal section with smooth animation
+    function revealSectionWithAnimation(sectionId: string) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        console.log('Revealing section:', sectionId);
+        section.classList.remove('hidden');
+        section.style.opacity = '1';
+        section.style.transform = 'translateY(0)';
+        section.style.transition = 'all 0.6s ease-out';
+        
+        // Ensure it's fully visible
+        setTimeout(() => {
+          section.style.opacity = '1';
+          section.style.transform = 'translateY(0)';
+        }, 100);
+      } else {
+        console.log('Section not found:', sectionId);
+      }
+    }
+
+    // Display advanced themes with more detail
+    function displayAdvancedThemes(themes: any[]) {
+      const container = document.getElementById('themes-display');
+      if (!container || !Array.isArray(themes)) {
+        console.log('Themes container not found or themes not array:', container, themes);
+        return;
+      }
+
+      console.log('Displaying themes:', themes);
+
+      const themesHtml = themes.slice(0, 5).map(theme => `
+        <div class="theme-item p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-l-4 border-blue-500 mb-3">
+          <h4 class="font-semibold text-gray-800 mb-2">${SecurityUtils.escapeHtml(theme.theme || theme.name || 'Unknown Theme')}</h4>
+          <p class="text-gray-600 text-sm mb-2">${SecurityUtils.escapeHtml(theme.summary || theme.description || 'No description available')}</p>
+          <div class="flex items-center gap-3">
+            <span class="px-2 py-1 rounded-full text-xs font-medium ${getSentimentClass(theme.sentiment)}">
+              ${theme.sentiment || 'neutral'}
+            </span>
+            <span class="text-xs text-gray-500">
+              ${Math.round((theme.share || 0) * 100)}% of comments
+            </span>
+            <span class="text-xs text-gray-500">
+              ${Math.round((theme.confidence || 0) * 100)}% confidence
+            </span>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = themesHtml;
+      console.log('Themes HTML rendered:', themesHtml);
+    }
+
+    // Display sarcasm flags
+    function displaySarcasmFlags(sarcasmFlags: any[]) {
+      const container = document.getElementById('sarcasm-display');
+      if (!container || !Array.isArray(sarcasmFlags)) return;
+
+      const sarcasmHtml = sarcasmFlags.slice(0, 3).map(flag => `
+        <div class="sarcasm-item p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400 mb-3">
+          <p class="text-gray-800 italic mb-2">"${SecurityUtils.escapeHtml(flag.text)}"</p>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="text-yellow-700 font-medium">
+              ${Math.round((flag.confidence || 0) * 100)}% confidence
+            </span>
+            <span class="text-gray-600">
+              by ${SecurityUtils.escapeHtml(flag.author || 'unknown')}
+            </span>
+            <span class="text-gray-600">
+              ${flag.upvotes || 0} upvotes
+            </span>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = sarcasmHtml;
+    }
+
+    // Display advanced analysis features
+    function displayAdvancedAnalysis(analysisData: any) {
+      // Display sentiment by depth
+      if (analysisData.sentiment_by_depth) {
+        displaySentimentByDepth(analysisData.sentiment_by_depth);
+      }
+
+      // Display emerging topics
+      if (analysisData.emerging_topics) {
+        displayEmergingTopics(analysisData.emerging_topics);
+      }
+
+      // Display risk alerts
+      if (analysisData.risk_alerts) {
+        displayRiskAlerts(analysisData.risk_alerts);
+      }
+
+      // Display community language
+      if (analysisData.community_lingo) {
+        displayCommunityLingo(analysisData.community_lingo);
+      }
+
+      // Display demographic insights
+      if (analysisData.demographic_insights) {
+        displayDemographicInsights(analysisData.demographic_insights);
+      }
+
+      // Display technical metrics
+      if (analysisData.technical_metrics) {
+        displayTechnicalMetrics(analysisData.technical_metrics);
+      }
+    }
+
+    // Helper function to get sentiment class
+    function getSentimentClass(sentiment: string) {
+      switch (sentiment) {
+        case 'positive': return 'bg-green-100 text-green-800';
+        case 'negative': return 'bg-red-100 text-red-800';
+        default: return 'bg-gray-100 text-gray-800';
+      }
+    }
+
+    // Add a new analysis section
+    function addAnalysisSection(title: string, content: string) {
+      if (!content) return;
+      
+      const resultsContainer = document.getElementById('analysis-results') || elements.resultsContainer;
+      if (!resultsContainer) return;
+
+      const section = document.createElement('div');
+      section.className = 'analysis-section bg-white rounded-lg shadow-md p-6 mb-4';
+      section.innerHTML = `
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">${title}</h3>
+        <div class="content">${content}</div>
+      `;
+      
+      resultsContainer.appendChild(section);
+      revealSectionWithAnimation(section.id);
+    }
+
+    // Display sentiment by depth analysis
+    function displaySentimentByDepth(sentimentByDepth: any[]) {
+      const container = document.getElementById('depth-analysis-display');
+      if (!container || !Array.isArray(sentimentByDepth) || sentimentByDepth.length === 0) return;
+      
+      const depthHtml = sentimentByDepth.map(depth => `
+        <div class="depth-analysis mb-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div class="font-medium text-gray-800 mb-2">
+            Comment Thread Depth ${depth.depth} 
+            <span class="text-gray-600 text-sm">(${depth.comment_count || 0} comments)</span>
+          </div>
+          <div class="grid grid-cols-3 gap-4 text-sm">
+            <div class="text-center">
+              <div class="text-green-600 font-bold text-lg">${depth.positive || 0}%</div>
+              <div class="text-green-600">Positive</div>
+            </div>
+            <div class="text-center">
+              <div class="text-gray-600 font-bold text-lg">${depth.neutral || 0}%</div>
+              <div class="text-gray-600">Neutral</div>
+            </div>
+            <div class="text-center">
+              <div class="text-red-600 font-bold text-lg">${depth.negative || 0}%</div>
+              <div class="text-red-600">Negative</div>
+            </div>
+          </div>
+          <div class="mt-2 text-xs text-gray-500">
+            ${depth.insights || 'Deeper conversations tend to become more nuanced'}
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = depthHtml;
+    }
+
+    // Display emerging topics
+    function displayEmergingTopics(emergingTopics: any[]) {
+      const container = document.getElementById('emerging-topics-display');
+      if (!container || !Array.isArray(emergingTopics) || emergingTopics.length === 0) return;
+      
+      const topicsHtml = emergingTopics.slice(0, 8).map(topic => `
+        <div class="topic-item mb-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+          <div class="font-semibold text-blue-900 mb-2">${SecurityUtils.escapeHtml(topic.topic || topic.name || 'Unknown Topic')}</div>
+          <div class="text-blue-700 text-sm mb-2">${SecurityUtils.escapeHtml(topic.description || topic.summary || 'No description available')}</div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+              ${Math.round((topic.frequency || topic.share || 0) * 100)}% discussion
+            </span>
+            <span class="text-blue-600">
+              ${Math.round((topic.confidence || 0) * 100)}% confidence
+            </span>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = topicsHtml;
+    }
+
+    // Display risk alerts
+    function displayRiskAlerts(riskAlerts: any[]) {
+      const container = document.getElementById('risk-alerts-display');
+      if (!container || !Array.isArray(riskAlerts) || riskAlerts.length === 0) {
+        if (container) container.innerHTML = '<div class="text-center text-gray-500 py-4">No significant risks detected in this discussion</div>';
+        return;
+      }
+      
+      const alertsHtml = riskAlerts.map(alert => {
+        const severityClass = getSeverityClass(alert.severity);
+        return `
+          <div class="alert-item mb-3 p-4 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border}">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="font-semibold ${severityClass.text} mb-1">
+                  ${SecurityUtils.escapeHtml(alert.alert_type || alert.type || 'Risk Alert')}
+                </div>
+                <div class="text-sm ${severityClass.textSecondary} mb-2">
+                  ${SecurityUtils.escapeHtml(alert.explanation || alert.description || 'No details available')}
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="px-2 py-1 rounded ${severityClass.badge}">
+                    ${alert.severity || 'unknown'} severity
+                  </span>
+                  ${alert.affected_comments ? `<span class="${severityClass.textSecondary}">${alert.affected_comments} comments affected</span>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = alertsHtml;
+    }
+
+    // Display community language and lingo
+    function displayCommunityLingo(communityLingo: any[]) {
+      const container = document.getElementById('community-lingo-display');
+      if (!container || !Array.isArray(communityLingo) || communityLingo.length === 0) return;
+      
+      const lingoHtml = communityLingo.slice(0, 10).map(lingo => `
+        <div class="lingo-item mb-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="font-semibold text-purple-900 mb-1">
+                "${SecurityUtils.escapeHtml(lingo.term || lingo.phrase || 'Unknown Term')}"
+              </div>
+              <div class="text-purple-700 text-sm mb-2">
+                ${SecurityUtils.escapeHtml(lingo.meaning || lingo.definition || lingo.explanation || 'No definition available')}
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="px-2 py-1 rounded-full bg-purple-100 text-purple-800">
+                  ${lingo.frequency || lingo.usage_count || 0} uses
+                </span>
+                ${lingo.context ? `<span class="text-purple-600">${SecurityUtils.escapeHtml(lingo.context)}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = lingoHtml;
+    }
+
+    // Display demographic insights
+    function displayDemographicInsights(demographicInsights: any) {
+      const container = document.getElementById('demographic-insights-display');
+      if (!container || !demographicInsights) return;
+
+      let insightsHtml = '';
+
+      // Age groups
+      if (demographicInsights.age_groups) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-indigo-50 rounded-lg">
+            <h4 class="font-semibold text-indigo-900 mb-2">Age Demographics</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              ${Object.entries(demographicInsights.age_groups).map(([age, percentage]: [string, any]) => `
+                <div class="text-center">
+                  <div class="text-indigo-700 font-bold">${Math.round(percentage)}%</div>
+                  <div class="text-indigo-600 text-sm">${age}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Geographic insights
+      if (demographicInsights.geographic_indicators) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-green-50 rounded-lg">
+            <h4 class="font-semibold text-green-900 mb-2">Geographic Indicators</h4>
+            <div class="space-y-2">
+              ${demographicInsights.geographic_indicators.slice(0, 5).map((geo: any) => `
+                <div class="flex justify-between">
+                  <span class="text-green-700">${SecurityUtils.escapeHtml(geo.region || geo.location)}</span>
+                  <span class="text-green-600">${Math.round(geo.confidence * 100)}% confidence</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Interest categories
+      if (demographicInsights.interest_categories) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-yellow-50 rounded-lg">
+            <h4 class="font-semibold text-yellow-900 mb-2">Interest Categories</h4>
+            <div class="flex flex-wrap gap-2">
+              ${demographicInsights.interest_categories.slice(0, 8).map((interest: any) => `
+                <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">
+                  ${SecurityUtils.escapeHtml(interest.category)} (${Math.round(interest.score * 100)}%)
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = insightsHtml || '<div class="text-center text-gray-500 py-4">No demographic insights available</div>';
+    }
+
+    // Display technical metrics
+    function displayTechnicalMetrics(technicalMetrics: any) {
+      const container = document.getElementById('technical-metrics-display');
+      if (!container || !technicalMetrics) return;
+
+      let metricsHtml = '';
+
+      // Processing metrics
+      if (technicalMetrics.processing_stats) {
+        const stats = technicalMetrics.processing_stats;
+        metricsHtml += `
+          <div class="metric-group mb-4 p-4 bg-gray-50 rounded-lg">
+            <h4 class="font-semibold text-gray-900 mb-3">Processing Statistics</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div class="text-center">
+                <div class="text-gray-800 font-bold text-lg">${stats.total_processing_time || 'N/A'}</div>
+                <div class="text-gray-600 text-sm">Processing Time</div>
+              </div>
+              <div class="text-center">
+                <div class="text-gray-800 font-bold text-lg">${stats.tokens_analyzed || 'N/A'}</div>
+                <div class="text-gray-600 text-sm">Tokens Analyzed</div>
+              </div>
+              <div class="text-center">
+                <div class="text-gray-800 font-bold text-lg">${Math.round((stats.confidence_score || 0) * 100)}%</div>
+                <div class="text-gray-600 text-sm">Confidence</div>
+              </div>
+              <div class="text-center">
+                <div class="text-gray-800 font-bold text-lg">${stats.api_calls || 'N/A'}</div>
+                <div class="text-gray-600 text-sm">API Calls</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Quality metrics
+      if (technicalMetrics.quality_metrics) {
+        const quality = technicalMetrics.quality_metrics;
+        metricsHtml += `
+          <div class="metric-group mb-4 p-4 bg-blue-50 rounded-lg">
+            <h4 class="font-semibold text-blue-900 mb-3">Analysis Quality</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between">
+                <span class="text-blue-700">Sample Quality</span>
+                <span class="text-blue-600 font-medium">${quality.sample_quality || 'Good'}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-blue-700">Data Completeness</span>
+                <span class="text-blue-600 font-medium">${Math.round((quality.completeness || 0) * 100)}%</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-blue-700">Analysis Depth</span>
+                <span class="text-blue-600 font-medium">${quality.analysis_depth || 'Standard'}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = metricsHtml || '<div class="text-center text-gray-500 py-4">No technical metrics available</div>';
+    }
+
+    // Helper function for severity styling
+    function getSeverityClass(severity: string) {
+      switch (severity?.toLowerCase()) {
+        case 'high':
+          return {
+            bg: 'bg-red-50',
+            border: 'border-red-400',
+            text: 'text-red-800',
+            textSecondary: 'text-red-600',
+            badge: 'bg-red-100 text-red-800'
+          };
+        case 'medium':
+          return {
+            bg: 'bg-yellow-50',
+            border: 'border-yellow-400',
+            text: 'text-yellow-800',
+            textSecondary: 'text-yellow-600',
+            badge: 'bg-yellow-100 text-yellow-800'
+          };
+        case 'low':
+          return {
+            bg: 'bg-blue-50',
+            border: 'border-blue-400',
+            text: 'text-blue-800',
+            textSecondary: 'text-blue-600',
+            badge: 'bg-blue-100 text-blue-800'
+          };
+        default:
+          return {
+            bg: 'bg-gray-50',
+            border: 'border-gray-400',
+            text: 'text-gray-800',
+            textSecondary: 'text-gray-600',
+            badge: 'bg-gray-100 text-gray-800'
+          };
       }
     }
 
@@ -1062,59 +1870,52 @@ const faqs = [
         currentRedditUrl = redditUrl;
 
         try {
-          // Fetch comments
-          showLoading('Fetching Reddit comments...');
+          // Analyze sentiment directly (new comprehensive API handles Reddit fetching internally)
+          showLoading('Fetching Reddit comments and analyzing sentiment...');
           
-          const commentsResponse = await secureFetch('/api/reddit-comments', {
-            method: 'POST',
-            body: JSON.stringify({ redditUrl })
-          });
-
-          const commentsData = await commentsResponse.json();
+          // Try streaming first, fall back to regular if needed
+          const useStreaming = true; // Set to false to use regular mode
           
-          console.log('Reddit API response received:', {
-            hasComments: !!commentsData.comments,
-            commentCount: commentsData.comments?.length,
-            threadInfo: commentsData.threadInfo,
-            imageUrl: commentsData.threadInfo?.imageUrl
-          });
-
-          if (!commentsData.comments || commentsData.comments.length === 0) {
-            throw new Error('No comments found for this Reddit thread');
+          if (useStreaming) {
+            await analyzeWithStreaming(redditUrl, 300);
+            return; // Exit early for streaming
           }
-
-          // Analyze sentiment
-          showLoading('Analyzing sentiment...');
           
-          const sentimentResponse = await secureFetch('/api/sentiment', {
+          const sentimentResponse = await secureFetch('/api/reddit-sentiment', {
             method: 'POST',
             body: JSON.stringify({
-              comments: commentsData.comments,
-              analyzedCount: commentsData.analyzedCount,
-              totalComments: commentsData.totalComments,
-              mostLiked: commentsData.mostUpvoted,
-              videoInfo: commentsData.threadInfo,
-              channelInfo: {},
-              platform: 'reddit'
+              redditUrl: redditUrl,
+              maxComments: 300
             })
           });
 
-          const sentimentData = await sentimentResponse.json();
+          const analysisData = await sentimentResponse.json();
+          
+          // Debug: Log the actual response data
+          console.log('Full analysis data received:', analysisData);
+          console.log('Top positive comments:', analysisData.top_positive_comments);
+          console.log('Top negative comments:', analysisData.top_negative_comments);
 
+          // Extract meta information from the comprehensive analysis
           const meta = {
-            analyzedCount: commentsData.analyzedCount,
-            totalComments: commentsData.totalComments,
-            mostUpvoted: commentsData.mostUpvoted,
-            threadInfo: commentsData.threadInfo,
+            analyzedCount: analysisData.analyzed_count,
+            totalComments: analysisData.sampling_quality?.total_comments_available || analysisData.analyzed_count,
+            threadInfo: {
+              title: analysisData.thread_title,
+              subreddit: analysisData.subreddit,
+              author: analysisData.thread_post_author?.replace('u/', ''),
+              score: analysisData.thread_score,
+              imageUrl: analysisData.thread_image_url || analysisData.thread_url // Use the image URL or thread URL as fallback
+            }
           };
 
           // Cache results
           analysisCache.set(redditUrl, {
-            data: { sentiment: sentimentData, meta },
+            data: { sentiment: analysisData.overall_sentiment, meta, fullAnalysis: analysisData },
             timestamp: Date.now()
           });
 
-          showResults(sentimentData, meta);
+          showResults(analysisData.overall_sentiment, meta, analysisData);
 
         } catch (error: unknown) {
           console.error('Analysis error:', error);
