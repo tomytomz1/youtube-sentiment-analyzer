@@ -1,0 +1,590 @@
+/* Streaming Reddit Sentiment Analysis UI Styles */
+
+/* Progress Container */
+.analysis-progress-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.analysis-progress-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Progress Bar */
+.progress-bar-container {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  height: 8px;
+  margin: 1rem 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #4ade80, #22c55e, #16a34a);
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.5s ease-in-out;
+  position: relative;
+  width: 0%;
+}
+
+.progress-bar.complete {
+  background: linear-gradient(90deg, #10b981, #059669, #047857);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Progress Text */
+#analysis-progress {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+#analysis-progress.complete {
+  color: #4ade80;
+  font-weight: 700;
+}
+
+#analysis-progress.error {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* Thread Info */
+#thread-info {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: none;
+  backdrop-filter: blur(10px);
+}
+
+#thread-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#thread-info p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+/* Analysis Sections */
+.analysis-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #667eea;
+}
+
+.analysis-section.animate-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.analysis-section.hidden {
+  display: none;
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.75rem;
+  color: #667eea;
+}
+
+/* Sentiment Display */
+#sentiment-display {
+  text-align: center;
+}
+
+.sentiment-bars {
+  display: flex;
+  gap: 4px;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sentiment-bar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sentiment-bar.positive {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.sentiment-bar.neutral {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.sentiment-bar.negative {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.sentiment-bar:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.sentiment-explanation {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+/* Themes Display */
+#themes-display {
+  display: grid;
+  gap: 1rem;
+}
+
+.theme-item {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.theme-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.theme-item h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.theme-item p {
+  margin: 0 0 1rem 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.theme-stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.theme-stats .sentiment {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.theme-stats .sentiment.positive {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.theme-stats .sentiment.neutral {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.theme-stats .sentiment.negative {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.theme-stats .share {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Comments Display */
+.comment-item {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.comment-text {
+  margin: 0 0 0.75rem 0;
+  line-height: 1.6;
+  color: #1f2937;
+  font-style: italic;
+}
+
+.comment-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.comment-meta .author {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.comment-meta .upvotes {
+  color: #6b7280;
+  background: #e5e7eb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Sarcasm Display */
+.sarcasm-item {
+  background: #fef3c7;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #f59e0b;
+  transition: all 0.3s ease;
+}
+
+.sarcasm-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sarcasm-text {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.6;
+  color: #92400e;
+  font-style: italic;
+}
+
+.sarcasm-reason {
+  margin: 0 0 0.75rem 0;
+  color: #a16207;
+  font-size: 0.9rem;
+}
+
+.sarcasm-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.sarcasm-meta .confidence {
+  background: #fbbf24;
+  color: #92400e;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.sarcasm-meta .author {
+  color: #a16207;
+  font-weight: 600;
+}
+
+/* Meme Display */
+.meme-item {
+  background: #fce7f3;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #ec4899;
+  transition: all 0.3s ease;
+}
+
+.meme-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.meme-text {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.6;
+  color: #be185d;
+  font-style: italic;
+}
+
+.meme-format {
+  margin: 0 0 0.75rem 0;
+  color: #a21caf;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.meme-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.meme-meta .confidence {
+  background: #f472b6;
+  color: #be185d;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.meme-meta .author {
+  color: #a21caf;
+  font-weight: 600;
+}
+
+/* Loading Animation */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .analysis-progress-container {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .sentiment-bars {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sentiment-bar {
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
+  .theme-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .comment-meta,
+  .sarcasm-meta,
+  .meme-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .analysis-section {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .section-header h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .analysis-section {
+    background: #1f2937;
+    color: #f9fafb;
+    border-left-color: #667eea;
+  }
+
+  .section-header {
+    border-bottom-color: #374151;
+  }
+
+  .section-header h2 {
+    color: #f9fafb;
+  }
+
+  .theme-item {
+    background: #374151;
+    color: #f9fafb;
+  }
+
+  .theme-item h4 {
+    color: #f9fafb;
+  }
+
+  .theme-item p {
+    color: #d1d5db;
+  }
+
+  .comment-item {
+    background: #374151;
+    color: #f9fafb;
+  }
+
+  .comment-text {
+    color: #f9fafb;
+  }
+
+  .sentiment-explanation {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  .sarcasm-item {
+    background: #451a03;
+    border-left-color: #f59e0b;
+  }
+
+  .sarcasm-text {
+    color: #fef3c7;
+  }
+
+  .sarcasm-reason {
+    color: #fde68a;
+  }
+
+  .meme-item {
+    background: #4c1d95;
+    border-left-color: #ec4899;
+  }
+
+  .meme-text {
+    color: #fce7f3;
+  }
+
+  .meme-format {
+    color: #f3e8ff;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .analysis-section,
+  .sentiment-bar,
+  .theme-item,
+  .comment-item,
+  .sarcasm-item,
+  .meme-item {
+    transition: none;
+  }
+
+  .analysis-progress-container::before {
+    animation: none;
+  }
+
+  .progress-bar.complete {
+    animation: none;
+  }
+
+  .loading-spinner {
+    animation: none;
+  }
+}
+
+/* Focus States */
+.analysis-section:focus-within {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.sentiment-bar:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .analysis-progress-container {
+    background: white;
+    color: black;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .progress-bar-container {
+    background: #e5e7eb;
+  }
+
+  .progress-bar {
+    background: #10b981;
+  }
+
+  .analysis-section {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+} 

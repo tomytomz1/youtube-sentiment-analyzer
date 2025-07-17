@@ -1,19 +1,85 @@
 User-agent: *
 Allow: /
 
+# Block API endpoints for security
+Disallow: /api/
+
 # Sitemap location
 Sitemap: https://www.senti-meter.com/sitemap.xml
 
-# Optional: Block any admin or private paths (if you add them later)
-# Disallow: /admin/
-# Disallow: /api/
-
-# Allow common crawlers
+# Google search crawlers
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
+# Bing search crawler
 User-agent: Bingbot
 Allow: /
-
-# Crawl delay (optional - helps prevent server overload)
 Crawl-delay: 1
+
+# AI/LLM Crawlers - Allow with rate limiting
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: ChatGPT-User
+Allow: /
+Crawl-delay: 2
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 2
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: YouBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: anthropic-ai
+Allow: /
+Crawl-delay: 2
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 2
+
+# Social media crawlers
+User-agent: facebookexternalhit
+Allow: /
+Crawl-delay: 1
+
+User-agent: Twitterbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: LinkedInBot
+Allow: /
+Crawl-delay: 1
+
+# Academic and research crawlers
+User-agent: ia_archiver
+Allow: /
+Crawl-delay: 3
+
+User-agent: Wayback
+Allow: /
+Crawl-delay: 3
+
+# Block aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# General crawl delay for all other bots
+Crawl-delay: 2

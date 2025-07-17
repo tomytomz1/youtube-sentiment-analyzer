@@ -1,12 +1,18 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import node from '@astrojs/node';
 import vercel from '@astrojs/vercel';
+
+// Check if we're in development mode
+const isDev = process.env.NODE_ENV === 'development';
 
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
-  adapter: vercel({
+  adapter: isDev ? node({
+    mode: 'standalone'
+  }) : vercel({
     webAnalytics: {
       enabled: true
     }
@@ -15,11 +21,6 @@ export default defineConfig({
   site: 'https://www.senti-meter.com',
   server: {
     port: 4321,
-    host: true
-  },
-  vite: {
-    define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-    }
+    host: 'localhost'
   }
 });

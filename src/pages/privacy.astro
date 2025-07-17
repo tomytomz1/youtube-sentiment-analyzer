@@ -1,8 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const title = "Privacy Policy - YouTube Sentiment Analyzer";
+const description = "Our privacy policy explains how we handle your data. We do not store, track, or collect any personal information.";
+const url = "https://www.senti-meter.com/privacy";
 ---
 
-<Layout>
+<Layout title={title} description={description} url={url}>
 	<head slot="head">
 		<title>Privacy Policy - YouTube Sentiment Analyzer</title>
 		<meta name="description" content="Our privacy policy explains how we handle your data. We do not store, track, or collect any personal information." />

@@ -1,0 +1,603 @@
+openapi: 3.0.3
+info:
+  title: Reddit Sentiment Analyzer API
+  description: |
+    Comprehensive sentiment analysis API for Reddit threads with advanced analytics including:
+    - Detailed sentiment analysis by comment depth
+    - Sarcasm and meme detection
+    - Community language analysis
+    - Controversy and drama indicators
+    - Temporal sentiment tracking
+    - Risk assessment and emerging topic detection
+  version: 1.0.0
+  contact:
+    name: SentiMeter Support
+    url: https://www.senti-meter.com/support
+    email: support@senti-meter.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://www.senti-meter.com/terms
+
+servers:
+  - url: https://www.senti-meter.com/api
+    description: Production server
+  - url: http://localhost:4321/api
+    description: Development server
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /reddit-sentiment:
+    post:
+      summary: Analyze Reddit Thread Sentiment
+      description: |
+        Performs comprehensive sentiment analysis on a Reddit thread including:
+        - Overall sentiment distribution (positive/neutral/negative)
+        - Sentiment analysis by comment depth (0-5 levels)
+        - Theme extraction and community language detection
+        - Sarcasm and meme identification
+        - Controversy and drama indicators
+        - Temporal sentiment patterns
+        - Risk assessment and emerging topics
+        
+        **Rate Limits:** 2 requests per minute per IP
+        **Cache:** Results cached for 15 minutes
+        **Processing Time:** 15-45 seconds depending on thread size
+      operationId: analyzeRedditSentiment
+      tags:
+        - Sentiment Analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisRequest'
+            examples:
+              basic_request:
+                summary: Basic analysis request
+                value:
+                  redditUrl: "https://www.reddit.com/r/pics/comments/1m0h9ze/trump_is_paving_the_white_house_rose_garden/"
+                  maxComments: 300
+              minimal_request:
+                summary: Minimal request (defaults to 100 comments)
+                value:
+                  redditUrl: "https://reddit.com/r/AskReddit/comments/xyz123/"
+      responses:
+        '200':
+          description: Successful analysis
+          headers:
+            X-Processing-Time:
+              description: Time taken to process the request in milliseconds
+              schema:
+                type: integer
+                example: 15420
+            X-Comments-Analyzed:
+              description: Number of comments actually analyzed
+              schema:
+                type: integer
+                example: 87
+            X-Cache-Status:
+              description: Whether result came from cache
+              schema:
+                type: string
+                enum: [HIT, MISS, REPLAY]
+                example: MISS
+            X-RateLimit-Remaining:
+              description: Number of requests remaining in current window
+              schema:
+                type: integer
+                example: 1
+            X-Success-Rate:
+              description: API success rate percentage
+              schema:
+                type: string
+                example: "94.2%"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedditSentimentResult'
+              examples:
+                successful_analysis:
+                  summary: Complete sentiment analysis result
+                  value:
+                    analyzed_count: 87
+                    analyzed_sample_rate: 0.032
+                    subreddit: "pics"
+                    thread_title: "Trump is paving the White House Rose Garden"
+                    thread_url: "https://www.reddit.com/r/pics/comments/1m0h9ze/trump_is_paving_the_white_house_rose_garden/"
+                    thread_post_author: "u/purplelynn"
+                    thread_post_time: "2024-07-15T21:00:00Z"
+                    analysis_timestamp: "2024-07-16T13:30:00Z"
+                    overall_sentiment:
+                      positive: 15
+                      neutral: 16
+                      negative: 69
+                      confidence: 0.95
+                      explainability: "Sentiment overwhelmingly negative, focused on perceived destruction of tradition and political polarization."
+                    schema_version: "1.0.0"
+        '400':
+          description: Bad Request - Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_url:
+                  summary: Invalid Reddit URL
+                  value:
+                    error: "Invalid Reddit URL format provided"
+                    code: "VALIDATION_ERROR"
+                    timestamp: "2024-07-16T13:30:00Z"
+                    status: 400
+                max_comments_exceeded:
+                  summary: Too many comments requested
+                  value:
+                    error: "Maximum comments limit exceeded (300)"
+                    code: "VALIDATION_ERROR"
+                    timestamp: "2024-07-16T13:30:00Z"
+                    status: 400
+        '404':
+          description: Thread not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                thread_not_found:
+                  summary: Reddit thread not found
+                  value:
+                    error: "Reddit thread not found or has been deleted"
+                    code: "NOT_FOUND"
+                    timestamp: "2024-07-16T13:30:00Z"
+                    status: 404
+        '429':
+          description: Rate limit exceeded
+          headers:
+            X-RateLimit-Reset:
+              description: Unix timestamp when rate limit resets
+              schema:
+                type: integer
+                example: 1721134200
+            Retry-After:
+              description: Seconds to wait before retrying
+              schema:
+                type: integer
+                example: 45
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rate_limited:
+                  summary: Too many requests
+                  value:
+                    error: "Too many requests. Please try again later"
+                    code: "RATE_LIMIT_ERROR"
+                    timestamp: "2024-07-16T13:30:00Z"
+                    status: 429
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server_error:
+                  summary: Service temporarily unavailable
+                  value:
+                    error: "Service temporarily unavailable"
+                    code: "INTERNAL_ERROR"
+                    timestamp: "2024-07-16T13:30:00Z"
+                    status: 500
+        '504':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  summary: Processing timeout
+                  value:
+                    error: "Request timed out. Please try again"
+                    code: "TIMEOUT_ERROR"
+                    timestamp: "2024-07-16T13:30:00Z"
+                    status: 504
+
+    options:
+      summary: CORS Preflight
+      description: Handle CORS preflight requests
+      responses:
+        '204':
+          description: Successful preflight
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+
+    get:
+      summary: Health Check
+      description: API health and status endpoint
+      parameters:
+        - name: health
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [true]
+          example: true
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '405':
+          description: Method not allowed (missing health parameter)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (if required in production)
+
+  schemas:
+    AnalysisRequest:
+      type: object
+      required:
+        - redditUrl
+      properties:
+        redditUrl:
+          type: string
+          format: uri
+          description: Reddit thread URL (supports various formats)
+          example: "https://www.reddit.com/r/pics/comments/1m0h9ze/trump_is_paving_the_white_house_rose_garden/"
+          pattern: '^https?://(www\.|old\.|new\.)?reddit\.com/r/[a-zA-Z0-9_]+/comments/[a-z0-9]+/?'
+          maxLength: 500
+        maxComments:
+          type: integer
+          description: Maximum number of comments to analyze
+          minimum: 1
+          maximum: 300
+          default: 300
+          example: 300
+
+    RedditSentimentResult:
+      type: object
+      required:
+        - analyzed_count
+        - analyzed_sample_rate
+        - subreddit
+        - thread_title
+        - thread_url
+        - thread_post_author
+        - thread_post_time
+        - analysis_timestamp
+        - overall_sentiment
+        - schema_version
+      properties:
+        analyzed_count:
+          type: integer
+          description: Number of comments analyzed
+          example: 100
+        analyzed_sample_rate:
+          type: number
+          format: float
+          description: Ratio of analyzed comments to total available
+          example: 0.037
+        subreddit:
+          type: string
+          description: Subreddit name
+          example: "pics"
+        thread_title:
+          type: string
+          description: Thread title
+          example: "Trump is paving the White House Rose Garden"
+        thread_url:
+          type: string
+          format: uri
+          description: Original thread URL
+          example: "https://www.reddit.com/r/pics/comments/1m0h9ze/trump_is_paving_the_white_house_rose_garden/"
+        thread_post_author:
+          type: string
+          description: Thread author username
+          example: "u/purplelynn"
+        thread_post_time:
+          type: string
+          format: date-time
+          description: When the thread was posted
+          example: "2024-07-15T21:00:00Z"
+        analysis_timestamp:
+          type: string
+          format: date-time
+          description: When the analysis was performed
+          example: "2024-07-16T13:30:00Z"
+        data_freshness:
+          $ref: '#/components/schemas/DataFreshness'
+        sampling_quality:
+          $ref: '#/components/schemas/SamplingQuality'
+        language_analysis:
+          $ref: '#/components/schemas/LanguageAnalysis'
+        overall_sentiment:
+          $ref: '#/components/schemas/OverallSentiment'
+        sentiment_by_depth:
+          type: array
+          items:
+            $ref: '#/components/schemas/SentimentByDepth'
+        themes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Theme'
+        sarcasm_flags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SarcasmFlag'
+        meme_detection:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemeDetection'
+        top_positive_comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopComment'
+        top_negative_comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopComment'
+        controversial_comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ControversialComment'
+        risk_alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskAlert'
+        schema_version:
+          type: string
+          description: Schema version for compatibility
+          example: "1.0.0"
+
+    OverallSentiment:
+      type: object
+      required:
+        - positive
+        - neutral
+        - negative
+        - confidence
+      properties:
+        positive:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Percentage of positive sentiment
+          example: 15
+        neutral:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Percentage of neutral sentiment
+          example: 16
+        negative:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Percentage of negative sentiment
+          example: 69
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Confidence in the analysis
+          example: 0.95
+        explainability:
+          type: string
+          description: Human-readable explanation of the sentiment
+          example: "Sentiment overwhelmingly negative, focused on perceived destruction of tradition and political polarization."
+
+    Theme:
+      type: object
+      properties:
+        theme:
+          type: string
+          example: "Destruction of tradition"
+        sentiment:
+          type: string
+          enum: [positive, neutral, negative]
+          example: "negative"
+        share:
+          type: number
+          format: float
+          example: 0.3
+        confidence:
+          type: number
+          format: float
+          example: 0.97
+        top_keywords:
+          type: array
+          items:
+            type: string
+          example: ["ruin", "history", "bulldoze", "nothing sacred"]
+
+    SarcasmFlag:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Didn't Melania already bulldoze it once? Can't wait for the 'improvements'."
+        confidence:
+          type: number
+          format: float
+          example: 0.94
+        upvotes:
+          type: integer
+          example: 880
+        sarcasm_indicators:
+          type: array
+          items:
+            type: string
+          example: ["bulldoze", "'improvements'"]
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - timestamp
+        - status
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+          example: "Invalid Reddit URL format provided"
+        code:
+          type: string
+          description: Machine-readable error code
+          example: "VALIDATION_ERROR"
+        timestamp:
+          type: string
+          format: date-time
+          description: When the error occurred
+          example: "2024-07-16T13:30:00Z"
+        status:
+          type: integer
+          description: HTTP status code
+          example: 400
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-07-16T13:30:00Z"
+        version:
+          type: string
+          example: "1.0.0"
+        performance:
+          type: object
+          properties:
+            totalRequests:
+              type: integer
+              example: 1250
+            successRate:
+              type: string
+              example: "94.2%"
+            averageProcessingTime:
+              type: string
+              example: "18420ms"
+
+    # Additional schemas for comprehensive analysis
+    DataFreshness:
+      type: object
+      properties:
+        last_reddit_fetch:
+          type: string
+          format: date-time
+        time_since_thread_created:
+          type: string
+        freshness_warning:
+          type: string
+
+    SamplingQuality:
+      type: object
+      properties:
+        total_comments_available:
+          type: integer
+        comments_analyzed:
+          type: integer
+        sample_representativeness:
+          type: string
+          enum: [high, medium, low]
+
+    LanguageAnalysis:
+      type: object
+      properties:
+        primary_language:
+          type: string
+          example: "en"
+        language_distribution:
+          type: object
+          additionalProperties:
+            type: integer
+
+    SentimentByDepth:
+      type: object
+      properties:
+        depth:
+          type: integer
+        positive:
+          type: integer
+        neutral:
+          type: integer
+        negative:
+          type: integer
+        comment_count:
+          type: integer
+
+    MemeDetection:
+      type: object
+      properties:
+        text:
+          type: string
+        meme_format:
+          type: string
+        confidence:
+          type: number
+          format: float
+
+    TopComment:
+      type: object
+      properties:
+        text:
+          type: string
+        upvotes:
+          type: integer
+        author:
+          type: string
+        confidence:
+          type: number
+          format: float
+
+    ControversialComment:
+      type: object
+      properties:
+        text:
+          type: string
+        controversial_score:
+          type: number
+          format: float
+        upvotes:
+          type: integer
+
+    RiskAlert:
+      type: object
+      properties:
+        alert_type:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        explanation:
+          type: string
+
+tags:
+  - name: Sentiment Analysis
+    description: Reddit sentiment analysis operations

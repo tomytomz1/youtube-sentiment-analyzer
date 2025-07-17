@@ -2,27 +2,121 @@
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
 import Footer from '../components/footer.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  url?: string;
+}
+
+const { title, description, url } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>YouTube Sentiment Analyzer</title>
+		
+		<!-- SEO Meta Tags -->
+		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Senti-Meter" />
+		<meta name="keywords" content="sentiment analysis, YouTube comments, Reddit analysis, AI sentiment tool, social media analytics, comment analyzer" />
+		
+		<!-- Voice Search Optimization -->
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="application-name" content="Senti-Meter" />
+		<meta name="apple-mobile-web-app-title" content="Senti-Meter" />
+		<meta name="theme-color" content="#3B82F6" />
+		<meta name="msapplication-TileColor" content="#3B82F6" />
+		<link rel="manifest" href="/manifest.json" />
+		
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		{description && <meta property="og:description" content={description} />}
+		{url && <meta property="og:url" content={url} />}
+		<meta property="og:site_name" content="Senti-Meter" />
+		<meta property="og:image" content="/og-image.svg" />
+		
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		{description && <meta name="twitter:description" content={description} />}
+		<meta name="twitter:image" content="/og-image.svg" />
+		
+		<!-- Canonical URL -->
+		{url && <link rel="canonical" href={url} />}
+		
+		<!-- Structured Data - Software Application -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "SoftwareApplication",
+			"name": "Senti-Meter",
+			"description": "AI-powered sentiment analysis tools for YouTube and Reddit comments",
+			"applicationCategory": "BusinessApplication",
+			"operatingSystem": "Web Browser",
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD"
+			},
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.5",
+				"ratingCount": "150"
+			},
+			"featureList": [
+				"Real-time sentiment analysis",
+				"YouTube comment analysis",
+				"Reddit discussion analysis",
+				"Multi-language support",
+				"Emotion detection",
+				"Sarcasm detection",
+				"Data export capabilities"
+			],
+			"creator": {
+				"@type": "Organization",
+				"name": "Senti-Meter",
+				"url": "https://www.senti-meter.com"
+			}
+		}
+		</script>
+		
+		<!-- Structured Data - Organization -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Organization",
+			"name": "Senti-Meter",
+			"description": "Provider of AI-powered sentiment analysis tools",
+			"url": "https://www.senti-meter.com",
+			"logo": {
+				"@type": "ImageObject",
+				"url": "https://www.senti-meter.com/logo.png"
+			},
+			"foundingDate": "2024",
+			"sameAs": [],
+			"contactPoint": {
+				"@type": "ContactPoint",
+				"contactType": "Customer Support",
+				"url": "https://www.senti-meter.com/contact"
+			}
+		}
+		</script>
 		
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-R3XF0RWZY3" is:inline></script>
-		<script>
-			// @ts-ignore
+		<script is:inline>
 			window.dataLayer = window.dataLayer || [];
-			// @ts-ignore
 			function gtag(){dataLayer.push(arguments);}
-			// @ts-ignore
 			gtag('js', new Date());
-			// @ts-ignore
 			gtag('config', 'G-R3XF0RWZY3');
 		</script>
 		

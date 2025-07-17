@@ -1,0 +1,37 @@
+---
+export interface Props {
+  faqs: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
+const { faqs } = Astro.props;
+---
+
+<div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+  <div class="text-center mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Quick Answers</h2>
+    <p class="text-lg text-gray-600">Voice search optimized responses</p>
+  </div>
+  
+  <div class="space-y-6" itemscope itemtype="https://schema.org/FAQPage">
+    {faqs.map((faq, index) => (
+      <div class="border-b border-gray-200 pb-6" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3" itemprop="name">{faq.question}</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p class="text-gray-700 leading-relaxed" itemprop="text">{faq.answer}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  /* Voice search optimized styling */
+  .voice-answer {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #374151;
+  }
+</style>

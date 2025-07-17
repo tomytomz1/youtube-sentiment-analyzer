@@ -2,11 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 
 const title = "Page Not Found - YouTube Sentiment Analyzer";
-const description = "The page you're looking for doesn't exist. Analyze any YouTube video for instant sentiment insights.";
+const description = "The page you're looking for doesn't exist. Analyze any YouTube video for detailed sentiment insights.";
 const url = `${Astro.url.origin}/404`;
 ---
 
-<Layout>
+<Layout title={title} description={description} url={url}>
   <head>
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -76,7 +76,7 @@ const url = `${Astro.url.origin}/404`;
               <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
               </svg>
-              <span>Get instant AI-powered sentiment insights</span>
+              <span>Get detailed AI-powered sentiment insights</span>
             </li>
             <li class="flex items-start">
               <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

@@ -11,9 +11,9 @@ const { items } = Astro.props;
 
 <nav class="bg-gray-50 border-b border-gray-200 py-3" aria-label="Breadcrumb">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <ol class="flex items-center space-x-2 text-sm">
+    <ol class="flex items-center space-x-2 text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
       {items.map((item, index) => (
-        <li class="flex items-center">
+        <li class="flex items-center" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
           {index > 0 && (
             <svg class="w-4 h-4 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -24,17 +24,20 @@ const { items } = Astro.props;
               href={item.href} 
               class="text-blue-600 hover:text-blue-800 transition-colors"
               aria-current={index === items.length - 1 ? 'page' : undefined}
+              itemprop="item"
             >
-              {item.label}
+              <span itemprop="name">{item.label}</span>
             </a>
           ) : (
             <span 
               class="text-gray-500 font-medium"
               aria-current="page"
+              itemprop="name"
             >
               {item.label}
             </span>
           )}
+          <meta itemprop="position" content={String(index + 1)} />
         </li>
       ))}
     </ol>

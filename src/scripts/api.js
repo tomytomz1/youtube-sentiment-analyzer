@@ -68,18 +68,29 @@ export class APIManager {
     });
   }
 
-  // Analyze sentiment with error handling
+  // Analyze sentiment with error handling  
   async analyzeSentiment(commentsData) {
     return errorHandler.handleApiCall(async () => {
-      const response = await this.secureFetch('/api/sentiment', {
+      const response = await this.secureFetch('/api/youtube-sentiment', {
+        method: 'POST',
+        body: JSON.stringify(commentsData)
+      });
+
+      return response.json();
+    }, {
+      retries: 2,
+      fallbackMessage: 'Failed to analyze sentiment. Please try again in a moment.'
+    });
+  }
+
+  // Analyze Reddit sentiment with error handling  
+  async analyzeRedditSentiment(redditUrl, maxComments = 300) {
+    return errorHandler.handleApiCall(async () => {
+      const response = await this.secureFetch('/api/reddit-sentiment', {
         method: 'POST',
         body: JSON.stringify({
-          comments: commentsData.comments,
-          analyzedCount: commentsData.analyzedCount,
-          totalComments: commentsData.totalComments,
-          mostLiked: commentsData.mostLiked,
-          videoInfo: commentsData.videoInfo,
-          channelInfo: commentsData.channelInfo,
+          redditUrl: redditUrl,
+          maxComments: maxComments
         })
       });
 

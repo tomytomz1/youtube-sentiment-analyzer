@@ -1,0 +1,58 @@
+---
+export interface Props {
+  faqs: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
+const { faqs } = Astro.props;
+---
+
+<!-- Voice Search Optimized FAQ Schema -->
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {faqs.map((faq, index) => `
+    {
+      "@type": "Question",
+      "name": "${faq.question}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "${faq.answer}",
+        "answerType": "VoiceSearchAnswer",
+        "suggestedAnswer": {
+          "@type": "Answer",
+          "text": "${faq.answer}",
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "xpath": "/html/body//div[@class='voice-answer']"
+          }
+        }
+      }
+    }${index < faqs.length - 1 ? ',' : ''}`).join('')}
+  ]
+}
+</script>
+
+<!-- Voice Search Intent Schema -->
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://www.senti-meter.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ".voice-answer"
+  }
+}
+</script>

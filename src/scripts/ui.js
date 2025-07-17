@@ -101,26 +101,66 @@ export class UIManager {
       this.elements.progressFill.style.width = '100%';
     }
 
-    // Display results
-    if (meta.videoInfo && meta.channelInfo) {
+    // Display results based on platform
+    // YouTube data structure
+    if (meta && meta.videoInfo && meta.channelInfo) {
       this.displayVideoInfo(meta);
     }
-
-    if (meta.analyzedCount && meta.totalComments) {
-      this.displaySampleInfo(meta);
+    // Reddit data structure
+    else if (data && data.thread_title) {
+      this.displayRedditInfo(data);
     }
 
-    if (meta.mostLiked) {
+    // Display sample info if available
+    if (meta && meta.analyzedCount && meta.totalComments) {
+      this.displaySampleInfo(meta);
+    } else if (data && data.analyzed_count) {
+      this.displaySampleInfo({ analyzedCount: data.analyzed_count, totalComments: data.sampling_quality?.total_comments_available || 0 });
+    }
+
+    // Display most liked/upvoted comment
+    if (meta && meta.mostLiked) {
       this.displayMostLikedComment(meta.mostLiked);
     }
 
     this.displaySentimentData(data);
-    this.displaySampleComments(data.sampleComments);
+    this.displaySampleComments(data);
 
     this.elements.resultsContainer?.classList.remove('hidden');
     
     if (this.elements.analyzeButton) {
       this.elements.analyzeButton.disabled = false;
+    }
+  }
+
+  displayRedditInfo(data) {
+    // Display Reddit thread information
+    if (this.elements.videoTitle) {
+      SecurityUtils.safeSetText(this.elements.videoTitle, data.thread_title || '');
+    }
+    
+    if (this.elements.channelLink && data.thread_url) {
+      this.elements.channelLink.href = data.thread_url;
+      this.elements.channelLink.textContent = `r/${data.subreddit || 'reddit'}`;
+    }
+    
+    if (this.elements.channelTitle) {
+      SecurityUtils.safeSetText(this.elements.channelTitle, `r/${data.subreddit || 'reddit'}`);
+    }
+    
+    if (this.elements.channelDesc) {
+      SecurityUtils.safeSetText(this.elements.channelDesc, `Posted by u/${data.thread_post_author || 'unknown'}`);
+    }
+    
+    // Use Reddit logo for thread image
+    if (this.elements.videoThumb) {
+      this.elements.videoThumb.src = data.thread_image_url || '/reddit-logo.png';
+      this.elements.videoThumb.alt = SecurityUtils.escapeHtml(data.thread_title || 'Reddit thread');
+    }
+    
+    // Show the video info card
+    if (this.elements.videoInfoCard) {
+      this.elements.videoInfoCard.classList.remove('hidden');
     }
   }
 
@@ -187,10 +227,23 @@ export class UIManager {
   }
 
   displaySentimentData(data) {
+    // Handle both YouTube (flat) and Reddit (nested) data structures
+    let sentimentData = data;
+    let summaryText = '';
+    
+    // Reddit API returns nested structure with overall_sentiment
+    if (data.overall_sentiment) {
+      sentimentData = data.overall_sentiment;
+      summaryText = data.overall_sentiment.explainability || '';
+    } else {
+      // YouTube API returns flat structure
+      summaryText = data.summary || '';
+    }
+    
     // Validate and display percentages
-    const positive = Math.max(0, Math.min(100, Math.round(Number(data.positive) || 0)));
-    const neutral = Math.max(0, Math.min(100, Math.round(Number(data.neutral) || 0)));
-    const negative = Math.max(0, Math.min(100, Math.round(Number(data.negative) || 0)));
+    const positive = Math.max(0, Math.min(100, Math.round(Number(sentimentData.positive) || 0)));
+    const neutral = Math.max(0, Math.min(100, Math.round(Number(sentimentData.neutral) || 0)));
+    const negative = Math.max(0, Math.min(100, Math.round(Number(sentimentData.negative) || 0)));
 
     SecurityUtils.safeSetText(this.elements.positivePercentage, `${positive}%`);
     SecurityUtils.safeSetText(this.elements.neutralPercentage, `${neutral}%`);
@@ -204,15 +257,33 @@ export class UIManager {
     }, 100);
 
     // Display summary safely
-    SecurityUtils.safeSetText(this.elements.sentimentSummary, data.summary || '');
+    SecurityUtils.safeSetText(this.elements.sentimentSummary, summaryText);
   }
 
-  displaySampleComments(sampleComments) {
-    if (!sampleComments) return;
+  displaySampleComments(data) {
+    if (!data) return;
 
-    this.updateCommentsContainer(this.elements.positiveComments, sampleComments.positive, 'text-green-700');
-    this.updateCommentsContainer(this.elements.neutralComments, sampleComments.neutral, 'text-gray-700');
-    this.updateCommentsContainer(this.elements.negativeComments, sampleComments.negative, 'text-red-700');
+    // Handle YouTube structure (sampleComments)
+    if (data.sampleComments) {
+      this.updateCommentsContainer(this.elements.positiveComments, data.sampleComments.positive, 'text-green-700');
+      this.updateCommentsContainer(this.elements.neutralComments, data.sampleComments.neutral, 'text-gray-700');
+      this.updateCommentsContainer(this.elements.negativeComments, data.sampleComments.negative, 'text-red-700');
+    }
+    // Handle Reddit structure (top_positive_comments, top_negative_comments)
+    else if (data.top_positive_comments || data.top_negative_comments) {
+      const positiveComments = data.top_positive_comments ? data.top_positive_comments.map(c => c.text) : [];
+      const negativeComments = data.top_negative_comments ? data.top_negative_comments.map(c => c.text) : [];
+      
+      this.updateCommentsContainer(this.elements.positiveComments, positiveComments, 'text-green-700');
+      this.updateCommentsContainer(this.elements.neutralComments, [], 'text-gray-700'); // Reddit API doesn't provide neutral samples
+      this.updateCommentsContainer(this.elements.negativeComments, negativeComments, 'text-red-700');
+    }
+    // Handle direct sampleComments structure
+    else if (data.positive || data.neutral || data.negative) {
+      this.updateCommentsContainer(this.elements.positiveComments, data.positive, 'text-green-700');
+      this.updateCommentsContainer(this.elements.neutralComments, data.neutral, 'text-gray-700');
+      this.updateCommentsContainer(this.elements.negativeComments, data.negative, 'text-red-700');
+    }
   }
 
   updateCommentsContainer(container, comments, textColor) {
@@ -222,10 +293,21 @@ export class UIManager {
     container.innerHTML = '';
     
     comments.forEach(comment => {
+      let commentText = '';
+      
+      // Handle string comments (YouTube format)
       if (typeof comment === 'string' && comment.trim()) {
+        commentText = comment.trim();
+      }
+      // Handle object comments (Reddit format)
+      else if (typeof comment === 'object' && comment.text && comment.text.trim()) {
+        commentText = comment.text.trim();
+      }
+      
+      if (commentText) {
         const commentDiv = document.createElement('div');
         commentDiv.className = `text-sm ${textColor} bg-white p-3 rounded-lg border border-gray-200`;
-        SecurityUtils.safeSetText(commentDiv, `"${comment.trim()}"`);
+        SecurityUtils.safeSetText(commentDiv, `"${commentText}"`);
         container.appendChild(commentDiv);
       }
     });

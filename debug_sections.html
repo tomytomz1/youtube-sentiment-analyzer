@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Section Visibility</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .status { padding: 5px 10px; margin: 5px; border-radius: 3px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Reddit Sentiment Analyzer - Section Visibility Debug</h1>
+    
+    <div class="debug-section">
+        <h2>Test Results</h2>
+        <div id="test-results">
+            <div class="status info">Testing...</div>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Console Logs</h2>
+        <div id="console-logs" style="font-family: monospace; font-size: 12px; background: #f8f9fa; padding: 10px; max-height: 400px; overflow-y: auto;">
+            <div>Logs will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        // Capture console logs
+        const logsContainer = document.getElementById('console-logs');
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+
+        function addLogEntry(type, message) {
+            const logEntry = document.createElement('div');
+            logEntry.style.marginBottom = '2px';
+            logEntry.style.color = type === 'error' ? 'red' : type === 'warn' ? 'orange' : 'black';
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}: ${message}`;
+            logsContainer.appendChild(logEntry);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            addLogEntry('log', args.join(' '));
+            originalConsoleLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            addLogEntry('error', args.join(' '));
+            originalConsoleError.apply(console, args);
+        };
+
+        // Test function
+        async function testSectionVisibility() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            console.log('🧪 Starting Section Visibility Test...');
+            
+            try {
+                // Test the streaming API
+                const response = await fetch('http://localhost:4324/api/reddit-sentiment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        redditUrl: 'https://www.reddit.com/r/mildlyinfuriating/comments/1m0htsh/people_making_up_shit_to_just_hate_on_gen_z/',
+                        maxComments: 300,
+                        stream: true
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                console.log('📡 Streaming started...');
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    
+                    if (done) {
+                        console.log('🏁 Stream completed');
+                        break;
+                    }
+
+                    buffer += decoder.decode(value, { stream: true });
+                    
+                    const lines = buffer.split('\\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6).trim();
+                            if (data) {
+                                try {
+                                    const message = JSON.parse(data);
+                                    
+                                    if (message.type === 'complete') {
+                                        console.log('✅ Analysis complete! Testing section visibility...');
+                                        
+                                        const analysisData = message.data;
+                                        
+                                        // Test what the frontend would do
+                                        testSectionLogic(analysisData);
+                                        
+                                        // Display results
+                                        displayTestResults(analysisData);
+                                        
+                                        return;
+                                    }
+                                } catch (e) {
+                                    console.error('Failed to parse message:', e);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error('Test failed:', error);
+                resultsDiv.innerHTML = `<div class="status error">Test failed: ${error.message}</div>`;
+            }
+        }
+
+        function testSectionLogic(analysisData) {
+            console.log('📊 Testing section logic with data keys:', Object.keys(analysisData));
+            
+            // Test each section
+            const sections = [
+                { name: 'themes', key: 'themes', required: true },
+                { name: 'sarcasm_flags', key: 'sarcasm_flags', required: true },
+                { name: 'sentiment_by_depth', key: 'sentiment_by_depth', required: true },
+                { name: 'emerging_topics', key: 'emerging_topics', required: true },
+                { name: 'risk_alerts', key: 'risk_alerts', required: true },
+                { name: 'community_lingo', key: 'community_lingo', required: true },
+                { name: 'demographic_insights', key: 'demographic_insights', required: false },
+                { name: 'technical_metrics', key: 'technical_metrics', required: false }
+            ];
+
+            sections.forEach(section => {
+                const data = analysisData[section.key];
+                const hasData = data && (Array.isArray(data) ? data.length > 0 : true);
+                
+                console.log(`📋 ${section.name}: ${hasData ? '✅ HAS DATA' : '❌ NO DATA'} - Required: ${section.required}`);
+                
+                if (section.required && !hasData) {
+                    console.error(`❌ MISSING REQUIRED DATA for ${section.name}`);
+                }
+            });
+        }
+
+        function displayTestResults(analysisData) {
+            const resultsDiv = document.getElementById('test-results');
+            
+            const sections = [
+                { name: 'Themes', key: 'themes', hasData: analysisData.themes && analysisData.themes.length > 0 },
+                { name: 'Sarcasm Flags', key: 'sarcasm_flags', hasData: analysisData.sarcasm_flags && analysisData.sarcasm_flags.length > 0 },
+                { name: 'Sentiment by Depth', key: 'sentiment_by_depth', hasData: analysisData.sentiment_by_depth && analysisData.sentiment_by_depth.length > 0 },
+                { name: 'Emerging Topics', key: 'emerging_topics', hasData: analysisData.emerging_topics && analysisData.emerging_topics.length > 0 },
+                { name: 'Risk Alerts', key: 'risk_alerts', hasData: analysisData.risk_alerts && analysisData.risk_alerts.length > 0 },
+                { name: 'Community Lingo', key: 'community_lingo', hasData: analysisData.community_lingo && analysisData.community_lingo.length > 0 },
+                { name: 'Demographic Insights', key: 'demographic_insights', hasData: !!analysisData.demographic_insights },
+                { name: 'Technical Metrics', key: 'technical_metrics', hasData: !!analysisData.technical_metrics }
+            ];
+
+            let resultsHtml = '<h3>Section Data Availability:</h3>';
+            
+            sections.forEach(section => {
+                const statusClass = section.hasData ? 'success' : 'warning';
+                const statusText = section.hasData ? 'Available' : 'Missing';
+                
+                resultsHtml += `<div class="status ${statusClass}">${section.name}: ${statusText}</div>`;
+            });
+
+            resultsDiv.innerHTML = resultsHtml;
+            
+            console.log('📊 Test completed - check results above');
+        }
+
+        // Run test on page load
+        window.addEventListener('load', () => {
+            setTimeout(testSectionVisibility, 1000);
+        });
+    </script>
+</body>
+</html>

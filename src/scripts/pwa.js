@@ -22,6 +22,26 @@ export class PWAManager {
 
   // Register service worker
   async registerServiceWorker() {
+    // Skip service worker registration in development mode
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('PWA: Development mode detected, skipping service worker registration');
+      
+      // Unregister any existing service workers in development
+      if ('serviceWorker' in navigator) {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            await registration.unregister();
+            console.log('PWA: Unregistered existing service worker in development mode');
+          }
+        } catch (error) {
+          console.log('PWA: No existing service workers to unregister');
+        }
+      }
+      
+      return;
+    }
+    
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js');

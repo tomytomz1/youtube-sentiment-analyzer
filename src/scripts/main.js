@@ -24,6 +24,9 @@ class YouTubeSentimentAnalyzer {
     this.apiManager = new APIManager();
     this.shareManager = new ShareManager();
     this.storageManager = new StorageManager();
+    
+    // Make UI manager globally available for streaming client
+    window.uiManager = this.uiManager;
 
     // Set up event listeners
     this.setupEventListeners();

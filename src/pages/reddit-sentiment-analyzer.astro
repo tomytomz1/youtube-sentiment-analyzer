@@ -1,10 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
+import VoiceFaqAccordion from '../components/VoiceFaqAccordion.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { redditAnalyzerVoiceFaqs } from '../data/voiceFaqs.ts';
 
-const title = 'Reddit Sentiment Analyzer - Free AI-Powered Comment Analysis';
-const description = 'Analyze Reddit thread sentiment with AI. Get instant insights into community opinions, emotions, and reactions. Free, no registration required.';
-const url = 'https://senti-meter.com/reddit-sentiment-analyzer';
+const title = 'Reddit Sentiment Analysis Tool - Free AI Community Analyzer | Senti-Meter';
+const description = 'Analyze Reddit thread sentiment with AI. Get detailed insights into community opinions, emotions, and reactions. High accuracy, start free.';
+const url = 'https://www.senti-meter.com/reddit-sentiment-analyzer';
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "Reddit Sentiment Analyzer" }
+];
 
 const faqs = [
   {
@@ -13,7 +21,7 @@ const faqs = [
   },
   {
     question: 'Is this Reddit analyzer free to use?',
-    answer: `Yes! Our Reddit sentiment analyzer is completely free to use with no subscription fees, hidden charges, or usage limits. You can analyze as many Reddit threads as you need without any cost barriers.`
+    answer: `Yes! You can start using our Reddit sentiment analyzer for free. Free users have limited analyses per month, while premium subscribers get expanded access and advanced features.`
   },
   {
     question: 'What types of Reddit threads can I analyze?',
@@ -29,10 +37,10 @@ const faqs = [
   }
 ];
 ---
-<Layout>
+<Layout title={title} description={description} url={url}>
+  <Breadcrumb items={breadcrumbItems} />
+  
   <head>
-    <title>{title}</title>
-    <meta name="description" content={description} />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
@@ -65,18 +73,17 @@ const faqs = [
             Reddit Sentiment Analyzer
           </h1>
           <p class="text-lg text-gray-600 leading-relaxed">
-            Paste any Reddit thread link below to get instant sentiment analysis of the comments.
+            Paste any Reddit thread link below to get detailed sentiment analysis of the comments.
             Discover what the Reddit community really thinks about the discussion with AI-powered insights.
           </p>
         </div>
 
         <!-- Recent History -->
         <div id="history-container" class="hidden mb-6">
-          <h3 class="text-sm font-medium text-gray-700 mb-2">Recently Analyzed</h3>
           <div id="history-list" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <form id="analysis-form" class="space-y-6">
+        <form id="analysis-form" class="space-y-6 mb-12">
           <div>
             <label for="reddit-url" class="block text-sm font-medium text-gray-700 mb-2">
               Reddit Thread URL
@@ -127,7 +134,7 @@ const faqs = [
         <!-- Thread Info Card -->
         <div id="thread-info" class="mb-8 p-6 bg-orange-50 rounded-lg border border-orange-200 hidden">
           <div class="flex items-start space-x-4">
-            <div id="thread-image-container" class="w-16 h-16 md:w-20 md:h-16 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <div id="thread-image-container" class="w-20 h-20 md:w-24 md:h-24 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
               <!-- Reddit post image will be inserted here by JS -->
             </div>
             <div class="flex-1">
@@ -137,175 +144,314 @@ const faqs = [
                 <span class="mx-1">•</span>
                 <span id="thread-author"></span>
                 <span class="mx-1">•</span>
-                <span id="thread-score"></span> upvotes
+                <span id="thread-score"></span>&nbsp;upvotes
               </div>
               <!-- Removed thread-stats from here -->
             </div>
           </div>
         </div>
 
-        <!-- Results -->
-        <div id="results-container" class="hidden mt-8 space-y-6">
-          <div id="sample-info" class="mb-4 text-sm text-orange-700 font-medium hidden"></div>
-          <div id="most-upvoted-callout" class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded shadow hidden">
-            <div class="flex items-center mb-2">
-              <span class="text-xl mr-2">⬆️</span>
-              <span class="font-bold text-gray-800" id="most-upvoted-label"></span>
+                  <!-- Enhanced Results Container -->
+          <div id="results-container" class="hidden mt-8">
+            <div id="sample-info" class="mb-4 text-sm text-orange-700 font-medium hidden"></div>
+            <div id="most-upvoted-callout" class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded shadow hidden">
+              <div class="flex items-center mb-2">
+                <span class="text-xl mr-2">⬆️</span>
+                <span class="font-bold text-gray-800" id="most-upvoted-label"></span>
+              </div>
+              <blockquote class="text-gray-700 italic" id="most-upvoted-text"></blockquote>
             </div>
-            <blockquote class="text-gray-700 italic" id="most-upvoted-text"></blockquote>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Sentiment Analysis</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-green-700">Positive</span>
-                <span class="text-sm font-bold text-green-700" id="positive-percentage">0%</span>
+            
+            <!-- Enhanced Analysis Container -->
+            <div id="analysis-results" class="enhanced-analysis-container">
+              <!-- Analysis Content -->
+              <div class="analysis-content">
+                <!-- Overview Section -->
+                <div id="overview-section" class="analysis-section mb-8">
+                  <div class="overview-grid">
+                    <div class="overview-card">
+                      <h3 class="card-title">Sentiment Analysis</h3>
+                      <div class="sentiment-bars">
+                        <div class="sentiment-bar-item">
+                          <div class="sentiment-bar-header">
+                            <span class="sentiment-label positive">Positive</span>
+                            <span class="sentiment-percentage" id="positive-percentage">0%</span>
+                          </div>
+                          <div class="sentiment-bar-track">
+                            <div class="sentiment-bar-fill positive" id="positive-bar"></div>
+                          </div>
+                        </div>
+                        <div class="sentiment-bar-item">
+                          <div class="sentiment-bar-header">
+                            <span class="sentiment-label neutral">Neutral</span>
+                            <span class="sentiment-percentage" id="neutral-percentage">0%</span>
+                          </div>
+                          <div class="sentiment-bar-track">
+                            <div class="sentiment-bar-fill neutral" id="neutral-bar"></div>
+                          </div>
+                        </div>
+                        <div class="sentiment-bar-item">
+                          <div class="sentiment-bar-header">
+                            <span class="sentiment-label negative">Negative</span>
+                            <span class="sentiment-percentage" id="negative-percentage">0%</span>
+                          </div>
+                          <div class="sentiment-bar-track">
+                            <div class="sentiment-bar-fill negative" id="negative-bar"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="overview-card">
+                      <h3 class="card-title">Key Metrics</h3>
+                      <div class="metrics-grid">
+                        <div class="metric-item">
+                          <div class="metric-value" id="overview-confidence">0%</div>
+                          <div class="metric-label">Confidence</div>
+                        </div>
+                        <div class="metric-item">
+                          <div class="metric-value" id="overview-analyzed">0</div>
+                          <div class="metric-label">Comments</div>
+                        </div>
+                        <div class="metric-item">
+                          <div class="metric-value" id="overview-themes">0</div>
+                          <div class="metric-label">Themes</div>
+                        </div>
+                        <div class="metric-item">
+                          <div class="metric-value" id="overview-risk">None</div>
+                          <div class="metric-label">Main Risk</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="overview-card full-width">
+                      <h3 class="card-title">Summary</h3>
+                      <div class="summary-container">
+                        <div class="summary-text" id="enhanced-summary"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <!-- Sentiment Section -->
+              <div id="sentiment-section" class="analysis-section mb-8">
+                <div class="sentiment-grid">
+                  <div class="sentiment-card">
+                    <h3 class="card-title">Sentiment by Depth</h3>
+                    <div class="chart-container">
+                      <canvas id="sentiment-depth-chart"></canvas>
+                    </div>
+                  </div>
+                  <div class="sentiment-card">
+                    <h3 class="card-title">Sentiment Over Time</h3>
+                    <div class="chart-container">
+                      <canvas id="sentiment-time-chart"></canvas>
+                      <div id="sentiment-time-placeholder" class="chart-placeholder">
+                        <p class="text-gray-500 text-center">Time-based sentiment data will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sentiment-card">
+                    <h3 class="card-title">Raw Distribution</h3>
+                    <div class="chart-container">
+                      <canvas id="raw-distribution-chart"></canvas>
+                      <div id="raw-distribution-placeholder" class="chart-placeholder">
+                        <p class="text-gray-500 text-center">Raw sentiment distribution will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-green-500 h-3 rounded-full transition-all duration-500" id="positive-bar" style="width: 0%"></div>
+
+              <!-- Themes Section -->
+              <div id="enhanced-themes-section" class="analysis-section mb-8">
+                <div class="themes-header">
+                  <h3 class="card-title">Discussion Themes</h3>
+                  <div class="theme-controls">
+                    <div class="theme-filters">
+                      <button class="filter-btn active" data-filter="all">All</button>
+                      <button class="filter-btn" data-filter="positive">Positive</button>
+                      <button class="filter-btn" data-filter="neutral">Neutral</button>
+                      <button class="filter-btn" data-filter="negative">Negative</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="themes-grid" id="themes-grid">
+                  <!-- Theme cards will be populated here -->
+                </div>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">Neutral</span>
-                <span class="text-sm font-bold text-gray-700" id="neutral-percentage">0%</span>
+
+              <!-- Comments Section -->
+              <div id="comments-section" class="analysis-section mb-8">
+                <div class="comments-sections">
+                  <div class="comment-section">
+                    <h3 class="section-title positive">
+                      <svg class="section-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      Top Positive Comments
+                    </h3>
+                    <div id="positive-comments" class="comments-list"></div>
+                  </div>
+                  <div class="comment-section">
+                    <h3 class="section-title neutral">
+                      <svg class="section-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-9a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z" clip-rule="evenodd"></path>
+                      </svg>
+                      Neutral Comments
+                    </h3>
+                    <div id="neutral-comments" class="comments-list"></div>
+                  </div>
+                  <div class="comment-section">
+                    <h3 class="section-title negative">
+                      <svg class="section-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                      </svg>
+                      Top Negative Comments
+                    </h3>
+                    <div id="negative-comments" class="comments-list"></div>
+                  </div>
+                </div>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-gray-500 h-3 rounded-full transition-all duration-500" id="neutral-bar" style="width: 0%"></div>
+
+              <!-- Analytics Section -->
+              <div id="analytics-section" class="analysis-section mb-8">
+                <div class="analytics-grid">
+                  <div class="analytics-card">
+                    <h3 class="card-title">Age Distribution</h3>
+                    <div class="chart-container">
+                      <canvas id="age-distribution-chart"></canvas>
+                      <div id="age-distribution-placeholder" class="chart-placeholder">
+                        <p class="text-gray-500 text-center">Age demographic data will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="analytics-card">
+                    <h3 class="card-title">Gender Distribution</h3>
+                    <div class="chart-container">
+                      <canvas id="gender-distribution-chart"></canvas>
+                      <div id="gender-distribution-placeholder" class="chart-placeholder">
+                        <p class="text-gray-500 text-center">Gender demographic data will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="analytics-card">
+                    <h3 class="card-title">Depth Distribution</h3>
+                    <div class="chart-container">
+                      <canvas id="depth-distribution-chart"></canvas>
+                      <div id="depth-distribution-placeholder" class="chart-placeholder">
+                        <p class="text-gray-500 text-center">Comment depth analysis will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="analytics-card full-width">
+                    <h3 class="card-title">Demographic Insights</h3>
+                    <div id="demographic-insights-display" class="insights-content"></div>
+                  </div>
+                </div>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-red-700">Negative</span>
-                <span class="text-sm font-bold text-red-700" id="negative-percentage">0%</span>
+              
+              <!-- Advanced Analysis Section -->
+              <div id="advanced-section" class="analysis-section mb-8 hidden">
+                <div class="analytics-grid">
+                  <div class="analytics-card">
+                    <h3 class="card-title">Sentiment by Depth</h3>
+                    <div id="depth-analysis-display" class="chart-container"></div>
+                  </div>
+                  <div class="analytics-card">
+                    <h3 class="card-title">Emerging Topics</h3>
+                    <div id="main-emerging-topics-display" class="topics-content"></div>
+                  </div>
+                  <div class="analytics-card">
+                    <h3 class="card-title">Risk Alerts</h3>
+                    <div id="main-risk-alerts-display" class="alerts-content"></div>
+                  </div>
+                  <div class="analytics-card">
+                    <h3 class="card-title">Community Language</h3>
+                    <div id="main-community-lingo-display" class="lingo-content"></div>
+                  </div>
+                  <div class="analytics-card full-width">
+                    <h3 class="card-title">Technical Metrics</h3>
+                    <div id="technical-metrics-display" class="warnings-content"></div>
+                  </div>
+                </div>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="bg-red-500 h-3 rounded-full transition-all duration-500" id="negative-bar" style="width: 0%"></div>
+
+              <!-- Quality Section -->
+              <div id="quality-section" class="analysis-section mb-8">
+                <div class="quality-grid">
+                  <div class="quality-card">
+                    <h3 class="card-title">Language Distribution</h3>
+                    <div class="chart-container">
+                      <canvas id="language-distribution-chart"></canvas>
+                    </div>
+                  </div>
+                  <div class="quality-card">
+                    <h3 class="card-title">Feedback Trends</h3>
+                    <div class="chart-container">
+                      <canvas id="feedback-trends-chart"></canvas>
+                      <div id="feedback-trends-placeholder" class="chart-placeholder">
+                        <p class="text-gray-500 text-center">Feedback trend analysis will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="quality-card">
+                    <h3 class="card-title">Quality Metrics</h3>
+                    <div class="quality-metrics">
+                      <div class="quality-metric">
+                        <div class="metric-value" id="quality-sample-rate">0%</div>
+                        <div class="metric-label">Sample Rate</div>
+                      </div>
+                      <div class="quality-metric">
+                        <div class="metric-value" id="quality-representativeness">Good</div>
+                        <div class="metric-label">Representativeness</div>
+                      </div>
+                      <div class="quality-metric">
+                        <div class="metric-value" id="quality-language-diversity">0</div>
+                        <div class="metric-label">Language Diversity</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="quality-card full-width">
+                    <h3 class="card-title">Analysis Quality</h3>
+                    <div id="quality-warnings-display" class="warnings-content">
+                      <div class="quality-placeholder">
+                        <p class="text-gray-500 text-center">Analysis quality metrics will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="mt-6 p-4 bg-orange-50 rounded-lg">
-              <h4 class="text-sm font-medium text-orange-900 mb-2">Summary</h4>
-              <p class="text-orange-800" id="sentiment-summary" style="white-space: pre-line;"></p>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-green-50 rounded-lg p-4">
-              <h4 class="text-lg font-semibold text-green-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                </svg>
-                Positive
-              </h4>
-              <div id="positive-comments" class="space-y-2"></div>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-4">
-              <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-9a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z" clip-rule="evenodd"></path>
-                </svg>
-                Neutral
-              </h4>
-              <div id="neutral-comments" class="space-y-2"></div>
-            </div>
-            <div class="bg-red-50 rounded-lg p-4">
-              <h4 class="text-lg font-semibold text-red-800 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                </svg>
-                Negative
-              </h4>
-              <div id="negative-comments" class="space-y-2"></div>
+
+              <!-- Insights Section -->
+              <div id="insights-section" class="analysis-section mb-8">
+                <div class="insights-grid">
+                  <div class="insight-card">
+                    <h3 class="card-title">Risk Alerts</h3>
+                    <div id="risk-alerts-display" class="alerts-content"></div>
+                  </div>
+                  <div class="insight-card">
+                    <h3 class="card-title">Emerging Topics</h3>
+                    <div id="emerging-topics-display" class="topics-content"></div>
+                  </div>
+                  <div class="insight-card">
+                    <h3 class="card-title">Community Language</h3>
+                    <div id="community-lingo-display" class="lingo-content"></div>
+                  </div>
+                  <div class="insight-card full-width">
+                    <h3 class="card-title">Sarcasm Detection</h3>
+                    <div id="enhanced-sarcasm-display" class="sarcasm-content"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Advanced Analysis Sections - Hidden by default and progressively revealed -->
+          <!-- Legacy display removed - using enhanced layout only -->
           
-          <!-- Themes Section -->
-          <div id="themes-section" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200 mt-6">
-            <h3 class="text-xl font-semibold text-blue-900 mb-4 flex items-center">
-              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-              </svg>
-              Discussion Themes
-            </h3>
-            <div id="themes-display" class="min-h-[100px]"></div>
-          </div>
+          <!-- Legacy Themes Display Section - REMOVED to prevent duplication -->
 
-          <!-- Sarcasm Detection Section -->
-          <div id="sarcasm-section" class="hidden bg-yellow-50 rounded-xl p-6 border border-yellow-200">
-            <h3 class="text-xl font-semibold text-yellow-900 mb-4 flex items-center">
-              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4l1 8-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
-              </svg>
-              Sarcasm Detection
-            </h3>
-            <div id="sarcasm-display"></div>
-          </div>
-
-          <!-- Advanced Features Section -->
-          <div id="advanced-section" class="hidden space-y-6">
-            <!-- Sentiment by Comment Depth -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                </svg>
-                Sentiment by Comment Depth
-              </h3>
-              <div id="depth-analysis-display"></div>
-            </div>
-
-            <!-- Emerging Topics -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-                Emerging Topics
-              </h3>
-              <div id="emerging-topics-display"></div>
-            </div>
-
-            <!-- Risk Alerts -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.348 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                </svg>
-                Risk Alerts
-              </h3>
-              <div id="risk-alerts-display"></div>
-            </div>
-
-            <!-- Community Language -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
-                </svg>
-                Community Language
-              </h3>
-              <div id="community-lingo-display"></div>
-            </div>
-
-            <!-- Demographic Insights -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                Demographic Insights
-              </h3>
-              <div id="demographic-insights-display"></div>
-            </div>
-
-            <!-- Technical Metrics -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-                Technical Analysis
-              </h3>
-              <div id="technical-metrics-display"></div>
-            </div>
-          </div>
+          <!-- Legacy Sarcasm Detection Section - REMOVED to prevent duplication -->
 
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-3 mt-6">
@@ -334,7 +480,7 @@ const faqs = [
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our Reddit Sentiment Analyzer Works</h2>
-        <p class="text-lg text-gray-600">Get instant sentiment insights in just three simple steps</p>
+        <p class="text-lg text-gray-600">Get detailed sentiment insights in just three simple steps</p>
       </div>
       <div class="grid md:grid-cols-3 gap-8">
         <!-- Step 1 -->
@@ -351,7 +497,7 @@ const faqs = [
             <span class="text-2xl font-bold text-purple-600">2</span>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">AI Analysis</h3>
-          <p class="text-gray-600">Our advanced AI analyzes up to 300 comments, understanding context, sarcasm, and emotional nuances. The process takes just 10-30 seconds.</p>
+          <p class="text-gray-600">Our advanced AI analyzes up to 300 comments, understanding context, sarcasm, and emotional nuances. The process typically takes 1-2 minutes.</p>
         </div>
         <!-- Step 3 -->
         <div class="text-center">
@@ -478,12 +624,19 @@ const faqs = [
     </div>
   </section>
 
+  <!-- Voice-Optimized FAQ Section -->
+  <section class="bg-gray-50 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <VoiceFaqAccordion faqs={redditAnalyzerVoiceFaqs} />
+    </div>
+  </section>
+
   <!-- FAQ Section -->
   <section id="faq" class="bg-white py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-        <p class="text-lg text-gray-600">Everything you need to know about our Reddit sentiment analyzer</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Detailed Questions & Answers</h2>
+        <p class="text-lg text-gray-600">Comprehensive information about our Reddit sentiment analyzer</p>
       </div>
       <FaqAccordion faqs={faqs} />
     </div>
@@ -495,7 +648,7 @@ const faqs = [
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Reddit Sentiment Analyzer",
-      "description": "Free AI-powered tool to analyze Reddit thread comment sentiment instantly. Get percentage breakdowns, sentiment summaries, and community insights in seconds.",
+      "description": "Free AI-powered tool to analyze Reddit thread comment sentiment. Get percentage breakdowns, sentiment summaries, and community insights in 1-2 minutes.",
       "url": "https://www.senti-meter.com/reddit-sentiment-analyzer",
       "applicationCategory": "AnalyticsApplication",
       "operatingSystem": "Any",
@@ -509,7 +662,7 @@ const faqs = [
       "featureList": [
         "AI-powered sentiment analysis using GPT-4o",
         "Analyzes up to 300 Reddit comments",
-        "Real-time processing with instant results",
+        "Real-time processing with detailed results",
         "Privacy-focused with no data storage",
         "Supports all Reddit URL formats",
         "Percentage breakdowns by sentiment",
@@ -521,7 +674,612 @@ const faqs = [
 
   <!-- JavaScript -->
   <script>
+  // Type declarations for global objects
+  declare global {
+    interface Window {
+      interactiveCharts?: any;
+      themeExplorer?: any;
+      enhancedUI?: any;
+    }
+  }
+  
   document.addEventListener('DOMContentLoaded', () => {
+    // Initialize enhanced UI components
+    initializeEnhancedUI();
+    
+    // Enhanced UI functions
+    function initializeEnhancedUI() {
+      console.log('Initializing Enhanced UI...');
+      
+      // Initialize filter buttons
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const filter = button.getAttribute('data-filter');
+          
+          // Remove active class from all filter buttons
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Add active class to clicked button
+          button.classList.add('active');
+          
+          // Apply filter to themes if themeExplorer is available
+          if (window.themeExplorer) {
+            window.themeExplorer.applyFilter(filter);
+          }
+        });
+      });
+    }
+    
+    // Enhanced results display function
+    function displayEnhancedResults(data: any) {
+      console.log('Displaying enhanced results with data:', data);
+      
+      // Update overview metrics
+      updateOverviewMetrics(data);
+      
+      // Update sentiment charts
+      updateSentimentCharts(data);
+      
+      // Update themes
+      updateThemes(data);
+      
+      // Update comments
+      updateComments(data);
+      
+      // Update analytics
+      updateAnalytics(data);
+      
+      // Update quality metrics
+      updateQualityMetrics(data);
+      
+      // Update insights
+      updateInsights(data);
+      
+      // Initialize theme explorer if available
+      if (window.themeExplorer && data.themes) {
+        window.themeExplorer.initialize(data.themes, data.emerging_topics || [], data.community_lingo || []);
+      }
+      
+      // Show the results container
+      const resultsContainer = document.getElementById('results-container');
+      if (resultsContainer) {
+        resultsContainer.classList.remove('hidden');
+      }
+      
+      // Reveal sections with data
+      if (data.themes && data.themes.length > 0) {
+        // Enhanced themes section is already visible in the enhanced layout
+        const enhancedThemesSection = document.getElementById('enhanced-themes-section');
+        if (enhancedThemesSection) {
+          enhancedThemesSection.style.display = 'block';
+        }
+      }
+      
+      if (data.sarcasm_flags && data.sarcasm_flags.length > 0) {
+        // Enhanced sarcasm section is already visible in the insights section
+        console.log('Sarcasm flags found, enhanced section should be visible');
+      }
+      
+      console.log('Enhanced results display completed');
+    }
+    
+    function updateOverviewMetrics(data: any) {
+      const overviewConfidence = document.getElementById('overview-confidence');
+      const overviewAnalyzed = document.getElementById('overview-analyzed');
+      const overviewThemes = document.getElementById('overview-themes');
+      const overviewRisk = document.getElementById('overview-risk');
+      const enhancedSummary = document.getElementById('enhanced-summary');
+      
+      if (overviewConfidence) overviewConfidence.textContent = Math.round(data.overall_sentiment?.confidence * 100) + '%';
+      if (overviewAnalyzed) overviewAnalyzed.textContent = data.analyzed_count || 0;
+      if (overviewThemes) overviewThemes.textContent = data.themes?.length || 0;
+      if (overviewRisk) {
+        const alerts = data.risk_alerts || [];
+        if (alerts.length > 0) {
+          const mainRisk = alerts[0];
+          const riskText = mainRisk.alert_type || 'Controversy';
+          overviewRisk.textContent = `${riskText}`;
+          overviewRisk.title = `${mainRisk.explanation || 'Risk detected'} (${mainRisk.severity || 'medium'} severity)`;
+        } else {
+          overviewRisk.textContent = 'None';
+          overviewRisk.title = 'No significant risks detected';
+        }
+      }
+      if (enhancedSummary) enhancedSummary.textContent = data.overall_sentiment?.explainability || '';
+    }
+    
+    function updateSentimentCharts(data: any) {
+      // Create sentiment wheel if interactive charts are available
+      if (window.interactiveCharts) {
+        window.interactiveCharts.createSentimentWheel('sentiment-wheel', data);
+        window.interactiveCharts.createSentimentDepthChart('sentiment-depth-chart', data);
+        
+        // Handle sentiment over time chart with placeholder
+        if (data.sentiment_over_time && Object.keys(data.sentiment_over_time).length > 0) {
+          window.interactiveCharts.createSentimentTimeChart('sentiment-time-chart', data);
+          const placeholder = document.getElementById('sentiment-time-placeholder');
+          if (placeholder) placeholder.style.display = 'none';
+        }
+        
+        // Handle raw distribution chart with placeholder
+        if (data.raw_distribution && Object.keys(data.raw_distribution).length > 0) {
+          window.interactiveCharts.createRawDistributionChart('raw-distribution-chart', data);
+          const placeholder = document.getElementById('raw-distribution-placeholder');
+          if (placeholder) placeholder.style.display = 'none';
+        }
+      }
+    }
+    
+    function updateThemes(data: any) {
+      const themesGrid = document.getElementById('themes-grid');
+      if (!themesGrid || !data.themes) return;
+      
+      console.log('Updating themes grid with:', data.themes);
+      
+      themesGrid.innerHTML = data.themes.map((theme: any, index: number) => `
+        <div class="theme-card ${SecurityUtils.escapeHtml(theme.sentiment)}" data-theme-id="${index}">
+          <div class="theme-header">
+            <h4>${SecurityUtils.escapeHtml(theme.theme)}</h4>
+            <div class="theme-meta">
+              <span class="sentiment-badge ${SecurityUtils.escapeHtml(theme.sentiment)}">${SecurityUtils.escapeHtml(theme.sentiment)}</span>
+              <span class="share-badge">${Math.round((theme.share || 0) * 100)}%</span>
+            </div>
+          </div>
+          <div class="theme-summary">
+            <p>${SecurityUtils.escapeHtml(theme.summary)}</p>
+          </div>
+        </div>
+      `).join('');
+      
+      // Enhanced themes section is handled by the enhanced layout
+    }
+    
+    function updateComments(data: any) {
+      // Update comment sections with enhanced display
+      updateCommentSection('positive-comments', data.top_positive_comments || []);
+      updateCommentSection('neutral-comments', []); // API doesn't provide neutral comments separately
+      updateCommentSection('negative-comments', data.top_negative_comments || []);
+    }
+    
+    function updateCommentSection(elementId: string, comments: any[]) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      
+      element.innerHTML = comments.map((comment: any) => `
+        <div class="comment-item">
+          <div class="comment-header">
+            <span class="comment-author">${SecurityUtils.escapeHtml(comment.author || 'Anonymous')}</span>
+            <span class="comment-score">${comment.upvotes || 0} upvotes</span>
+          </div>
+          <div class="comment-text">${SecurityUtils.escapeHtml(comment.text || comment)}</div>
+          <div class="comment-confidence">Confidence: ${Math.round((comment.confidence || 0) * 100)}%</div>
+        </div>
+      `).join('');
+    }
+    
+    function updateAnalytics(data: any) {
+      // Create depth distribution chart if data is available
+      if (window.interactiveCharts && data.sentiment_by_depth) {
+        window.interactiveCharts.createDepthDistributionChart('depth-distribution-chart', data);
+        const placeholder = document.getElementById('depth-distribution-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+      
+      // Create age distribution chart if data is available
+      if (window.interactiveCharts && data.demographic_analysis?.age_distribution) {
+        window.interactiveCharts.createAgeDistributionChart('age-distribution-chart', data);
+        const placeholder = document.getElementById('age-distribution-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+      
+      // Create gender distribution chart if data is available
+      if (window.interactiveCharts && data.demographic_analysis?.gender_distribution) {
+        window.interactiveCharts.createGenderDistributionChart('gender-distribution-chart', data);
+        const placeholder = document.getElementById('gender-distribution-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+    }
+    
+    function updateQualityMetrics(data: any) {
+      const qualitySampleRate = document.getElementById('quality-sample-rate');
+      const qualityRepresentativeness = document.getElementById('quality-representativeness');
+      const qualityLanguageDiversity = document.getElementById('quality-language-diversity');
+      
+      if (qualitySampleRate) qualitySampleRate.textContent = Math.round((data.analyzed_sample_rate || 0) * 100) + '%';
+      if (qualityRepresentativeness) qualityRepresentativeness.textContent = data.sampling_quality?.sample_representativeness || 'Good';
+      if (qualityLanguageDiversity) qualityLanguageDiversity.textContent = Object.keys(data.language_analysis?.language_distribution || {}).length.toString();
+      
+      // Create language distribution chart if data is available
+      if (window.interactiveCharts && data.language_analysis?.language_distribution) {
+        window.interactiveCharts.createLanguageDistributionChart('language-distribution-chart', data);
+      }
+      
+      // Create feedback trends chart if data is available
+      if (window.interactiveCharts && data.feedback_trends) {
+        window.interactiveCharts.createFeedbackTrendsChart('feedback-trends-chart', data);
+        const placeholder = document.getElementById('feedback-trends-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+      
+      // Update quality warnings display
+      const qualityWarningsDisplay = document.getElementById('quality-warnings-display');
+      if (qualityWarningsDisplay) {
+        const warnings = data.quality_warnings || [];
+        if (warnings.length > 0) {
+          qualityWarningsDisplay.innerHTML = warnings.map((warning: any) => `
+            <div class="quality-warning">
+              <div class="warning-header">
+                <span class="warning-icon">⚠️</span>
+                <span class="warning-title">${warning.type || 'Quality Warning'}</span>
+              </div>
+              <div class="warning-description">${warning.message || warning.description || 'No details available'}</div>
+              <div class="warning-severity">${warning.severity || 'medium'} severity</div>
+            </div>
+          `).join('');
+        } else {
+          qualityWarningsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No quality issues detected</div>';
+        }
+      }
+    }
+    
+    function updateInsights(data: any) {
+      updateRiskAlerts(data);
+      updateEmergingTopics(data);
+      updateCommunityLanguage(data);
+      updateSarcasmDetection(data);
+      updateDemographicInsights(data);
+      
+      // Also update main content sections
+      updateMainRiskAlerts(data);
+      updateMainEmergingTopics(data);
+      updateMainCommunityLanguage(data);
+      updateMainSarcasmDetection(data);
+      updateMainDemographicInsights(data);
+    }
+    
+    function updateRiskAlerts(data: any) {
+      const riskAlertsDisplay = document.getElementById('risk-alerts-display');
+      if (!riskAlertsDisplay) return;
+      
+      const alerts = data.risk_alerts || [];
+      console.log('Risk alerts found:', alerts);
+      
+      if (alerts.length === 0) {
+        riskAlertsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No significant risks detected in this discussion</div>';
+        return;
+      }
+      
+      riskAlertsDisplay.innerHTML = alerts.map((alert: any) => `
+        <div class="risk-alert ${alert.severity}">
+          <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">${alert.alert_type || 'Risk Alert'}</span>
+          </div>
+          <div class="alert-description">${alert.explanation || alert.description || 'No details available'}</div>
+          <div class="alert-meta">
+            <span class="severity-badge ${alert.severity}">${alert.severity} severity</span>
+            <span class="confidence">${Math.round((alert.confidence || 0) * 100)}% confidence</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function updateEmergingTopics(data: any) {
+      const emergingTopicsDisplay = document.getElementById('emerging-topics-display');
+      if (!emergingTopicsDisplay) return;
+      
+      const topics = data.emerging_topics || [];
+      console.log('Emerging topics found:', topics);
+      
+      if (topics.length === 0) {
+        emergingTopicsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No emerging topics detected in this discussion</div>';
+        return;
+      }
+      
+      emergingTopicsDisplay.innerHTML = topics.map((topic: any) => `
+        <div class="emerging-topic">
+          <h4>${topic.topic || 'Unknown Topic'}</h4>
+          <p>${topic.explanation || topic.description || 'No description available'}</p>
+          <div class="topic-meta">
+            <span class="trend-badge ${topic.trend_direction}">${topic.trend_direction} trend</span>
+            <span class="confidence">${Math.round((topic.confidence || 0) * 100)}% confidence</span>
+          </div>
+          ${topic.sample_comment ? `<div class="sample-comment">"${topic.sample_comment}"</div>` : ''}
+        </div>
+      `).join('');
+    }
+    
+    function updateCommunityLanguage(data: any) {
+      const communityLingoDisplay = document.getElementById('community-lingo-display');
+      if (!communityLingoDisplay) return;
+      
+      const lingo = data.community_lingo || [];
+      console.log('Community lingo found:', lingo);
+      
+      if (lingo.length === 0) {
+        communityLingoDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No community-specific language detected</div>';
+        return;
+      }
+      
+      communityLingoDisplay.innerHTML = lingo.map((term: any) => `
+        <div class="lingo-term">
+          <span class="term">"${term.term || 'Unknown Term'}"</span>
+          <span class="definition">${term.explanation || term.definition || 'No definition available'}</span>
+          <div class="lingo-meta">
+            <span class="frequency">${term.frequency || 0} uses</span>
+            <span class="context">${term.context || 'General usage'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function updateSarcasmDetection(data: any) {
+      const sarcasmDisplay = document.getElementById('sarcasm-display');
+      const enhancedSarcasmDisplay = document.getElementById('enhanced-sarcasm-display');
+      
+      const sarcasmFlags = data.sarcasm_flags || [];
+      console.log('Sarcasm flags found:', sarcasmFlags);
+      
+      const sarcasmHtml = sarcasmFlags.length === 0 
+        ? '<div class="text-center text-gray-500 py-4">No sarcasm detected in this discussion</div>'
+        : sarcasmFlags.map((flag: any) => `
+            <div class="sarcasm-item p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400 mb-3">
+              <p class="text-gray-800 italic mb-2">"${SecurityUtils.escapeHtml(flag.text || 'Unknown text')}"</p>
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-yellow-700 font-medium">
+                  ${Math.round((flag.confidence || 0) * 100)}% confidence
+                </span>
+                <span class="text-gray-600">
+                  by ${SecurityUtils.escapeHtml(flag.author || 'unknown')}
+                </span>
+                <span class="text-gray-600">
+                  ${flag.upvotes || 0} upvotes
+                </span>
+              </div>
+            </div>
+          `).join('');
+      
+      if (sarcasmDisplay) sarcasmDisplay.innerHTML = sarcasmHtml;
+      if (enhancedSarcasmDisplay) enhancedSarcasmDisplay.innerHTML = sarcasmHtml;
+    }
+    
+    // Main content update functions for the advanced sections
+    function updateMainRiskAlerts(data: any) {
+      const mainRiskAlertsDisplay = document.getElementById('main-risk-alerts-display');
+      if (!mainRiskAlertsDisplay) return;
+      
+      const alerts = data.risk_alerts || [];
+      console.log('Main risk alerts found:', alerts);
+      
+      if (alerts.length === 0) {
+        mainRiskAlertsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No significant risks detected in this discussion</div>';
+        return;
+      }
+      
+      mainRiskAlertsDisplay.innerHTML = alerts.map((alert: any) => `
+        <div class="risk-alert ${alert.severity}">
+          <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">${alert.alert_type || 'Risk Alert'}</span>
+          </div>
+          <div class="alert-description">${alert.explanation || alert.description || 'No details available'}</div>
+          <div class="alert-meta">
+            <span class="severity-badge ${alert.severity}">${alert.severity} severity</span>
+            <span class="confidence">${Math.round((alert.confidence || 0) * 100)}% confidence</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function updateMainEmergingTopics(data: any) {
+      const mainEmergingTopicsDisplay = document.getElementById('main-emerging-topics-display');
+      if (!mainEmergingTopicsDisplay) return;
+      
+      const topics = data.emerging_topics || [];
+      console.log('Main emerging topics found:', topics);
+      
+      if (topics.length === 0) {
+        mainEmergingTopicsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No emerging topics detected in this discussion</div>';
+        return;
+      }
+      
+      mainEmergingTopicsDisplay.innerHTML = topics.map((topic: any) => `
+        <div class="emerging-topic">
+          <h4>${topic.topic || 'Unknown Topic'}</h4>
+          <p>${topic.explanation || topic.description || 'No description available'}</p>
+          <div class="topic-meta">
+            <span class="trend-badge ${topic.trend_direction}">${topic.trend_direction} trend</span>
+            <span class="confidence">${Math.round((topic.confidence || 0) * 100)}% confidence</span>
+          </div>
+          ${topic.sample_comment ? `<div class="sample-comment">"${topic.sample_comment}"</div>` : ''}
+        </div>
+      `).join('');
+    }
+    
+    function updateMainCommunityLanguage(data: any) {
+      const mainCommunityLingoDisplay = document.getElementById('main-community-lingo-display');
+      if (!mainCommunityLingoDisplay) return;
+      
+      const lingo = data.community_lingo || [];
+      console.log('Main community lingo found:', lingo);
+      
+      if (lingo.length === 0) {
+        mainCommunityLingoDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No community-specific language detected</div>';
+        return;
+      }
+      
+      mainCommunityLingoDisplay.innerHTML = lingo.map((term: any) => `
+        <div class="lingo-term">
+          <span class="term">"${term.term || 'Unknown Term'}"</span>
+          <span class="definition">${term.explanation || term.definition || 'No definition available'}</span>
+          <div class="lingo-meta">
+            <span class="frequency">${term.frequency || 0} uses</span>
+            <span class="context">${term.context || 'General usage'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function updateMainSarcasmDetection(data: any) {
+      const mainSarcasmDisplay = document.getElementById('main-sarcasm-display');
+      if (!mainSarcasmDisplay) return;
+      
+      const sarcasmFlags = data.sarcasm_flags || [];
+      console.log('Main sarcasm flags found:', sarcasmFlags);
+      
+      if (sarcasmFlags.length === 0) {
+        mainSarcasmDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No sarcasm detected in this discussion</div>';
+        return;
+      }
+      
+      mainSarcasmDisplay.innerHTML = sarcasmFlags.map((flag: any) => `
+        <div class="sarcasm-item">
+          <div class="sarcasm-text">"${flag.text || 'Unknown text'}"</div>
+          <div class="sarcasm-meta">
+            <span class="confidence">${Math.round((flag.confidence || 0) * 100)}% confidence</span>
+            <span class="author">by ${flag.author || 'unknown'}</span>
+            <span class="upvotes">${flag.upvotes || 0} upvotes</span>
+          </div>
+          <div class="sarcasm-reason">${flag.reason || 'Sarcasm indicators detected'}</div>
+        </div>
+      `).join('');
+    }
+    
+    function updateDemographicInsights(data: any) {
+      const demographicInsightsDisplay = document.getElementById('demographic-insights-display');
+      if (!demographicInsightsDisplay) return;
+      
+      const demographicInsights = data.demographic_insights;
+      console.log('Demographic insights found:', demographicInsights);
+      
+      if (!demographicInsights) {
+        demographicInsightsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No demographic insights available for this analysis</div>';
+        return;
+      }
+      
+      let insightsHtml = '';
+
+      // Age groups
+      if (demographicInsights.age_groups) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-indigo-50 rounded-lg">
+            <h4 class="font-semibold text-indigo-900 mb-2">Age Demographics</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              ${Object.entries(demographicInsights.age_groups).map(([age, percentage]: [string, any]) => `
+                <div class="text-center">
+                  <div class="text-indigo-700 font-bold">${Math.round(percentage)}%</div>
+                  <div class="text-indigo-600 text-sm">${age}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Geographic insights
+      if (demographicInsights.geographic_indicators) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-green-50 rounded-lg">
+            <h4 class="font-semibold text-green-900 mb-2">Geographic Indicators</h4>
+            <div class="space-y-2">
+              ${demographicInsights.geographic_indicators.slice(0, 5).map((geo: any) => `
+                <div class="flex justify-between">
+                  <span class="text-green-700">${SecurityUtils.escapeHtml(geo.region || geo.location)}</span>
+                  <span class="text-green-600">${Math.round(geo.confidence * 100)}% confidence</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Interest categories
+      if (demographicInsights.interest_categories) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-yellow-50 rounded-lg">
+            <h4 class="font-semibold text-yellow-900 mb-2">Interest Categories</h4>
+            <div class="flex flex-wrap gap-2">
+              ${demographicInsights.interest_categories.slice(0, 8).map((interest: any) => `
+                <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">
+                  ${SecurityUtils.escapeHtml(interest.category)} (${Math.round(interest.score * 100)}%)
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      demographicInsightsDisplay.innerHTML = insightsHtml || '<div class="text-center text-gray-500 py-4">No demographic insights available</div>';
+    }
+    
+    function updateMainDemographicInsights(data: any) {
+      const mainDemographicInsightsDisplay = document.getElementById('main-demographic-insights-display');
+      if (!mainDemographicInsightsDisplay) return;
+      
+      const demographicInsights = data.demographic_insights;
+      console.log('Main demographic insights found:', demographicInsights);
+      
+      if (!demographicInsights) {
+        mainDemographicInsightsDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No demographic insights available for this analysis</div>';
+        return;
+      }
+      
+      let insightsHtml = '';
+
+      // Age groups
+      if (demographicInsights.age_groups) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-indigo-50 rounded-lg">
+            <h4 class="font-semibold text-indigo-900 mb-2">Age Demographics</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              ${Object.entries(demographicInsights.age_groups).map(([age, percentage]: [string, any]) => `
+                <div class="text-center">
+                  <div class="text-indigo-700 font-bold">${Math.round(percentage)}%</div>
+                  <div class="text-indigo-600 text-sm">${age}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Geographic insights
+      if (demographicInsights.geographic_indicators) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-green-50 rounded-lg">
+            <h4 class="font-semibold text-green-900 mb-2">Geographic Indicators</h4>
+            <div class="space-y-2">
+              ${demographicInsights.geographic_indicators.slice(0, 5).map((geo: any) => `
+                <div class="flex justify-between">
+                  <span class="text-green-700">${SecurityUtils.escapeHtml(geo.region || geo.location)}</span>
+                  <span class="text-green-600">${Math.round(geo.confidence * 100)}% confidence</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Interest categories
+      if (demographicInsights.interest_categories) {
+        insightsHtml += `
+          <div class="insight-group mb-4 p-4 bg-yellow-50 rounded-lg">
+            <h4 class="font-semibold text-yellow-900 mb-2">Interest Categories</h4>
+            <div class="flex flex-wrap gap-2">
+              ${demographicInsights.interest_categories.slice(0, 8).map((interest: any) => `
+                <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">
+                  ${SecurityUtils.escapeHtml(interest.category)} (${Math.round(interest.score * 100)}%)
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      mainDemographicInsightsDisplay.innerHTML = insightsHtml || '<div class="text-center text-gray-500 py-4">No demographic insights available</div>';
+    }
+    
     // Security utilities (reused from YouTube analyzer)
     const SecurityUtils = {
       escapeHtml: (text: string) => {
@@ -605,7 +1363,6 @@ const faqs = [
       positiveBar: document.getElementById('positive-bar'),
       neutralBar: document.getElementById('neutral-bar'),
       negativeBar: document.getElementById('negative-bar'),
-      sentimentSummary: document.getElementById('sentiment-summary'),
       positiveComments: document.getElementById('positive-comments'),
       neutralComments: document.getElementById('neutral-comments'),
       negativeComments: document.getElementById('negative-comments'),
@@ -645,12 +1402,66 @@ const faqs = [
 
     // Results cache
     const analysisCache = new Map();
-    const CACHE_DURATION = 5 * 60 * 1000;
+    const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+    const STORAGE_KEY = 'reddit_sentiment_cache_v2';
+
+    // Enhanced persistent cache functions
+    function saveAnalysisToCache(url: string, title: string, analysisData: any) {
+      const cacheEntry = {
+        url,
+        title,
+        timestamp: Date.now(),
+        data: analysisData.data,
+        meta: analysisData.meta,
+        fullAnalysis: analysisData.fullAnalysis
+      };
+      // Save to in-memory cache
+      analysisCache.set(url, cacheEntry);
+      // Save to localStorage
+      let allCache: Record<string, any> = {};
+      try {
+        allCache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') as Record<string, any>;
+      } catch {}
+      allCache[url] = cacheEntry;
+      // Limit to 10 entries
+      const entries = Object.entries(allCache).sort((a, b) => (b[1]?.timestamp || 0) - (a[1]?.timestamp || 0));
+      const limitedCache = Object.fromEntries(entries.slice(0, 10));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(limitedCache));
+      console.log('[CACHE] Saved analysis to cache:', { key: url, value: cacheEntry });
+    }
+
+    function loadAnalysisCache() {
+      try {
+        const allCache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') as Record<string, any>;
+        Object.values(allCache).forEach((entry: any) => {
+          if (entry.url && entry.data) {
+            analysisCache.set(entry.url, entry);
+          }
+        });
+      } catch {}
+    }
+
+    function getCachedAnalysis(url: string) {
+      let allCache: Record<string, any> = {};
+      try {
+        allCache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') as Record<string, any>;
+      } catch {}
+      const cached = allCache[url];
+      if (cached) {
+        console.log('[CACHE] Read analysis from cache:', { key: url, value: cached });
+      } else {
+        console.warn('[CACHE] No cache found for key:', url, 'Available keys:', Object.keys(allCache));
+      }
+      return cached;
+    }
+
+    // On page load, load cache
+    loadAnalysisCache();
 
     // Utility functions
     function hideAllStates() {
-      console.log('hideAllStates called');
-      [
+      // Only log once per call to reduce console spam
+      const statesToHide = [
         elements.loadingState,
         elements.errorState,
         elements.resultsContainer,
@@ -659,12 +1470,21 @@ const faqs = [
         elements.threadInfo,
         elements.progressBar,
         elements.urlError
-      ].forEach(el => {
-        if (el) {
-          console.log('Hiding element:', el.id || el.className);
+      ];
+      
+      let hiddenCount = 0;
+      statesToHide.forEach(el => {
+        if (el && !el.classList.contains('hidden')) {
           el.classList.add('hidden');
+          hiddenCount++;
         }
       });
+      
+      // Only log if we actually hid something
+      if (hiddenCount > 0) {
+        console.log(`hideAllStates: Hidden ${hiddenCount} elements`);
+      }
+      
       clearProgress();
     }
 
@@ -739,6 +1559,8 @@ const faqs = [
         (elements.progressFill as HTMLElement).style.width = '100%';
       }
 
+
+
       // Display thread info
       if (meta.threadInfo) {
         displayThreadInfo(meta.threadInfo);
@@ -767,6 +1589,11 @@ const faqs = [
         displaySampleComments(sampleComments);
       }
 
+      // Display enhanced results with sidebar features
+      if (fullAnalysis) {
+        displayEnhancedResults(fullAnalysis);
+      }
+
       elements.resultsContainer?.classList.remove('hidden');
       if (elements.analyzeButton) {
         (elements.analyzeButton as HTMLButtonElement).disabled = false;
@@ -775,6 +1602,12 @@ const faqs = [
       currentSummary = data.explainability || fullAnalysis?.overall_sentiment?.explainability || '';
       if (meta.threadInfo?.title) {
         addToHistory(currentRedditUrl, meta.threadInfo.title);
+        // Save full analysis to persistent cache
+        saveAnalysisToCache(currentRedditUrl, meta.threadInfo.title, { 
+          data: fullAnalysis.overall_sentiment, 
+          meta, 
+          fullAnalysis: fullAnalysis 
+        });
       }
     }
 
@@ -783,31 +1616,63 @@ const faqs = [
       SecurityUtils.safeSetText(elements.subredditName, `r/${threadInfo.subreddit}` || '');
       SecurityUtils.safeSetText(elements.threadAuthor, `u/${threadInfo.author}` || '');
       SecurityUtils.safeSetText(elements.threadScore, threadInfo.score?.toString() || '0');
+      // Add a space before 'upvotes' in the thread info row
+      const threadScoreEl = document.getElementById('thread-score');
+      if (threadScoreEl && threadScoreEl.nextSibling && threadScoreEl.nextSibling.textContent?.startsWith('upvotes')) {
+        threadScoreEl.nextSibling.textContent = ' upvotes';
+      }
       // Set post image if available
       const imageContainer = document.getElementById('thread-image-container');
       if (imageContainer) {
         imageContainer.innerHTML = '';
         console.log('Thread image URL:', threadInfo.imageUrl);
         if (threadInfo.imageUrl) {
-          const img = document.createElement('img');
-          img.src = threadInfo.imageUrl;
-          img.alt = `Reddit post image for "${threadInfo.title || 'thread'}"`;
-          img.className = 'object-contain max-w-full max-h-full rounded-lg border border-gray-200 bg-white';
-          img.style.width = '';
-          img.style.height = '';
-          img.onerror = function() { 
-            console.error('Image failed to load:', threadInfo.imageUrl);
-            this.style.display = 'none'; 
-            imageContainer.innerHTML = `<svg class="w-8 h-8 md:w-12 md:h-12 text-white mx-auto" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#FF4500"/><ellipse cx="10" cy="15" rx="6" ry="3" fill="#fff"/><circle cx="7" cy="13" r="1.5" fill="#000"/><circle cx="13" cy="13" r="1.5" fill="#000"/><ellipse cx="10" cy="15" rx="2" ry="1" fill="#000"/><circle cx="15.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/><circle cx="4.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/></svg>`; 
-          };
-          img.onload = function() {
-            console.log('Image loaded successfully:', threadInfo.imageUrl);
-          };
-          imageContainer.appendChild(img);
+          // Skip image loading for external URLs that are likely to have CORS issues
+          if (threadInfo.imageUrl && !threadInfo.imageUrl.includes('redd.it') && !threadInfo.imageUrl.includes('reddit.com')) {
+            // Show fallback with Reddit logo
+            const img = document.createElement('img');
+            img.src = '/reddit-logo.png';
+            img.alt = 'Reddit logo';
+            img.className = 'w-full h-full object-cover rounded-lg';
+            img.onerror = function() {
+              // Fallback to SVG if Reddit logo fails
+              imageContainer.innerHTML = `<svg class="w-full h-full text-orange-500" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#FF4500"/><ellipse cx="10" cy="15" rx="6" ry="3" fill="#fff"/><circle cx="7" cy="13" r="1.5" fill="#000"/><circle cx="13" cy="13" r="1.5" fill="#000"/><ellipse cx="10" cy="15" rx="2" ry="1" fill="#000"/><circle cx="15.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/><circle cx="4.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/></svg>`;
+            };
+            imageContainer.appendChild(img);
+          } else {
+            // Load Reddit images normally
+            const img = document.createElement('img');
+            img.src = threadInfo.imageUrl;
+            img.alt = `Reddit post image for "${threadInfo.title || 'thread'}"`;
+            img.className = 'w-full h-full object-cover rounded-lg';
+            img.onerror = function() { 
+              console.error('Image failed to load:', threadInfo.imageUrl);
+              // Show fallback with link to original image
+              imageContainer.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-gray-100 rounded-lg p-4">
+                  <svg class="w-12 h-12 md:w-16 md:h-16 text-gray-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="10" fill="#FF4500"/>
+                    <ellipse cx="10" cy="15" rx="6" ry="3" fill="#fff"/>
+                    <circle cx="7" cy="13" r="1.5" fill="#000"/>
+                    <circle cx="13" cy="13" r="1.5" fill="#000"/>
+                    <ellipse cx="10" cy="15" rx="2" ry="1" fill="#000"/>
+                    <circle cx="15.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/>
+                    <circle cx="4.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/>
+                  </svg>
+                  <p class="text-xs text-gray-500 text-center mb-2">Image failed to load</p>
+                  <a href="${threadInfo.imageUrl}" target="_blank" class="text-xs text-blue-600 hover:text-blue-800 underline">View original image</a>
+                </div>
+              `; 
+            };
+            img.onload = function() {
+              console.log('Image loaded successfully:', threadInfo.imageUrl);
+            };
+            imageContainer.appendChild(img);
+          }
         } else {
           console.log('No image URL found, using fallback');
           // fallback: Reddit logo SVG
-          imageContainer.innerHTML = `<svg class="w-8 h-8 md:w-12 md:h-12 text-white mx-auto" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#FF4500"/><ellipse cx="10" cy="15" rx="6" ry="3" fill="#fff"/><circle cx="7" cy="13" r="1.5" fill="#000"/><circle cx="13" cy="13" r="1.5" fill="#000"/><ellipse cx="10" cy="15" rx="2" ry="1" fill="#000"/><circle cx="15.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/><circle cx="4.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/></svg>`;
+          imageContainer.innerHTML = `<svg class="w-12 h-12 md:w-16 md:h-16 text-white mx-auto" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#FF4500"/><ellipse cx="10" cy="15" rx="6" ry="3" fill="#fff"/><circle cx="7" cy="13" r="1.5" fill="#000"/><circle cx="13" cy="13" r="1.5" fill="#000"/><ellipse cx="10" cy="15" rx="2" ry="1" fill="#000"/><circle cx="15.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/><circle cx="4.5" cy="6.5" r="1.5" fill="#fff" stroke="#000" stroke-width="0.5"/></svg>`;
         }
       }
       elements.threadInfo?.classList.remove('hidden');
@@ -845,8 +1710,7 @@ const faqs = [
       console.log('Elements found:', {
         positivePercentage: elements.positivePercentage,
         neutralPercentage: elements.neutralPercentage,
-        negativePercentage: elements.negativePercentage,
-        sentimentSummary: elements.sentimentSummary
+        negativePercentage: elements.negativePercentage
       });
       
       SecurityUtils.safeSetText(elements.positivePercentage, `${positive}%`);
@@ -859,8 +1723,7 @@ const faqs = [
         if (elements.negativeBar) (elements.negativeBar as HTMLElement).style.width = `${negative}%`;
       }, 100);
 
-      console.log('Setting summary:', data.summary || data.explainability || '');
-      SecurityUtils.safeSetText(elements.sentimentSummary, data.summary || data.explainability || '');
+
     }
 
     function displaySampleComments(sampleComments: any) {
@@ -1057,14 +1920,16 @@ const faqs = [
       };
 
       const displayMessage = progressMessages[message.stage] || message.message || 'Processing...';
-      showLoading(displayMessage);
+      
+      // Only update loading text, don't hide all states on every progress message
+      SecurityUtils.safeSetText(elements.loadingText, displayMessage);
 
       // Update progress bar if we have progress percentage
       if (message.progress && elements.progressFill) {
         (elements.progressFill as HTMLElement).style.width = `${message.progress}%`;
       }
 
-      // Show thread info when available
+      // Show thread info when available (only once)
       if (message.data?.threadTitle && message.stage === 'reddit_fetched') {
         displayThreadInfo({
           title: message.data.threadTitle,
@@ -1085,6 +1950,15 @@ const faqs = [
         console.log('Analysis result from streaming:', analysisResult);
         console.log('Analysis result keys:', Object.keys(analysisResult));
         console.log('Overall sentiment from analysis result:', analysisResult.overall_sentiment);
+        
+        // Display enhanced UI with complete analysis results
+        displayEnhancedResults(analysisResult);
+        
+        // Also update sidebar insights specifically for streaming
+        updateInsights(analysisResult);
+        
+        console.log('Thread image URL from API:', analysisResult.thread_image_url);
+        console.log('Thread URL from API:', analysisResult.thread_url);
         
         const meta = {
           analyzedCount: analysisResult.analyzed_count,
@@ -1151,7 +2025,7 @@ const faqs = [
         console.log('Attempting to show themes:', analysisData.themes);
         if (analysisData.themes && analysisData.themes.length > 0) {
           displayAdvancedThemes(analysisData.themes);
-          revealSectionWithAnimation('themes-section');
+          // Enhanced themes section is already visible in the enhanced layout
         } else {
           console.log('No themes to display');
         }
@@ -1174,7 +2048,7 @@ const faqs = [
         console.log('Attempting to show sarcasm flags:', analysisData.sarcasm_flags);
         if (analysisData.sarcasm_flags && analysisData.sarcasm_flags.length > 0) {
           displaySarcasmFlags(analysisData.sarcasm_flags);
-          revealSectionWithAnimation('sarcasm-section');
+          // Enhanced sarcasm section is already visible in the insights section
         } else {
           console.log('No sarcasm flags to display');
         }
@@ -1188,6 +2062,13 @@ const faqs = [
         // Always reveal the advanced section container, even if individual subsections might be empty
         console.log('Revealing advanced-section container');
         revealSectionWithAnimation('advanced-section');
+        
+        // Also reveal the insights tab content since updateInsights has already populated it
+        console.log('Revealing insights tab content');
+        const insightsTab = document.getElementById('insights-tab');
+        if (insightsTab) {
+          insightsTab.classList.remove('hidden');
+        }
       }, 2000);
 
       // Enable analyze button
@@ -1199,6 +2080,12 @@ const faqs = [
       currentSummary = analysisData.overall_sentiment?.explainability || '';
       if (meta.threadInfo?.title) {
         addToHistory(currentRedditUrl, meta.threadInfo.title);
+        // Save full analysis to persistent cache
+        saveAnalysisToCache(currentRedditUrl, meta.threadInfo.title, { 
+          data: analysisData.overall_sentiment, 
+          meta, 
+          fullAnalysis: analysisData 
+        });
       }
     }
 
@@ -1232,7 +2119,7 @@ const faqs = [
 
     // Display advanced themes with more detail
     function displayAdvancedThemes(themes: any[]) {
-      const container = document.getElementById('themes-display');
+      const container = document.getElementById('themes-grid');
       if (!container || !Array.isArray(themes)) {
         console.log('Themes container not found or themes not array:', container, themes);
         return;
@@ -1264,8 +2151,9 @@ const faqs = [
 
     // Display sarcasm flags
     function displaySarcasmFlags(sarcasmFlags: any[]) {
-      const container = document.getElementById('sarcasm-display');
-      if (!container || !Array.isArray(sarcasmFlags)) return;
+      const container = document.getElementById('enhanced-sarcasm-display');
+      
+      if (!container) return;
 
       const sarcasmHtml = sarcasmFlags.slice(0, 3).map(flag => `
         <div class="sarcasm-item p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400 mb-3">
@@ -1284,7 +2172,7 @@ const faqs = [
         </div>
       `).join('');
 
-      container.innerHTML = sarcasmHtml;
+      if (container) container.innerHTML = sarcasmHtml;
     }
 
     // Display advanced analysis features
@@ -1704,44 +2592,117 @@ const faqs = [
     // History management
     function loadHistory() {
       try {
-        const history = JSON.parse(localStorage.getItem('analyzedRedditThreads') || '[]');
+        const history = JSON.parse(localStorage.getItem('analyzedRedditThreads') || '[]') as Array<{ url: string, title: string, date: number }>;
         if (history.length > 0 && elements.historyContainer && elements.historyList) {
           elements.historyContainer.classList.remove('hidden');
           elements.historyList.innerHTML = '';
-          history.slice(0, 5).forEach((item: any) => {
+          history.slice(0, 5).forEach((item: { url: string, title: string, date: number }) => {
             if (item && typeof item.title === 'string' && typeof item.url === 'string') {
+              // Create container for the history item
+              const itemContainer = document.createElement('div');
+              itemContainer.className = 'flex items-center gap-1 mb-2';
+              
+              // Create the main history button
               const button = document.createElement('button');
-              button.className = 'text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-gray-700 truncate max-w-xs';
+              button.className = 'text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-gray-700 truncate max-w-xs flex-1';
               SecurityUtils.safeSetText(button, item.title);
               button.title = SecurityUtils.escapeHtml(item.url);
               button.onclick = () => {
-                if (elements.urlInput && elements.form) {
+                // Try to load cached analysis
+                const cached = getCachedAnalysis(item.url);
+                console.log('Clicked history item, cached analysis:', cached);
+                if (cached && cached.data && cached.meta) {
+                  // Show results from cache instantly
+                  showResults(cached.data, cached.meta, cached.fullAnalysis);
+                } else if (cached) {
+                  // Try fallback for legacy cache structure
+                  if (cached.fullAnalysis && cached.fullAnalysis.overall_sentiment) {
+                    showResults(
+                      cached.fullAnalysis.overall_sentiment,
+                      cached.meta || {},
+                      cached.fullAnalysis
+                    );
+                  } else {
+                    console.error('Cached analysis structure is invalid:', cached);
+                  }
+                } else if (elements.urlInput && elements.form) {
+                  // Fallback: trigger fetch
                   (elements.urlInput as HTMLInputElement).value = item.url;
                   elements.form.dispatchEvent(new Event('submit'));
                 }
               };
-              if (elements.historyList && button) {
-                elements.historyList.appendChild(button);
+              
+              // Create the remove button
+              const removeButton = document.createElement('button');
+              removeButton.className = 'text-xs bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-800 px-2 py-1 rounded-full transition-colors';
+              removeButton.innerHTML = '×';
+              removeButton.title = 'Remove from history';
+              removeButton.onclick = (e) => {
+                e.stopPropagation();
+                removeFromHistory(item.url);
+              };
+              
+              // Add both buttons to container
+              itemContainer.appendChild(button);
+              itemContainer.appendChild(removeButton);
+              
+              if (elements.historyList && itemContainer) {
+                elements.historyList.appendChild(itemContainer);
               }
             }
           });
         }
-      } catch (error: unknown) {
+      } catch (error) {
         console.warn('Could not load history:', error);
+      }
+    }
+
+    function removeFromHistory(url: string) {
+      try {
+        const history = JSON.parse(localStorage.getItem('analyzedRedditThreads') || '[]') as Array<{ url: string, title: string, date: number }>;
+        const filteredHistory = history.filter(item => item.url !== url);
+        localStorage.setItem('analyzedRedditThreads', JSON.stringify(filteredHistory));
+        
+        // Also remove from cache
+        removeFromCache(url);
+        
+        // Reload the history display
+        loadHistory();
+      } catch (error) {
+        console.warn('Could not remove from history:', error);
+      }
+    }
+
+    function removeFromCache(url: string) {
+      try {
+        // Remove from in-memory cache
+        analysisCache.delete(url);
+        
+        // Remove from localStorage cache
+        let allCache: Record<string, any> = {};
+        try {
+          allCache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') as Record<string, any>;
+        } catch {}
+        delete allCache[url];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allCache));
+        
+        console.log(`[CACHE] Removed from cache: ${url}`);
+      } catch (error) {
+        console.warn('Could not remove from cache:', error);
       }
     }
 
     function addToHistory(url: string, title: string) {
       try {
-        const history = JSON.parse(localStorage.getItem('analyzedRedditThreads') || '[]');
-        const existing = history.findIndex((item: any) => item.url === url);
+        const history = JSON.parse(localStorage.getItem('analyzedRedditThreads') || '[]') as Array<{ url: string, title: string, date: number }>;
+        const existing = history.findIndex((item: { url: string }) => item.url === url);
         if (existing !== -1) {
           history.splice(existing, 1);
         }
         history.unshift({ url, title, date: Date.now() });
         localStorage.setItem('analyzedRedditThreads', JSON.stringify(history.slice(0, 10)));
         loadHistory();
-      } catch (error: unknown) {
+      } catch (error) {
         console.warn('Could not save to history:', error);
       }
     }
@@ -1974,8 +2935,16 @@ const faqs = [
         // Check cache
         const cached = analysisCache.get(redditUrl);
         if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-          showResults(cached.data.sentiment, cached.data.meta);
-          return;
+          // Check if cached data has the correct image URL
+          if (cached.meta?.threadInfo?.imageUrl?.includes('redd.it')) {
+            showResults(cached.data, cached.meta, cached.fullAnalysis);
+            return;
+          } else {
+            // Clear cache if image URL is incorrect
+            console.log('Clearing cache due to incorrect image URL');
+            analysisCache.delete(redditUrl);
+            removeFromCache(redditUrl);
+          }
         }
 
         isAnalyzing = true;
@@ -2029,6 +2998,9 @@ const faqs = [
           });
 
           showResults(analysisData.overall_sentiment, meta, analysisData);
+          
+          // Also display enhanced results for sidebar features
+          displayEnhancedResults(analysisData);
 
         } catch (error: unknown) {
           console.error('Analysis error:', error);
@@ -2112,7 +3084,7 @@ const faqs = [
         "name": "Is this Reddit analyzer free to use?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes! Our Reddit sentiment analyzer is completely free to use with no subscription fees, hidden charges, or usage limits. You can analyze as many Reddit threads as you need without any cost barriers."
+          "text": "Yes! You can start using our Reddit sentiment analyzer for free. Free users have limited analyses per month, while premium subscribers get expanded access and advanced features."
         }
       },
       {
@@ -2142,4 +3114,491 @@ const faqs = [
     ]
   }
   </script>
+  
+  <!-- Enhanced UI Styles -->
+  <style>
+    @import url('../styles/enhanced-sentiment-ui.css');
+    
+    /* Analysis Section Styles */
+    .analysis-section {
+      padding: 2rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: block !important;
+    }
+    
+    .analysis-section:last-child {
+      border-bottom: none;
+    }
+    
+    .analysis-section h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f59e0b;
+    }
+    
+    .analysis-content {
+      background: white;
+    }
+    
+    /* Fix image sizing */
+    #thread-image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 0.5rem;
+    }
+    
+    /* Ensure proper grid layout */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .sentiment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .quality-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    /* Full width cards */
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .overview-grid,
+      .sentiment-grid,
+      .themes-grid,
+      .analytics-grid,
+      .quality-grid,
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .analysis-section {
+        padding: 1rem;
+      }
+    }
+    
+    /* Basic card styles for enhanced layout */
+    .overview-card,
+    .sentiment-card,
+    .analytics-card,
+    .quality-card,
+    .insight-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .overview-card:hover,
+    .sentiment-card:hover,
+    .analytics-card:hover,
+    .quality-card:hover,
+    .insight-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f59e0b;
+    }
+    
+    .chart-container {
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+    
+    .metric-item {
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    
+    .metric-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+    
+    .summary-container {
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #f59e0b;
+    }
+    
+    .summary-text {
+      color: #374151;
+      line-height: 1.6;
+    }
+    
+    /* Enhanced layout specific styles */
+    .themes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .theme-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .theme-filters {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #6b7280;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .filter-btn:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    
+    .filter-btn.active {
+      background: #f59e0b;
+      color: white;
+      border-color: #f59e0b;
+    }
+    
+    .comments-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .comment-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid;
+    }
+    
+    .section-title.positive {
+      color: #059669;
+      border-bottom-color: #059669;
+    }
+    
+    .section-title.neutral {
+      color: #6b7280;
+      border-bottom-color: #6b7280;
+    }
+    
+    .section-title.negative {
+      color: #dc2626;
+      border-bottom-color: #dc2626;
+    }
+    
+    .section-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.5rem;
+    }
+    
+    .comments-list {
+      space-y: 0.75rem;
+    }
+    
+    .sentiment-bars {
+      space-y: 1rem;
+    }
+    
+    .sentiment-bar-item {
+      margin-bottom: 1rem;
+    }
+    
+    .sentiment-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .sentiment-label {
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    
+    .sentiment-label.positive {
+      color: #059669;
+    }
+    
+    .sentiment-label.neutral {
+      color: #6b7280;
+    }
+    
+    .sentiment-label.negative {
+      color: #dc2626;
+    }
+    
+    .sentiment-percentage {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .sentiment-bar-track {
+      width: 100%;
+      height: 0.75rem;
+      background: #f3f4f6;
+      border-radius: 0.375rem;
+      overflow: hidden;
+    }
+    
+    .sentiment-bar-fill {
+      height: 100%;
+      border-radius: 0.375rem;
+      transition: width 0.5s ease;
+    }
+    
+    .sentiment-bar-fill.positive {
+      background: #10b981;
+    }
+    
+    .sentiment-bar-fill.neutral {
+      background: #6b7280;
+    }
+    
+    .sentiment-bar-fill.negative {
+      background: #ef4444;
+    }
+    
+    .quality-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+    }
+    
+    .quality-metric {
+      text-align: center;
+    }
+    
+    /* Chart container and placeholder styles */
+    .chart-container {
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chart-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9fafb;
+      border-radius: 0.5rem;
+      border: 2px dashed #d1d5db;
+    }
+    
+    .chart-placeholder p {
+      font-size: 0.875rem;
+      color: #6b7280;
+      text-align: center;
+      padding: 1rem;
+    }
+    
+    .quality-placeholder {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7280;
+    }
+    
+    /* Content display styles */
+    .alerts-content,
+    .topics-content,
+    .lingo-content,
+    .sarcasm-content,
+    .insights-content,
+    .warnings-content {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .alerts-content::-webkit-scrollbar,
+    .topics-content::-webkit-scrollbar,
+    .lingo-content::-webkit-scrollbar,
+    .sarcasm-content::-webkit-scrollbar,
+    .insights-content::-webkit-scrollbar,
+    .warnings-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .alerts-content::-webkit-scrollbar-track,
+    .topics-content::-webkit-scrollbar-track,
+    .lingo-content::-webkit-scrollbar-track,
+    .sarcasm-content::-webkit-scrollbar-track,
+    .insights-content::-webkit-scrollbar-track,
+    .warnings-content::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    
+    .alerts-content::-webkit-scrollbar-thumb,
+    .topics-content::-webkit-scrollbar-thumb,
+    .lingo-content::-webkit-scrollbar-thumb,
+    .sarcasm-content::-webkit-scrollbar-thumb,
+    .insights-content::-webkit-scrollbar-thumb,
+    .warnings-content::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    
+    .alerts-content::-webkit-scrollbar-thumb:hover,
+    .topics-content::-webkit-scrollbar-thumb:hover,
+    .lingo-content::-webkit-scrollbar-thumb:hover,
+    .sarcasm-content::-webkit-scrollbar-thumb:hover,
+    .insights-content::-webkit-scrollbar-thumb:hover,
+    .warnings-content::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+  
+  <!-- Enhanced UI Scripts -->
+  <script src="../components/enhanced-sentiment-ui.js"></script>
+  <script src="../components/interactive-charts.js"></script>
+  <script src="../components/theme-explorer.js"></script>
+  <script src="../components/enhanced-streaming-integration.js"></script>
+  
+  <!-- PWA Manager -->
+  <script type="module">
+    import { pwaManager } from '/src/scripts/pwa.js';
+    
+    // Initialize PWA manager
+    document.addEventListener('DOMContentLoaded', () => {
+      pwaManager.init();
+    });
+  </script>
+  
+  <!-- HowTo Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Analyze Reddit Thread Sentiment",
+    "description": "Step-by-step guide to analyzing Reddit thread comments for sentiment and community opinions using AI",
+    "image": "https://www.senti-meter.com/reddit-logo.png",
+    "totalTime": "PT3M",
+    "estimatedCost": {
+      "@type": "MonetaryAmount",
+      "currency": "USD",
+      "value": "0"
+    },
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Find Reddit Thread",
+        "text": "Navigate to Reddit and find the thread you want to analyze",
+        "image": "https://www.senti-meter.com/reddit-logo.png"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Copy Thread URL",
+        "text": "Copy the Reddit thread URL from your browser's address bar",
+        "image": "https://www.senti-meter.com/reddit-logo.png"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Paste URL",
+        "text": "Paste the Reddit URL into the sentiment analyzer input field",
+        "image": "https://www.senti-meter.com/logo.svg"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Start Analysis",
+        "text": "Click the 'Analyze Comments' button to begin AI-powered sentiment analysis",
+        "image": "https://www.senti-meter.com/logo.svg"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Review Results",
+        "text": "Examine the sentiment breakdown, community insights, and trending topics",
+        "image": "https://www.senti-meter.com/logo.svg"
+      }
+    ]
+  }
+  </script>
+  
 </Layout>

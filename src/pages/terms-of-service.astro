@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const title = "Terms of Service - YouTube Sentiment Analyzer";
+const description = "Terms of service for YouTube Sentiment Analyzer. Learn about usage terms, limitations, and user responsibilities for our free AI-powered sentiment analysis tool.";
+const url = "https://www.senti-meter.com/terms-of-service";
 ---
 
 <head slot="head">
@@ -13,7 +17,7 @@ import Layout from '../layouts/Layout.astro';
   <link rel="canonical" href="https://www.senti-meter.com/terms-of-service" />
 </head>
 
-<Layout>
+<Layout title={title} description={description} url={url}>
   <main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->

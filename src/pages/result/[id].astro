@@ -92,7 +92,7 @@ const twitterTitle = title;
 const twitterDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
 
 // Create a simple image URL (you could generate a more complex one)
-const imageUrl = `${Astro.url.origin}/api/og-png?id=${id}`;
+const _imageUrl = `${Astro.url.origin}/api/og-png?id=${id}`;
 
 // Extract video ID for thumbnail
 function extractVideoId(url: string): string | null {
@@ -114,7 +114,7 @@ const videoId = extractVideoId(videoUrl);
 const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 ---
 
-<Layout>
+<Layout title={title} description={description} url={url}>
   <Fragment slot="head">
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -436,22 +436,40 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
 
 <script is:inline>
 // --- Share Modal Logic (copied from index.astro, adapted for result page) ---
-function copyToClipboard(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-  } else {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+async function copyToClipboard(text) {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      textarea.style.top = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (!successful) {
+          throw new Error('Copy command failed');
+        }
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+  } catch (error) {
+    console.error('Failed to copy text to clipboard:', error);
+    // Show user-friendly error message
+    alert('Failed to copy to clipboard. Please copy the URL manually.');
   }
 }
 
 function handlePlatformShare(platform, shareUrl, videoTitle, positive, neutral, negative, modal) {
   const shareMessages = {
-    twitter: `🎥 "${videoTitle}" sentiment analysis:\n✅ ${positive} positive\n➖ ${neutral} neutral\n❌ ${negative} negative\n\nAnalyze any YouTube video instantly! 🚀`,
+    twitter: `🎥 "${videoTitle}" sentiment analysis:\n✅ ${positive} positive\n➖ ${neutral} neutral\n❌ ${negative} negative\n\nAnalyze any YouTube video with AI! 🚀`,
     facebook: `I just analyzed the sentiment of "${videoTitle}" on YouTube!\n\n📊 Results:\n• Positive: ${positive}\n• Neutral: ${neutral}\n• Negative: ${negative}\n\nTry it yourself with any YouTube video!`,
     linkedin: `Interesting sentiment analysis of "${videoTitle}":\n\n📈 ${positive} positive comments\n➖ ${neutral} neutral comments\n📉 ${negative} negative comments\n\nGreat tool for content creators and marketers!`,
     whatsapp: `Check out this YouTube sentiment analysis!\n\n"${videoTitle}"\n✅ Positive: ${positive}\n➖ Neutral: ${neutral}\n❌ ${negative}\n\nTry it yourself:`,

@@ -6,79 +6,123 @@ const DYNAMIC_CACHE_NAME = 'dynamic-v1';
 // Assets to cache on install
 const STATIC_ASSETS = [
   '/',
-  '/manifest.json',
-  '/logo.svg',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/icon-192-maskable.png',
-  '/icon-512-maskable.png'
+  '/manifest.json'
+  // Remove assets that may not exist to prevent cache failures
 ];
 
 // API endpoints that can be cached
 const CACHEABLE_APIS = [
   '/api/youtube-comments',
-  '/api/sentiment'
+  '/api/reddit-sentiment'
 ];
 
-// Install event - cache static assets
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-  
-  event.waitUntil(
-    caches.open(STATIC_CACHE_NAME)
-      .then((cache) => {
-        console.log('Service Worker: Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .catch((error) => {
-        console.error('Service Worker: Failed to cache static assets:', error);
-      })
-  );
-  
-  // Force activation
-  self.skipWaiting();
-});
+// Check if we're in development mode
+const isDevelopment = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 
-// Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
+// If in development, skip service worker functionality
+if (isDevelopment) {
+  console.log('Service Worker: Development mode detected, skipping service worker functionality');
   
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE_NAME && cacheName !== DYNAMIC_CACHE_NAME) {
-            console.log('Service Worker: Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
+  // Handle unregister message
+  self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      console.log('Service Worker: Development mode - skipping wait');
+      self.skipWaiting();
+    }
+  });
+  
+  // Still need to handle install and activate events to prevent errors
+  self.addEventListener('install', (_event) => {
+    console.log('Service Worker: Development mode - skipping install');
+    self.skipWaiting();
+  });
+  
+  self.addEventListener('activate', (_event) => {
+    console.log('Service Worker: Development mode - skipping activate');
+    self.clients.claim();
+  });
+  
+  self.addEventListener('fetch', (_event) => {
+    // In development, just pass through all requests
+  });
+  
+} else {
+
+  // Install event - cache static assets
+  self.addEventListener('install', (event) => {
+    console.log('Service Worker: Installing...');
+    
+    event.waitUntil(
+      caches.open(STATIC_CACHE_NAME)
+        .then((cache) => {
+          console.log('Service Worker: Caching static assets');
+          return cache.addAll(STATIC_ASSETS);
         })
-      );
-    })
-  );
-  
-  // Take control of all pages
-  self.clients.claim();
-});
+        .catch((error) => {
+          console.error('Service Worker: Failed to cache static assets:', error);
+        })
+    );
+    
+    // Force activation
+    self.skipWaiting();
+  });
 
-// Fetch event - intercept network requests
-self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-  
-  // Skip non-GET requests
-  if (request.method !== 'GET') {
-    return;
-  }
-  
-  // Handle different types of requests
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(handleApiRequest(request));
-  } else if (isStaticAsset(url.pathname)) {
-    event.respondWith(handleStaticAsset(request));
-  } else {
-    event.respondWith(handleNavigation(request));
-  }
-});
+  // Activate event - clean up old caches
+  self.addEventListener('activate', (event) => {
+    console.log('Service Worker: Activating...');
+    
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== STATIC_CACHE_NAME && cacheName !== DYNAMIC_CACHE_NAME) {
+              console.log('Service Worker: Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+    );
+    
+    // Take control of all pages
+    self.clients.claim();
+  });
+
+  // Fetch event - intercept network requests
+  self.addEventListener('fetch', (event) => {
+    const { request } = event;
+    const url = new URL(request.url);
+    
+    // Skip unsupported schemes (chrome-extension, moz-extension, etc.)
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      console.log('Service Worker: Skipping unsupported protocol:', url.protocol);
+      return;
+    }
+    
+    // Skip non-GET requests
+    if (request.method !== 'GET') {
+      return;
+    }
+    
+    // Skip Vite HMR and development tools
+    if (url.pathname.includes('@vite/client') || 
+        url.pathname.includes('@id/__x00__astro:toolbar') ||
+        url.pathname.includes('vite/dist/client') ||
+        url.pathname.includes('?astro&type=')) {
+      console.log('Service Worker: Skipping Vite/development request:', url.pathname);
+      return;
+    }
+    
+    // Handle different types of requests
+    if (url.pathname.startsWith('/api/')) {
+      event.respondWith(handleApiRequest(request));
+    } else if (isStaticAsset(url.pathname)) {
+      event.respondWith(handleStaticAsset(request));
+    } else {
+      event.respondWith(handleNavigation(request));
+    }
+  });
+}
 
 // Handle API requests with cache-first strategy for cacheable APIs
 async function handleApiRequest(request) {
@@ -104,8 +148,12 @@ async function handleApiRequest(request) {
     
     // Cache successful responses for cacheable APIs
     if (isCacheable && response.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE_NAME);
-      cache.put(request, response.clone());
+      try {
+        const cache = await caches.open(DYNAMIC_CACHE_NAME);
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        console.error('Service Worker: Failed to cache API response:', cacheError);
+      }
     }
     
     return response;
@@ -145,8 +193,12 @@ async function handleStaticAsset(request) {
     
     // Cache successful responses
     if (response.ok) {
-      const cache = await caches.open(STATIC_CACHE_NAME);
-      cache.put(request, response.clone());
+      try {
+        const cache = await caches.open(STATIC_CACHE_NAME);
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        console.error('Service Worker: Failed to cache static asset:', cacheError);
+      }
     }
     
     return response;
@@ -168,8 +220,12 @@ async function handleNavigation(request) {
     
     // Cache successful navigation responses
     if (response.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE_NAME);
-      cache.put(request, response.clone());
+      try {
+        const cache = await caches.open(DYNAMIC_CACHE_NAME);
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        console.error('Service Worker: Failed to cache navigation:', cacheError);
+      }
     }
     
     return response;

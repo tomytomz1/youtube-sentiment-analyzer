@@ -127,17 +127,14 @@ describe('APIManager', () => {
       };
       global.fetch = vi.fn().mockResolvedValue(mockResponse);
 
-      const commentsData = {
-        comments: ['Great video!', 'Thanks for sharing'],
-        analyzedCount: 2,
-        totalComments: 10
-      };
+      const redditUrl = 'https://reddit.com/r/test/comments/123/';
+      const maxComments = 300;
 
-      const result = await apiManager.analyzeSentiment(commentsData);
+      const result = await apiManager.analyzeSentiment(redditUrl, maxComments);
       
-      expect(global.fetch).toHaveBeenCalledWith('/api/sentiment', expect.objectContaining({
+      expect(global.fetch).toHaveBeenCalledWith('/api/reddit-sentiment', expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify(commentsData)
+        body: JSON.stringify({ redditUrl, maxComments })
       }));
       expect(result.positive).toBe(80);
     });

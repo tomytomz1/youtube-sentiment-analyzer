@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     question: 'Is the Reddit comment analyzer really free?',
-    answer: `Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited Reddit threads.`
+    answer: `Yes! You can start using our comment analyzer for free. Free users have limited analyses per month, while premium subscribers get unlimited access.`
   },
   {
     question: 'How does it understand Reddit-specific context?',
@@ -25,7 +25,7 @@ const faqs = [
   }
 ];
 ---
-<Layout>
+<Layout title={title} description={description} url={url}>
   <head>
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -66,7 +66,7 @@ const faqs = [
         Reddit Comment Analyzer
       </h1>
       <p class="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-        Analyze Reddit thread comments instantly with our free AI-powered tool. Understand what the community really thinks about any discussion with detailed sentiment analysis, engagement insights, and comment breakdowns.
+        Analyze Reddit thread comments with our free AI-powered tool. Understand what the community really thinks about any discussion with detailed sentiment analysis, engagement insights, and comment breakdowns.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="#comment-analyzer-tool" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
@@ -104,8 +104,8 @@ const faqs = [
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">Privacy-First & Free</h3>
-          <p class="text-gray-600">No registration required. We don't store your data or track your activity. Analyze unlimited Reddit threads with complete privacy.</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Privacy-First & Freemium</h3>
+          <p class="text-gray-600">No registration required for basic features. We don't store your data or track your activity. Get started with our freemium model.</p>
         </div>
         <!-- Benefit 3 -->
         <div class="text-center p-6">
@@ -127,36 +127,20 @@ const faqs = [
       <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
         <div class="text-center mb-8">
           <h2 class="text-3xl font-bold text-gray-900 mb-4">Analyze Reddit Comments</h2>
-          <p class="text-lg text-gray-600">Paste any Reddit thread URL below to start analyzing comments</p>
+          <p class="text-lg text-gray-600">Ready to analyze Reddit comments? Use our main analysis tool to get started.</p>
         </div>
         
-        <!-- Tool Form -->
-        <form id="comment-analysis-form" class="space-y-6">
-          <div>
-            <label for="reddit-url-input" class="block text-sm font-medium text-gray-700 mb-2">
-              Reddit Thread URL
-            </label>
-            <input
-              type="url"
-              id="reddit-url-input"
-              name="reddit-url"
-              placeholder="https://www.reddit.com/r/AskReddit/comments/..."
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors duration-200 text-gray-900 placeholder-gray-500"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            id="analyze-comments-button"
-            class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:outline-none"
-          >
-            Analyze Reddit Comments
-          </button>
-        </form>
+        <!-- Redirect Button -->
+        <div class="text-center">
+          <a href="/reddit-sentiment-analyzer" class="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:outline-none text-lg">
+            Go to Reddit Sentiment Analyzer
+          </a>
+          <p class="text-sm text-gray-500 mt-4">Click to access the full Reddit comment analysis tool</p>
+        </div>
 
         <!-- Sample Results Preview -->
         <div class="mt-12 p-6 bg-orange-50 rounded-xl">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Sample Analysis Preview</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">What You'll Get</h3>
           <div class="grid md:grid-cols-3 gap-4">
             <div class="text-center p-4 bg-green-100 rounded-lg">
               <div class="text-2xl font-bold text-green-700">72%</div>
@@ -374,7 +358,7 @@ const faqs = [
             </tr>
             <tr class="bg-gray-50">
               <td class="border border-gray-300 px-4 py-3">Cost</td>
-              <td class="border border-gray-300 px-4 py-3 text-center">✅ 100% Free</td>
+              <td class="border border-gray-300 px-4 py-3 text-center">✅ Freemium</td>
               <td class="border border-gray-300 px-4 py-3 text-center">💰 Paid plans</td>
             </tr>
           </tbody>
@@ -433,7 +417,7 @@ const faqs = [
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "Reddit Comment Analyzer - Free AI Tool",
-      "description": "Analyze Reddit comments instantly with our free AI-powered comment analyzer. Get sentiment breakdowns, community insights, and engagement metrics for any thread.",
+      "description": "Analyze Reddit comments with our free AI-powered comment analyzer. Get sentiment breakdowns, community insights, and engagement metrics for any thread.",
       "url": "https://www.senti-meter.com/reddit-comment-analyzer",
       "mainEntity": {
         "@type": "WebApplication",
@@ -468,7 +452,7 @@ const faqs = [
         "name": "Is the Reddit comment analyzer really free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes! Our comment analyzer is completely free with no hidden costs, registration requirements, or usage limits. You can analyze unlimited Reddit threads."
+          "text": "Yes! You can start using our comment analyzer for free. Free users have limited analyses per month, while premium subscribers get unlimited access."
         }
       },
       {
@@ -499,20 +483,4 @@ const faqs = [
   }
   </script>
 
-  <!-- JavaScript for tool functionality -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('comment-analysis-form');
-      const urlInput = document.getElementById('reddit-url-input');
-      
-      form?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const url = (urlInput as HTMLInputElement)?.value?.trim();
-        if (url) {
-          // Redirect to main tool with the URL pre-filled
-          window.location.href = `/reddit-sentiment-analyzer?thread=${encodeURIComponent(url)}`;
-        }
-      });
-    });
-  </script>
 </Layout>

@@ -1,0 +1,758 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import VoiceFaqAccordion from '../components/VoiceFaqAccordion.astro';
+import Hero from '../components/sections/Hero.astro';
+import ToolForm from '../components/sections/ToolForm.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import RelatedTools from '../components/sections/RelatedTools.astro';
+import UseCases from '../components/sections/UseCases.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { youtubeAnalyzerVoiceFaqs } from '../data/voiceFaqs.ts';
+
+const title = "YouTube Comment Sentiment Analysis Tool - Free AI Analyzer | Senti-Meter";
+const description = "Analyze YouTube comments with AI. Get sentiment insights, viewer reactions, and engagement metrics for any video. High accuracy, start free.";
+const url = "https://www.senti-meter.com/youtube-sentiment-analyzer";
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "YouTube Sentiment Analyzer" }
+];
+
+const faqs = [
+  {
+    question: 'How does this YouTube Sentiment Analyzer work?',
+    answer: `Our YouTube sentiment analyzer uses advanced AI technology to analyze the emotional tone of video comments. When you paste a YouTube URL, our system first extracts the video ID and fetches up to 100 of the most relevant comments using the YouTube Data API v3. These comments are then processed through OpenAI's GPT-4o model, which has been specifically trained to understand context, sarcasm, and nuanced emotional expressions. The AI analyzes each comment and categorizes it as positive, neutral, or negative sentiment. It then provides you with percentage breakdowns, a summary of the overall sentiment, and sample comments from each category. This process typically takes 1-2 minutes and gives you detailed insights into how viewers are responding to the video content.`
+  },
+  {
+    question: 'Is this tool free to use?',
+    answer: `Yes, you can start using our YouTube sentiment analyzer for free! We offer free analyses to get you started, with premium features available through subscription. Our goal is to make sentiment analysis accessible to everyone, from individual YouTubers looking to understand their audience better to businesses conducting market research. Simply paste any YouTube URL and get detailed, AI-powered sentiment analysis results.`
+  },
+  {
+    question: 'Do you store any of my data?',
+    answer: `No, we do not store any of your data or the YouTube comments we analyze. Our sentiment analyzer processes everything in real-time and immediately discards the data once the analysis is complete. We prioritize your privacy and data security - the YouTube URLs you submit, the comments we fetch, and the sentiment analysis results are never saved to our servers or databases. Each analysis is completely independent and temporary. When you submit a YouTube URL, we fetch the comments, analyze the sentiment, return the results to you, and then all data is automatically purged from our system. This ensures complete privacy and means that your analysis activity cannot be tracked or stored by us.`
+  },
+  {
+    question: 'What types of YouTube videos can I analyze?',
+    answer: `You can analyze any public YouTube video that has comments enabled. Our sentiment analyzer works with all types of content including vlogs, tutorials, music videos, product reviews, educational content, and entertainment videos. The tool supports various YouTube URL formats including standard watch URLs (youtube.com/watch?v=), shortened URLs (youtu.be/), and embedded URLs. For best results, we recommend analyzing videos that have at least 10-20 comments, as this provides a more representative sample for sentiment analysis.`
+  },
+  {
+    question: 'How accurate is the sentiment analysis?',
+    answer: `Our sentiment analyzer uses OpenAI's GPT-4o model, which is an advanced AI language model. This provides good accuracy in understanding context, detecting sarcasm, and interpreting complex emotional expressions. The AI has been trained on vast amounts of text data and can understand nuanced language patterns. While no automated sentiment analysis is perfect, our tool provides reliable sentiment classifications. The AI considers factors like emoji usage, capitalization, punctuation patterns, and contextual clues to make informed classifications. For the most reliable results, we analyze multiple comments and provide sample comments so you can verify the classifications yourself.`
+  },
+  {
+    question: 'How many comments does the tool analyze?',
+    answer: `Our tool analyzes up to 100 of the most relevant comments from each YouTube video. We focus on comments that have received the most engagement (likes, replies) and recent comments to provide a balanced view of audience sentiment. This approach ensures we capture both the most impactful comments and current viewer reactions. We prioritize quality over quantity by selecting the most representative sample. This gives you accurate sentiment insights without overwhelming you with data.`
+  },
+  {
+    question: 'Can I analyze private or unlisted videos?',
+    answer: `No, our tool can only analyze public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data. This means private videos, unlisted videos, and videos with disabled comments cannot be analyzed. This limitation ensures we comply with YouTube's Terms of Service and respect content creators' privacy preferences. If you're trying to analyze a video and it's not working, please check that the video is public and has comments enabled.`
+  },
+  {
+    question: 'What do the sentiment percentages mean?',
+    answer: `The sentiment percentages represent the proportion of comments that fall into each category: positive, neutral, and negative. For example, if you see 60% positive, 25% neutral, and 15% negative, it means 60% of the analyzed comments expressed positive sentiment, 25% were neutral, and 15% were negative. These percentages help you quickly understand the overall audience reaction to a video. A high positive percentage indicates viewers generally enjoyed the content, while a high negative percentage suggests viewers had concerns or criticisms. The neutral percentage represents comments that don't clearly express positive or negative sentiment.`
+  },
+  {
+    question: 'How long does the analysis take?',
+    answer: `Most analyses complete within 1-2 minutes, depending on the number of comments and current system load. The process involves fetching comments from YouTube's API, processing them through our AI model, and generating the sentiment breakdown and summary. During peak usage times, analysis might take slightly longer. You'll see a loading indicator while the analysis is in progress, and you can analyze multiple videos in succession.`
+  },
+  {
+    question: 'Can I share my analysis results?',
+    answer: `Yes! You can easily share your analysis results using the "Share Results" button. This generates a unique URL that you can share with others, allowing them to view the same sentiment analysis results. The shared link includes all the sentiment percentages, summary, and sample comments. This feature is perfect for content creators who want to share audience insights with their team, marketers presenting campaign results, or researchers sharing findings. The shared results are accessible to anyone with the link and don't require any login or registration.`
+  },
+  {
+    question: 'What makes this tool useful for sentiment analysis?',
+    answer: `Our tool offers several useful features: We use OpenAI's GPT-4o model for accurate understanding of context, sarcasm, and nuanced language. We offer a freemium model with free analyses to get started. We prioritize privacy by not storing any data. We provide comprehensive insights including sentiment percentages, detailed summaries, and sample comments from each category. The tool is specifically optimized for YouTube comments, understanding the unique language patterns and context of social media interactions.`
+  },
+  {
+    question: 'Is there a limit to how many videos I can analyze?',
+    answer: `Free users have a limited number of analyses per month, while premium subscribers get expanded access. This makes our premium plan perfect for content creators who want to analyze their video library or researchers conducting studies. Upgrade to premium for expanded analyses and advanced features.`
+  },
+  {
+    question: 'Can I analyze comments in different languages?',
+    answer: `Yes! Our AI model can analyze comments in multiple languages, including English, Spanish, French, German, Italian, Portuguese, and many others. The sentiment analysis works across different languages and cultural contexts, providing accurate insights regardless of the comment language. This multilingual capability makes our tool valuable for international content creators and global brands who want to understand audience sentiment across different markets and languages.`
+  },
+  {
+    question: 'How can I use sentiment analysis for my business?',
+    answer: `Sentiment analysis is incredibly valuable for businesses in many ways: You can monitor brand perception by analyzing comments on your company's videos, track competitor performance by analyzing their content, measure campaign effectiveness, and understand customer feedback and concerns. The insights can help you improve your products, optimize your marketing strategies, identify trending topics, and make data-driven decisions about your content and business direction. Many businesses use sentiment analysis to improve customer satisfaction and create more engaging content.`
+  },
+  {
+    question: 'What if the analysis seems inaccurate?',
+    answer: `While our AI provides good accuracy, sentiment analysis can sometimes misinterpret sarcasm, cultural references, or complex language patterns. If you notice inaccuracies, you can review the sample comments provided to see how the AI classified specific comments. We're working to improve our tool based on user feedback. If you encounter issues, please contact us with specific examples so we can enhance the analysis for similar content types.`
+  },
+  {
+    question: 'Can I analyze live streams or premieres?',
+    answer: `Yes, you can analyze comments from live streams and premieres, but only after they've ended and the comments are publicly available. During live streams, comments are often processed in real-time and may not be immediately accessible for analysis. For the most comprehensive analysis of live content, we recommend waiting until the stream has ended and all comments have been processed by YouTube's systems. This ensures you get the complete picture of audience sentiment.`
+  },
+  {
+    question: 'How do you handle spam or irrelevant comments?',
+    answer: `Our AI model is trained to identify and filter out spam comments, irrelevant content, and automated responses. The sentiment analysis focuses on genuine viewer comments that provide meaningful insights about the video content. This filtering ensures that your sentiment analysis results reflect actual viewer opinions rather than being skewed by spam or irrelevant content. The AI can distinguish between meaningful feedback and noise, providing you with cleaner, more accurate insights.`
+  },
+  {
+    question: 'Can I export or download the analysis results?',
+    answer: `Currently, you can share your analysis results via a unique URL, but we don't offer direct export or download functionality. However, you can easily copy the sentiment percentages, summary, and sample comments from the results page. We're working on adding export features in future updates, including the ability to download results as PDF reports or CSV files for further analysis in spreadsheet applications.`
+  },
+  {
+    question: 'Is the tool available on mobile devices?',
+    answer: `Yes! Our YouTube sentiment analyzer is fully responsive and works perfectly on mobile devices, tablets, and desktop computers. The interface automatically adjusts to different screen sizes, making it easy to analyze videos on the go. You can paste YouTube URLs, view analysis results, and share findings from any device with a web browser. The mobile experience is optimized for touch interactions and provides the same comprehensive insights as the desktop version.`
+  },
+  {
+    question: 'How can I get support or report issues?',
+    answer: `If you encounter any issues or have questions about using our tool, you can contact us through our contact page. We're committed to providing excellent support and responding to user feedback to improve our service. We also welcome suggestions for new features or improvements. Your feedback helps us make the tool better for everyone, so don't hesitate to reach out if you have ideas or encounter any problems.`
+  }
+];
+---
+<Layout title={title} description={description} url={url}>
+  <head>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/logo.svg" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/logo.svg" />
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="YouTube Sentiment Analyzer" />
+    <meta name="keywords" content="youtube, sentiment analysis, comment analysis, video sentiment, ai analysis, free tool" />
+    <link rel="canonical" href={url} />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Senti-Meter" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="msapplication-TileImage" content="/icon-192.png" />
+  </head>
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#analysis-form" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
+    Skip to analyzer
+  </a>
+
+  <Breadcrumb items={breadcrumbItems} />
+
+  <main id="main-content" class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8" role="main">
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        <Hero 
+          title="YouTube Sentiment Analyzer"
+          description="Paste any YouTube video link below to get detailed sentiment analysis of the comments. Discover what viewers really think about the content with AI-powered insights."
+        />
+
+        <ToolForm />
+      </div>
+    </div>
+  </main>
+
+  <HowItWorks />
+
+  <RelatedTools />
+
+  <UseCases />
+
+
+  <!-- AdSense Ad Placement -->
+  <section class="py-8 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <div class="bg-white border-2 border-dashed border-gray-300 rounded-lg p-8">
+          <div class="text-gray-500">
+            <h3 class="text-lg font-medium mb-2">Advertisement</h3>
+            <p class="text-sm">AdSense ad will be displayed here</p>
+            <div class="mt-4 w-full h-32 bg-gray-100 rounded flex items-center justify-center">
+              <span class="text-gray-400">728x90 Ad Unit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Voice-Optimized FAQ Section -->
+  <section class="bg-white py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <VoiceFaqAccordion faqs={youtubeAnalyzerVoiceFaqs} />
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="bg-gray-50 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Detailed Questions & Answers</h2>
+        <p class="text-lg text-gray-600">Comprehensive information about our YouTube sentiment analyzer</p>
+      </div>
+      <FaqAccordion faqs={faqs} />
+    </div>
+  </section>
+
+  <!-- Enhanced JSON-LD Schema -->
+<script type="application/ld+json" is:inline>
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "YouTube Sentiment Analyzer",
+      "url": "https://www.senti-meter.com",
+      "description": "Analyze YouTube comments with AI. Get sentiment insights, viewer reactions, and engagement metrics for any video. Free, no signup required.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.senti-meter.com/?video={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Analyze YouTube Comments for Sentiment",
+      "description": "Step-by-step guide to analyzing YouTube video comments for sentiment and emotional insights using AI",
+      "image": "https://www.senti-meter.com/youtube-logo.png",
+      "totalTime": "PT2M",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "USD",
+        "value": "0"
+      },
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Find YouTube Video",
+          "text": "Navigate to YouTube and find the video you want to analyze",
+          "image": "https://www.senti-meter.com/youtube-logo.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Copy Video URL",
+          "text": "Copy the YouTube video URL from your browser's address bar",
+          "image": "https://www.senti-meter.com/youtube-logo.png"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Paste URL",
+          "text": "Paste the YouTube URL into the sentiment analyzer input field",
+          "image": "https://www.senti-meter.com/logo.svg"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Start Analysis",
+          "text": "Click the 'Analyze Comments' button to begin AI-powered sentiment analysis",
+          "image": "https://www.senti-meter.com/logo.svg"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Review Results",
+          "text": "Examine the sentiment breakdown, percentages, and sample comments from each category",
+          "image": "https://www.senti-meter.com/logo.svg"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Sentiment Analyzer",
+      "alternateName": "Senti-Meter",
+      "url": "https://www.senti-meter.com",
+      "description": "Free AI-powered tool to analyze YouTube video comment sentiment. Get percentage breakdowns, sentiment summaries, and sample comments in 1-2 minutes.",
+      "applicationCategory": "AnalyticsApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "screenshot": "https://www.senti-meter.com/logo.svg",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "description": "Free to use with no registration required"
+      },
+      "featureList": [
+        "AI-powered sentiment analysis using GPT-4o",
+        "Analyzes up to 300 YouTube comments",
+        "Real-time processing with detailed results",
+        "Privacy-focused with no data storage",
+        "Supports all YouTube URL formats",
+        "Percentage breakdowns by sentiment",
+        "Sample comments for each sentiment category",
+        "Most liked comment highlighting"
+      ],
+      "creator": {
+        "@type": "Organization",
+        "name": "Senti-Meter"
+      },
+      "datePublished": "2025-01-07",
+      "inLanguage": "en-US",
+      "isAccessibleForFree": true,
+      "keywords": "YouTube sentiment analysis, comment analysis, video sentiment, AI analysis, free tool, YouTube analytics",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Content creators, marketers, researchers, YouTube users"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "YouTube Sentiment Analyzer",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does this YouTube Sentiment Analyzer work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our YouTube sentiment analyzer uses advanced AI technology to analyze the emotional tone of video comments. When you paste a YouTube URL, our system first extracts the video ID and fetches up to 100 of the most relevant comments using the YouTube Data API v3. These comments are then processed through OpenAI's GPT-4o model, which has been specifically trained to understand context, sarcasm, and nuanced emotional expressions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this tool free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can start using our YouTube sentiment analyzer for free. Free users have limited analyses per month, while premium subscribers get expanded access. We believe in providing accessible tools for content creators, marketers, and researchers who want to understand audience sentiment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you store any of my data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, we do not store any of your data or the YouTube comments we analyze. Our sentiment analyzer processes everything in real-time and immediately discards the data once the analysis is complete. We prioritize your privacy and data security - the YouTube URLs you submit, the comments we fetch, and the sentiment analysis results are never saved to our servers or databases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What types of YouTube videos can I analyze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can analyze any public YouTube video that has comments enabled. Our sentiment analyzer works with all types of content including vlogs, tutorials, music videos, product reviews, educational content, and entertainment videos. The tool supports various YouTube URL formats including standard watch URLs, shortened URLs, and embedded URLs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is the sentiment analysis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our sentiment analyzer uses OpenAI's GPT-4o model, which is an advanced AI language model. This provides good accuracy in understanding context, detecting sarcasm, and interpreting complex emotional expressions. While no automated sentiment analysis is perfect, our tool provides reliable sentiment classifications."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many comments does the tool analyze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our tool analyzes up to 100 of the most relevant comments from each YouTube video. We focus on comments that have received the most engagement (likes, replies) and recent comments to provide a balanced view of audience sentiment. This approach ensures we capture both the most impactful comments and current viewer reactions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I analyze private or unlisted videos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, our tool can only analyze public YouTube videos that have comments enabled. We respect YouTube's privacy settings and can only access publicly available comment data. This means private videos, unlisted videos, and videos with disabled comments cannot be analyzed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does the analysis take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most analyses complete within 1-2 minutes, depending on the number of comments and current system load. The process involves fetching comments from YouTube's API, processing them through our AI model, and generating the sentiment breakdown and summary."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I share my analysis results?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can easily share your analysis results using the 'Share Results' button. This generates a unique URL that you can share with others, allowing them to view the same sentiment analysis results. The shared link includes all the sentiment percentages, summary, and sample comments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What makes this tool different from other sentiment analyzers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our tool offers several useful features: We use OpenAI's GPT-4o model for accurate understanding of context, sarcasm, and nuanced language. We offer a freemium model with free analyses to get started. We prioritize privacy by not storing any data."
+          }
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Use YouTube Sentiment Analyzer",
+      "description": "Learn how to analyze YouTube video comments with AI-powered sentiment analysis in three simple steps",
+      "image": "https://www.senti-meter.com/logo.svg",
+      "totalTime": "PT30S",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "USD",
+        "value": "0"
+      },
+      "supply": [
+        {
+          "@type": "HowToSupply",
+          "name": "YouTube video URL"
+        }
+      ],
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": "Senti-Meter YouTube Sentiment Analyzer"
+        }
+      ],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Paste YouTube URL",
+          "text": "Copy any YouTube video link and paste it into our analyzer. We support all YouTube URL formats including standard watch URLs, shortened links, and embedded URLs.",
+          "image": "https://www.senti-meter.com/logo.svg"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "AI Analysis",
+          "text": "Our advanced AI (GPT-4o) analyzes up to 100 comments, understanding context, sarcasm, and emotional nuances. The process typically takes 1-2 minutes.",
+          "image": "https://www.senti-meter.com/logo.svg"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Get Insights",
+          "text": "Receive detailed sentiment breakdowns, percentage analysis, sample comments, and a comprehensive summary of audience reactions to the video.",
+          "image": "https://www.senti-meter.com/logo.svg"
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <!-- Import modular JavaScript -->
+  <script type="module">
+    import { SecurityUtils } from '/src/scripts/security.js';
+    import { UIManager } from '/src/scripts/ui.js';
+    import { APIManager } from '/src/scripts/api.js';
+    import { ShareManager } from '/src/scripts/share.js';
+    import { StorageManager } from '/src/scripts/storage.js';
+    // Imports removed to fix unused variable warnings
+    // import { errorHandler } from '/src/scripts/errorHandler.js';
+    // import { accessibilityManager } from '/src/scripts/accessibility.js';
+    // import { monitoringManager } from '/src/scripts/monitoring.js';
+    import { pwaManager } from '/src/scripts/pwa.js';
+
+    // Initialize the YouTube Sentiment Analyzer
+    document.addEventListener('DOMContentLoaded', () => {
+      class YouTubeSentimentAnalyzer {
+        constructor() {
+          this.isAnalyzing = false;
+          this.lastAnalyzedUrl = '';
+          this.currentVideoUrl = '';
+          this.currentSummary = '';
+          this.lastSharedResultId = null;
+          this.lastSharedResultData = null;
+          
+          this.init();
+        }
+
+        init() {
+          // Initialize managers
+          this.elements = this.cacheElements();
+          this.uiManager = new UIManager(this.elements);
+          this.apiManager = new APIManager();
+          this.shareManager = new ShareManager();
+          this.storageManager = new StorageManager();
+
+          // Initialize PWA manager
+          pwaManager.init();
+
+          // Set up event listeners
+          this.setupEventListeners();
+          
+          // Load history and check for shared videos
+          this.loadHistory();
+          this.checkSharedVideo();
+          
+          // Set up cleanup
+          this.setupCleanup();
+        }
+
+        cacheElements() {
+          return {
+            form: document.getElementById('analysis-form'),
+            urlInput: document.getElementById('youtube-url'),
+            urlError: document.getElementById('url-error'),
+            analyzeButton: document.getElementById('analyze-button'),
+            loadingState: document.getElementById('loading-state'),
+            loadingText: document.getElementById('loading-text'),
+            progressBar: document.getElementById('progress-bar'),
+            progressFill: document.getElementById('progress-fill'),
+            errorState: document.getElementById('error-state'),
+            errorMessage: document.getElementById('error-message'),
+            errorSuggestions: document.getElementById('error-suggestions'),
+            resultsContainer: document.getElementById('results-container'),
+            positivePercentage: document.getElementById('positive-percentage'),
+            neutralPercentage: document.getElementById('neutral-percentage'),
+            negativePercentage: document.getElementById('negative-percentage'),
+            positiveBar: document.getElementById('positive-bar'),
+            neutralBar: document.getElementById('neutral-bar'),
+            negativeBar: document.getElementById('negative-bar'),
+            sentimentSummary: document.getElementById('sentiment-summary'),
+            positiveComments: document.getElementById('positive-comments'),
+            neutralComments: document.getElementById('neutral-comments'),
+            negativeComments: document.getElementById('negative-comments'),
+            sampleInfo: document.getElementById('sample-info'),
+            mostLikedCallout: document.getElementById('most-liked-callout'),
+            mostLikedLabel: document.getElementById('most-liked-label'),
+            mostLikedText: document.getElementById('most-liked-text'),
+            videoInfoCard: document.getElementById('video-info'),
+            videoThumb: document.getElementById('video-thumb'),
+            videoTitle: document.getElementById('video-title'),
+            channelLink: document.getElementById('channel-link'),
+            channelThumb: document.getElementById('channel-thumb'),
+            channelTitle: document.getElementById('channel-title'),
+            channelDesc: document.getElementById('channel-desc'),
+            analyzeAnother: document.getElementById('analyze-another'),
+            shareResults: document.getElementById('share-results'),
+            historyContainer: document.getElementById('history-container'),
+            historyList: document.getElementById('history-list')
+          };
+        }
+
+        setupEventListeners() {
+          // Form submission
+          this.elements.form?.addEventListener('submit', (e) => this.handleFormSubmit(e));
+          
+          // Analyze Another button
+          this.elements.analyzeAnother?.addEventListener('click', () => this.analyzeAnother());
+          
+          // Share Results button
+          this.elements.shareResults?.addEventListener('click', () => this.shareResults());
+          
+          // Keyboard shortcuts
+          document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+        }
+
+        async handleFormSubmit(e) {
+          e.preventDefault();
+          
+          if (this.isAnalyzing) return;
+          
+          if (!this.elements.urlInput) return;
+          
+          const youtubeUrl = this.elements.urlInput.value.trim();
+          
+          // Input validation
+          if (!this.validateInput(youtubeUrl)) return;
+          
+          // Rate limiting
+          if (!SecurityUtils.rateLimiter.isAllowed()) {
+            this.uiManager.showError('Too many requests. Please wait a minute before trying again.');
+            return;
+          }
+
+          // Check if re-analyzing same URL
+          if (youtubeUrl === this.lastAnalyzedUrl && 
+              this.elements.resultsContainer && 
+              !this.elements.resultsContainer.classList.contains('hidden')) {
+            return;
+          }
+
+          // Check cache
+          const cached = this.apiManager.getCachedAnalysis(youtubeUrl);
+          if (cached) {
+            this.uiManager.showResults(cached.sentiment, cached.meta);
+            return;
+          }
+
+          await this.performAnalysis(youtubeUrl);
+        }
+
+        validateInput(youtubeUrl) {
+          this.elements.urlError?.classList.add('hidden');
+
+          if (!youtubeUrl) {
+            SecurityUtils.safeSetText(this.elements.urlError, 'Please enter a YouTube URL');
+            this.elements.urlError?.classList.remove('hidden');
+            return false;
+          }
+
+          if (youtubeUrl.length > 2048) {
+            SecurityUtils.safeSetText(this.elements.urlError, 'URL is too long');
+            this.elements.urlError?.classList.remove('hidden');
+            return false;
+          }
+
+          if (!SecurityUtils.isValidYouTubeUrl(youtubeUrl)) {
+            SecurityUtils.safeSetText(this.elements.urlError, 'Please enter a valid YouTube URL');
+            this.elements.urlError?.classList.remove('hidden');
+            return false;
+          }
+
+          return true;
+        }
+
+        async performAnalysis(youtubeUrl) {
+          this.isAnalyzing = true;
+          this.lastAnalyzedUrl = youtubeUrl;
+          this.currentVideoUrl = youtubeUrl;
+          
+          // Set global reference for UI manager
+          window.currentVideoUrl = youtubeUrl;
+
+          try {
+            // Fetch comments
+            this.uiManager.showLoading('Fetching comments...');
+            const commentsData = await this.apiManager.fetchComments(youtubeUrl);
+
+            if (!commentsData.comments || commentsData.comments.length === 0) {
+              throw new Error('No comments found for this video');
+            }
+
+            // Analyze sentiment
+            this.uiManager.showLoading('Analyzing sentiment...');
+            const sentimentData = await this.apiManager.analyzeSentiment(commentsData);
+
+            const meta = {
+              analyzedCount: commentsData.analyzedCount,
+              totalComments: commentsData.totalComments,
+              mostLiked: commentsData.mostLiked,
+              videoInfo: sentimentData.videoInfo,
+              channelInfo: sentimentData.channelInfo,
+            };
+
+            // Cache results
+            this.apiManager.cacheAnalysis(youtubeUrl, { sentiment: sentimentData, meta });
+
+            // Display results
+            this.uiManager.showResults(sentimentData, meta);
+            
+            this.currentSummary = sentimentData.summary || '';
+            
+            // Add to history
+            if (meta.videoInfo?.title) {
+              this.storageManager.addToHistory(this.currentVideoUrl, meta.videoInfo.title);
+              this.loadHistory();
+            }
+
+          } catch (error) {
+            console.error('Analysis error:', error);
+            this.uiManager.showError(error.message || 'An unexpected error occurred');
+          } finally {
+            this.isAnalyzing = false;
+          }
+        }
+
+        analyzeAnother() {
+          if (this.elements.urlInput) {
+            this.elements.urlInput.value = '';
+          }
+          this.uiManager.hideAllStates();
+          this.elements.urlInput?.focus();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async shareResults() {
+          if (!this.currentVideoUrl || !this.currentSummary) return;
+          
+          try {
+            let shareUrl = '';
+            
+            if (this.lastSharedResultId && this.lastSharedResultData && this.lastAnalyzedUrl === this.currentVideoUrl) {
+              shareUrl = `${window.location.origin}/result/${this.lastSharedResultId}`;
+            } else {
+              const cached = this.apiManager.getCachedAnalysis(this.currentVideoUrl);
+              if (cached) {
+                const result = await this.apiManager.saveResults(cached.sentiment, cached.meta, this.currentVideoUrl);
+                this.lastSharedResultId = result.id;
+                this.lastSharedResultData = { sentimentData: cached.sentiment, meta: cached.meta, videoUrl: this.currentVideoUrl };
+                shareUrl = result.shareUrl;
+              } else {
+                shareUrl = `${window.location.origin}?video=${encodeURIComponent(this.currentVideoUrl)}`;
+              }
+            }
+            
+            const videoTitle = this.elements.videoTitle?.textContent || 'this video';
+            const positive = this.elements.positivePercentage?.textContent || '0%';
+            const neutral = this.elements.neutralPercentage?.textContent || '0%';
+            const negative = this.elements.negativePercentage?.textContent || '0%';
+            
+            this.shareManager.createShareModal(shareUrl, videoTitle, positive, neutral, negative);
+            
+          } catch (error) {
+            console.error('Error sharing results:', error);
+            const fallbackUrl = `${window.location.origin}?video=${encodeURIComponent(this.currentVideoUrl)}`;
+            this.shareManager.copyToClipboard(fallbackUrl);
+          }
+        }
+
+        handleKeyboard(e) {
+          // Ctrl/Cmd + Enter to analyze
+          if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && 
+              document.activeElement === this.elements.urlInput && this.elements.form) {
+            e.preventDefault();
+            this.elements.form.dispatchEvent(new Event('submit'));
+          }
+          
+          // Escape to clear results
+          if (e.key === 'Escape' && this.elements.resultsContainer && 
+              !this.elements.resultsContainer.classList.contains('hidden')) {
+            this.uiManager.hideAllStates();
+            if (this.elements.urlInput) {
+              this.elements.urlInput.value = '';
+              this.elements.urlInput.focus();
+            }
+          }
+        }
+
+        loadHistory() {
+          this.storageManager.displayHistory(
+            this.elements.historyContainer,
+            this.elements.historyList,
+            this.elements
+          );
+        }
+
+        checkSharedVideo() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const sharedVideo = urlParams.get('video');
+          if (sharedVideo && SecurityUtils.isValidYouTubeUrl(sharedVideo) && 
+              this.elements.urlInput && this.elements.form) {
+            this.elements.urlInput.value = sharedVideo;
+            this.elements.form.dispatchEvent(new Event('submit'));
+          }
+        }
+
+        setupCleanup() {
+          window.addEventListener('beforeunload', () => {
+            this.uiManager.clearProgress();
+          });
+        }
+      }
+
+      // Initialize the application
+      new YouTubeSentimentAnalyzer();
+    });
+  </script>
+</Layout>
