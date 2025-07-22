@@ -310,7 +310,13 @@ async function validateRedditUrl(url: string): Promise<boolean> {
     const response = await fetch(url, {
       method: 'HEAD',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'DNT': '1',
+        'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"'
       }
     });
     
@@ -326,6 +332,12 @@ async function validateRedditUrl(url: string): Promise<boolean> {
     if (response.status === 404) {
       console.log('URL returns 404 - does not exist');
       return false;
+    }
+    
+    // 403 might mean access restrictions but URL could still exist
+    if (response.status === 403) {
+      console.log('URL returns 403 - access restricted but may exist');
+      return true; // Continue processing, let the actual resolution methods handle it
     }
     
     // For other status codes, assume it might be valid (rate limiting, etc.)
@@ -362,16 +374,25 @@ async function resolveMobileShareUrl(url: string): Promise<string> {
     const jsonUrl = url + '.json';
     console.log('Trying JSON API:', jsonUrl);
     
-    const response = await fetch(jsonUrl, {
+    const jsonResponse = await fetch(jsonUrl, {
       method: 'GET',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; RedditAnalyzer/1.0)',
-        'Accept': 'application/json'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/html, */*',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Cache-Control': 'max-age=0'
       }
     });
     
-    if (response.ok) {
-      const data = await response.json();
+    if (jsonResponse.ok) {
+      const data = await jsonResponse.json();
       console.log('JSON API response received');
       
       // Check if we got valid Reddit data
@@ -385,50 +406,110 @@ async function resolveMobileShareUrl(url: string): Promise<string> {
       }
     }
     
-    console.log('JSON API did not work, trying redirect method');
+    console.log('JSON API did not work, trying redirect method with browser headers');
     
-    // Fallback: Try the original redirect method
+    // Enhanced redirect method with better headers
     const redirectResponse = await fetch(url, {
       method: 'GET',
-      redirect: 'follow',
+      redirect: 'manual', // Handle redirects manually to capture the Location header
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Cache-Control': 'max-age=0',
+        'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"'
       }
     });
     
-    const resolvedUrl = redirectResponse.url;
-    console.log('Redirect method resolved to:', resolvedUrl);
+    console.log('Redirect response status:', redirectResponse.status);
     
-    // Check if we actually got redirected to a different URL
-    if (resolvedUrl !== url && isValidRedditUrl(resolvedUrl)) {
-      console.log('Successfully resolved via redirect to:', resolvedUrl);
-      return resolvedUrl;
-    } else {
-      console.log('Redirect method did not work, trying HTML parsing');
+    // Check for redirect responses
+    if (redirectResponse.status >= 300 && redirectResponse.status < 400) {
+      const location = redirectResponse.headers.get('location');
+      console.log('Found redirect location:', location);
       
-      // Alternative: Try to construct the URL from the response content
-      const text = await redirectResponse.text();
-      
-      // Look for various patterns in the HTML
-      const patterns = [
-        /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i,
-        /<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i,
-        /<meta[^>]+name="twitter:url"[^>]+content="([^"]+)"/i,
-        /window\.location\.href\s*=\s*["']([^"']+)["']/i,
-        /href="(https:\/\/www\.reddit\.com\/r\/[^\/]+\/comments\/[^"]+)"/i
-      ];
-      
-      for (const pattern of patterns) {
-        const match = text.match(pattern);
-        if (match && match[1] && isValidRedditUrl(match[1])) {
-          console.log('Found URL in HTML via pattern:', match[1]);
-          return match[1];
+      if (location && isValidRedditUrl(location)) {
+        console.log('Successfully resolved via redirect to:', location);
+        return location;
+      }
+    }
+    
+    // If no redirect, try to parse the HTML content
+    console.log('No redirect found, trying HTML content parsing');
+    
+    const htmlResponse = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none'
+      }
+    });
+    
+    const htmlText = await htmlResponse.text();
+    console.log('HTML response length:', htmlText.length);
+    
+    // Enhanced HTML parsing with more patterns
+    const patterns = [
+      // Look for canonical URL
+      /<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i,
+      // Look for og:url meta tag
+      /<meta[^>]+property=["']og:url["'][^>]+content=["']([^"']+)["']/i,
+      // Look for twitter:url meta tag
+      /<meta[^>]+name=["']twitter:url["'][^>]+content=["']([^"']+)["']/i,
+      // Look for JavaScript redirects
+      /window\.location\.href\s*=\s*["']([^"']+)["']/i,
+      /window\.location\s*=\s*["']([^"']+)["']/i,
+      /location\.href\s*=\s*["']([^"']+)["']/i,
+      // Look for direct Reddit comment links in HTML
+      /href=["'](https:\/\/www\.reddit\.com\/r\/[^\/]+\/comments\/[^"']+)["']/i,
+      // Look for data attributes
+      /data-permalink=["']([^"']+)["']/i,
+      /data-url=["']([^"']+)["']/i,
+      // Look for JSON-LD structured data
+      /"url":\s*"([^"]+\/comments\/[^"]+)"/i,
+      // Look for Reddit's internal routing data
+      /"permalink":\s*"([^"]+)"/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = htmlText.match(pattern);
+      if (match && match[1]) {
+        let foundUrl = match[1];
+        
+        // Handle relative URLs
+        if (foundUrl.startsWith('/')) {
+          foundUrl = 'https://www.reddit.com' + foundUrl;
+        }
+        
+        // Validate it's a proper Reddit URL
+        if (isValidRedditUrl(foundUrl) && foundUrl.includes('/comments/')) {
+          console.log('Found URL in HTML via pattern:', foundUrl);
+          return foundUrl;
         }
       }
-      
-      console.log('Could not resolve mobile share URL through any method');
-      throw new Error('Unable to resolve this Reddit share link. It may be expired, invalid, or the post may have been deleted.');
     }
+    
+    console.log('Could not resolve mobile share URL through any method');
+    throw new Error('Unable to resolve this Reddit share link. It may be expired, invalid, or the post may have been deleted.');
+    
   } catch (error) {
     if (error.message.includes('expired') || error.message.includes('invalid') || error.message.includes('deleted')) {
       throw error; // Re-throw our custom error messages
