@@ -487,6 +487,9 @@ function extractJSON(str: string): string {
   const lastBrace = cleaned.lastIndexOf('}');
   
   if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
+    console.error('No valid JSON braces found in OpenAI response');
+    console.error('Response length:', str.length);
+    console.error('Response preview:', str.substring(0, 500));
     throw new Error('No JSON object found in response');
   }
   
@@ -498,6 +501,7 @@ function extractJSON(str: string): string {
     return cleaned;
   } catch (parseError) {
     console.error('JSON parse error:', parseError);
+    console.error('Invalid JSON preview:', cleaned.substring(0, 500));
     throw new Error('Invalid JSON in response');
   }
 }
