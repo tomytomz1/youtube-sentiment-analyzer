@@ -306,6 +306,13 @@ async function validateRedditUrl(url: string): Promise<boolean> {
   try {
     console.log('Validating Reddit URL existence:', url);
     
+    // Skip validation in production/Vercel environment as it can cause issues
+    // Reddit may block HEAD requests from cloud providers
+    if (import.meta.env.VERCEL || import.meta.env.PROD) {
+      console.log('Skipping URL validation in production environment');
+      return true;
+    }
+    
     // Try a simple HEAD request to check if the URL exists
     const response = await fetch(url, {
       method: 'HEAD',
