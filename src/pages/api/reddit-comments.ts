@@ -154,8 +154,20 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Resolve mobile share URLs
-    const resolvedUrl = await resolveMobileShareUrl(redditUrl);
-    console.log('Resolved Reddit URL:', resolvedUrl);
+    let resolvedUrl: string;
+    try {
+      resolvedUrl = await resolveMobileShareUrl(redditUrl);
+      console.log('Resolved Reddit URL:', resolvedUrl);
+    } catch (error) {
+      console.error('Failed to resolve Reddit URL:', error);
+      return new Response(JSON.stringify({ 
+        error: error.message || 'Unable to resolve Reddit URL',
+        details: 'Please check that the Reddit link is valid and accessible.'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     // Extract thread info
     const threadInfo = extractThreadInfo(resolvedUrl);
@@ -288,12 +300,59 @@ export const OPTIONS: APIRoute = async () => {
 };
 
 /**
+ * Validate if a Reddit URL actually exists
+ */
+async function validateRedditUrl(url: string): Promise<boolean> {
+  try {
+    console.log('Validating Reddit URL existence:', url);
+    
+    // Try a simple HEAD request to check if the URL exists
+    const response = await fetch(url, {
+      method: 'HEAD',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+    
+    console.log('URL validation response status:', response.status);
+    
+    // Consider 200, 301, 302 as valid (redirects are fine)
+    if (response.status === 200 || response.status === 301 || response.status === 302) {
+      console.log('URL is valid');
+      return true;
+    }
+    
+    // 404 means the URL doesn't exist
+    if (response.status === 404) {
+      console.log('URL returns 404 - does not exist');
+      return false;
+    }
+    
+    // For other status codes, assume it might be valid (rate limiting, etc.)
+    console.log('URL validation inconclusive, assuming valid');
+    return true;
+    
+  } catch (error) {
+    console.error('Error validating Reddit URL:', error);
+    // If we can't validate, assume it might be valid
+    return true;
+  }
+}
+
+/**
  * Resolve mobile share URLs to actual thread URLs
  */
 async function resolveMobileShareUrl(url: string): Promise<string> {
   // Check if it's a mobile share URL
   if (!/\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/.test(url)) {
     return url; // Not a mobile share URL, return as-is
+  }
+  
+  // First, validate if the share URL actually exists
+  const urlExists = await validateRedditUrl(url);
+  if (!urlExists) {
+    console.log('Mobile share URL does not exist or is expired');
+    throw new Error('This Reddit share link appears to be invalid or expired. Please check the URL and try again.');
   }
   
   try {
@@ -367,12 +426,15 @@ async function resolveMobileShareUrl(url: string): Promise<string> {
         }
       }
       
-      console.log('Could not resolve mobile share URL, falling back to original');
-      return url;
+      console.log('Could not resolve mobile share URL through any method');
+      throw new Error('Unable to resolve this Reddit share link. It may be expired, invalid, or the post may have been deleted.');
     }
   } catch (error) {
+    if (error.message.includes('expired') || error.message.includes('invalid') || error.message.includes('deleted')) {
+      throw error; // Re-throw our custom error messages
+    }
     console.error('Error resolving mobile share URL:', error);
-    return url; // Fall back to original URL
+    throw new Error('Unable to resolve this Reddit share link. Please try using the direct Reddit post URL instead.');
   }
 }
 
