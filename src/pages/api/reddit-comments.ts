@@ -86,9 +86,22 @@ function isValidRedditUrl(url: string): boolean {
   if (typeof url !== 'string' || url.length > 2048) return false;
   
   const patterns = [
+    // Standard desktop formats
     /^https:\/\/(www\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
     /^https:\/\/(old\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
     /^https:\/\/(new\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+    
+    // Mobile formats
+    /^https:\/\/(m\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+    /^https:\/\/(www\.)?reddit\.com\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/,  // Mobile share format
+    
+    // Without www
+    /^https:\/\/reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+    /^https:\/\/reddit\.com\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/,
+    
+    // HTTP versions (less secure but sometimes used)
+    /^http:\/\/(www\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+    /^http:\/\/(www\.)?reddit\.com\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/,
   ];
   
   return patterns.some(pattern => pattern.test(url.trim()));
@@ -140,12 +153,16 @@ export const POST: APIRoute = async ({ request }) => {
       return createErrorResponse('Could not extract thread ID from URL', 400, { url: redditUrl });
     }
 
+    // Resolve mobile share URLs
+    const resolvedUrl = await resolveMobileShareUrl(redditUrl);
+    console.log('Resolved Reddit URL:', resolvedUrl);
+
     // Extract thread info
-    const threadInfo = extractThreadInfo(redditUrl);
+    const threadInfo = extractThreadInfo(resolvedUrl);
     console.log('Extracted thread info:', threadInfo);
     
     if (!threadInfo) {
-      return createErrorResponse('Could not extract thread info from URL', 400, { url: redditUrl });
+      return createErrorResponse('Could not extract thread info from URL', 400, { url: resolvedUrl });
     }
 
     // Setup request timeout
@@ -214,7 +231,7 @@ export const POST: APIRoute = async ({ request }) => {
           author: sanitizeString(redditData.threadData?.author || '', 50),
           score: Math.max(0, redditData.threadData?.score || 0),
           created: redditData.threadData?.created || null,
-          url: sanitizeString(redditUrl, 500),
+          url: sanitizeString(resolvedUrl, 500),
           imageUrl: redditData.threadData?.imageUrl || undefined,
         },
       };
@@ -271,11 +288,48 @@ export const OPTIONS: APIRoute = async () => {
 };
 
 /**
+ * Resolve mobile share URLs to actual thread URLs
+ */
+async function resolveMobileShareUrl(url: string): Promise<string> {
+  // Check if it's a mobile share URL
+  if (!/\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/.test(url)) {
+    return url; // Not a mobile share URL, return as-is
+  }
+  
+  try {
+    console.log('Resolving mobile share URL:', url);
+    
+    // Follow the redirect to get the actual URL
+    const response = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'follow',
+    });
+    
+    const resolvedUrl = response.url;
+    console.log('Resolved URL:', resolvedUrl);
+    
+    // Verify the resolved URL is a valid Reddit thread URL
+    if (isValidRedditUrl(resolvedUrl)) {
+      return resolvedUrl;
+    } else {
+      console.log('Resolved URL is not a valid Reddit thread URL, falling back to original');
+      return url;
+    }
+  } catch (error) {
+    console.error('Error resolving mobile share URL:', error);
+    return url; // Fall back to original URL
+  }
+}
+
+/**
  * Extract thread information from Reddit URL
  */
 function extractThreadInfo(url: string): { subreddit: string; threadId: string; slug?: string } | null {
   const patterns = [
+    // Standard comments format: /r/subreddit/comments/threadId/slug
     /reddit\.com\/r\/([^\/]+)\/comments\/([a-zA-Z0-9]+)(?:\/([^\/\?]+))?/,
+    // Mobile share format: /r/subreddit/s/shareId
+    /reddit\.com\/r\/([^\/]+)\/s\/([a-zA-Z0-9]+)/,
   ];
   
   for (const pattern of patterns) {

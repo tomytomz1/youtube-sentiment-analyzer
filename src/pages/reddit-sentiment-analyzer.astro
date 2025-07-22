@@ -213,7 +213,7 @@ const faqs = [
                   type="url"
                   id="reddit-url"
                   name="reddit-url"
-                  placeholder="https://www.reddit.com/r/AskReddit/comments/..."
+                  placeholder="https://www.reddit.com/r/AskReddit/comments/... (mobile links supported)"
                   class="flex-1 px-4 py-4 bg-transparent border-none focus:ring-0 text-gray-900 placeholder-gray-400 rounded-2xl"
                   required
                   aria-describedby="url-error"
@@ -939,9 +939,18 @@ const faqs = [
       isValidRedditUrl: (url: string) => {
         if (!SecurityUtils.isValidUrl(url)) return false;
         const patterns = [
+          // Standard desktop formats
           /^https?:\/\/(www\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
           /^https?:\/\/(old\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
           /^https?:\/\/(new\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+          
+          // Mobile formats
+          /^https?:\/\/(m\.)?reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+          /^https?:\/\/(www\.)?reddit\.com\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/,  // Mobile share format
+          
+          // Without www
+          /^https?:\/\/reddit\.com\/r\/[^\/]+\/comments\/[a-zA-Z0-9]+/,
+          /^https?:\/\/reddit\.com\/r\/[^\/]+\/s\/[a-zA-Z0-9]+/,
         ];
         return patterns.some(pattern => pattern.test(url));
       },
