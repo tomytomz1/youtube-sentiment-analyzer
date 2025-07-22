@@ -230,11 +230,14 @@ const faqs = [
                   </svg>
                 </button>
               </div>
-              <span id="url-error" class="hidden text-red-600 text-sm mt-2 items-center" role="alert">
-                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                </svg>
-              </span>
+              <div id="url-error" class="hidden bg-amber-50 border border-amber-200 rounded-lg p-4 mt-3" role="alert">
+                <div class="flex items-start">
+                  <svg class="w-5 h-5 text-amber-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div class="text-amber-800 text-sm whitespace-pre-line leading-relaxed flex-1"></div>
+                </div>
+              </div>
             </div>
           </form>
 
@@ -993,6 +996,31 @@ const faqs = [
         };
       })()
     };
+
+    // Helper function to set error messages with proper styling
+    function setErrorMessage(message: string, isShareUrlError = false) {
+      if (!elements.urlError) return;
+      
+      if (isShareUrlError) {
+        // Use the styled amber container for share URL errors
+        const errorText = elements.urlError.querySelector('div > div');
+        if (errorText) {
+          SecurityUtils.safeSetText(errorText as HTMLElement, message);
+        }
+        elements.urlError.classList.remove('hidden');
+      } else {
+        // For simple errors, replace the content with a simple red message
+        elements.urlError.innerHTML = `
+          <div class="flex items-center text-red-600 text-sm">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <span>${SecurityUtils.escapeHtml(message)}</span>
+          </div>
+        `;
+        elements.urlError.classList.remove('hidden');
+      }
+    }
 
     // Cache all DOM elements
     const elements = {
@@ -1895,8 +1923,7 @@ const faqs = [
         
         // Input validation
         if (!redditUrl) {
-          SecurityUtils.safeSetText(elements.urlError, 'Please enter a Reddit URL');
-          (elements.urlError as HTMLElement).classList.remove('hidden');
+          setErrorMessage('Please enter a Reddit URL');
           return;
         }
 
@@ -1904,19 +1931,29 @@ const faqs = [
         const shareUrlMatch = redditUrl.match(/\/r\/([^\/]+)\/s\/([a-zA-Z0-9]+)/);
         if (shareUrlMatch) {
           const subreddit = shareUrlMatch[1];
-          SecurityUtils.safeSetText(elements.urlError, `Reddit share link detected! Please: 1) Open ${redditUrl} in your browser, 2) Wait for redirect, 3) Copy the full URL (should look like reddit.com/r/${subreddit}/comments/...), 4) Paste it here.`);
-          (elements.urlError as HTMLElement).classList.remove('hidden');
+          const instructions = [
+            "📱 Reddit Share Link Detected",
+            "",
+            "Mobile share links can't be analyzed directly. Please follow these steps:",
+            "",
+            `1. Click this link to open in your browser: ${redditUrl}`,
+            "2. Wait for it to redirect to the full Reddit thread",
+            "3. Copy the complete URL from your address bar",
+            `4. It should look like: reddit.com/r/${subreddit}/comments/...`,
+            "5. Paste the full URL here and try again",
+            "",
+            "This ensures we can properly analyze all the comments!"
+          ];
+          setErrorMessage(instructions.join('\n'), true);
           return;
         }
           if (redditUrl.length > 2048) {
-          SecurityUtils.safeSetText(elements.urlError, 'URL is too long');
-          (elements.urlError as HTMLElement).classList.remove('hidden');
+          setErrorMessage('URL is too long');
           return;
         }
 
         if (!SecurityUtils.isValidRedditUrl(redditUrl)) {
-          SecurityUtils.safeSetText(elements.urlError, 'Please enter a valid Reddit thread URL');
-          (elements.urlError as HTMLElement).classList.remove('hidden');
+          setErrorMessage('Please enter a valid Reddit thread URL');
           return;
         }
 
