@@ -299,41 +299,72 @@ async function resolveMobileShareUrl(url: string): Promise<string> {
   try {
     console.log('Resolving mobile share URL:', url);
     
-    // Use GET request with manual redirect handling to capture the final URL
-    const response = await fetch(url, {
+    // Try Reddit's JSON API to resolve the share URL
+    const jsonUrl = url + '.json';
+    console.log('Trying JSON API:', jsonUrl);
+    
+    const response = await fetch(jsonUrl, {
       method: 'GET',
-      redirect: 'follow',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; RedditAnalyzer/1.0)'
+        'User-Agent': 'Mozilla/5.0 (compatible; RedditAnalyzer/1.0)',
+        'Accept': 'application/json'
       }
     });
     
-    const resolvedUrl = response.url;
-    console.log('Resolved URL:', resolvedUrl);
+    if (response.ok) {
+      const data = await response.json();
+      console.log('JSON API response received');
+      
+      // Check if we got valid Reddit data
+      if (data && Array.isArray(data) && data[0] && data[0].data && data[0].data.children && data[0].data.children[0]) {
+        const post = data[0].data.children[0].data;
+        if (post.subreddit && post.id) {
+          const resolvedUrl = `https://www.reddit.com/r/${post.subreddit}/comments/${post.id}/`;
+          console.log('Successfully resolved via JSON API to:', resolvedUrl);
+          return resolvedUrl;
+        }
+      }
+    }
+    
+    console.log('JSON API did not work, trying redirect method');
+    
+    // Fallback: Try the original redirect method
+    const redirectResponse = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+    
+    const resolvedUrl = redirectResponse.url;
+    console.log('Redirect method resolved to:', resolvedUrl);
     
     // Check if we actually got redirected to a different URL
     if (resolvedUrl !== url && isValidRedditUrl(resolvedUrl)) {
-      console.log('Successfully resolved mobile share URL to:', resolvedUrl);
+      console.log('Successfully resolved via redirect to:', resolvedUrl);
       return resolvedUrl;
     } else {
-      console.log('Mobile share URL did not redirect properly, trying alternative method');
+      console.log('Redirect method did not work, trying HTML parsing');
       
       // Alternative: Try to construct the URL from the response content
-      // Sometimes Reddit returns HTML with the actual URL in meta tags
-      const text = await response.text();
-      const canonicalMatch = text.match(/<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i);
+      const text = await redirectResponse.text();
       
-      if (canonicalMatch && canonicalMatch[1] && isValidRedditUrl(canonicalMatch[1])) {
-        console.log('Found canonical URL in HTML:', canonicalMatch[1]);
-        return canonicalMatch[1];
-      }
+      // Look for various patterns in the HTML
+      const patterns = [
+        /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i,
+        /<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i,
+        /<meta[^>]+name="twitter:url"[^>]+content="([^"]+)"/i,
+        /window\.location\.href\s*=\s*["']([^"']+)["']/i,
+        /href="(https:\/\/www\.reddit\.com\/r\/[^\/]+\/comments\/[^"]+)"/i
+      ];
       
-      // Look for og:url meta tag as backup
-      const ogUrlMatch = text.match(/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i);
-      
-      if (ogUrlMatch && ogUrlMatch[1] && isValidRedditUrl(ogUrlMatch[1])) {
-        console.log('Found og:url in HTML:', ogUrlMatch[1]);
-        return ogUrlMatch[1];
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match && match[1] && isValidRedditUrl(match[1])) {
+          console.log('Found URL in HTML via pattern:', match[1]);
+          return match[1];
+        }
       }
       
       console.log('Could not resolve mobile share URL, falling back to original');
