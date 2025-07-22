@@ -476,7 +476,7 @@ export const OPTIONS: APIRoute = async () => {
 };
 
 /**
- * Helper: Extract JSON object from GPT output with validation
+ * Helper: Extract JSON object from GPT output with validation and error recovery
  */
 function extractJSON(str: string): string {
   // Remove markdown code blocks if present
@@ -484,13 +484,66 @@ function extractJSON(str: string): string {
   
   // Remove any text before the first { and after the last }
   const firstBrace = cleaned.indexOf('{');
-  const lastBrace = cleaned.lastIndexOf('}');
+  let lastBrace = cleaned.lastIndexOf('}');
   
-  if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
-    console.error('No valid JSON braces found in OpenAI response');
+  if (firstBrace === -1) {
+    console.error('No opening brace found in OpenAI response');
     console.error('Response length:', str.length);
     console.error('Response preview:', str.substring(0, 500));
     throw new Error('No JSON object found in response');
+  }
+  
+  // If no closing brace found, the response might be truncated
+  if (lastBrace === -1 || firstBrace >= lastBrace) {
+    console.error('No closing brace found - response may be truncated');
+    console.error('Response length:', str.length);
+    console.error('Last 200 chars:', str.substring(Math.max(0, str.length - 200)));
+    
+    // Try to find the last complete JSON structure
+    // Look for the end of the last complete field
+    const truncatedJson = cleaned.substring(firstBrace);
+    
+    // Try to find a reasonable place to close the JSON
+    // Look for the last complete field before truncation
+    const patterns = [
+      /,"neutral":\s*\d+/g,
+      /,"resigned":\s*\d+/g,
+      /,"cynical":\s*\d+/g,
+      /,"fearful":\s*\d+/g,
+      /,"frustrated":\s*\d+/g,
+      /,"critical":\s*\d+/g,
+      /,"sarcastic":\s*\d+/g,
+      /,"skeptical":\s*\d+/g,
+      /,"genuinePositive":\s*\d+/g
+    ];
+    
+    let bestEndPos = -1;
+    for (const pattern of patterns) {
+      const matches = [...truncatedJson.matchAll(pattern)];
+      if (matches.length > 0) {
+        const lastMatch = matches[matches.length - 1];
+        const endPos = lastMatch.index! + lastMatch[0].length;
+        if (endPos > bestEndPos) {
+          bestEndPos = endPos;
+        }
+      }
+    }
+    
+    if (bestEndPos > 0) {
+      // Create a minimal valid JSON with just the numeric fields
+      const partialJson = truncatedJson.substring(0, bestEndPos);
+      const reconstructed = partialJson + ',"summary":"Response was truncated","sampleComments":{"genuinePositive":[],"skeptical":[],"sarcastic":[],"critical":[],"frustrated":[],"fearful":[],"cynical":[],"resigned":[],"neutral":[]}}';
+      
+      try {
+        JSON.parse(reconstructed);
+        console.log('Successfully reconstructed truncated JSON response');
+        return reconstructed;
+      } catch (e) {
+        console.error('Failed to reconstruct JSON:', e);
+      }
+    }
+    
+    throw new Error('Response appears to be truncated and cannot be recovered');
   }
   
   cleaned = cleaned.substring(firstBrace, lastBrace + 1);
@@ -502,7 +555,28 @@ function extractJSON(str: string): string {
   } catch (parseError) {
     console.error('JSON parse error:', parseError);
     console.error('Invalid JSON preview:', cleaned.substring(0, 500));
-    throw new Error('Invalid JSON in response');
+    
+    // Try to fix common JSON issues
+    let fixed = cleaned;
+    
+    // Fix trailing commas
+    fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
+    
+    // Fix unclosed strings (add closing quote if missing)
+    const stringMatches = fixed.match(/"[^"]*$/);
+    if (stringMatches) {
+      fixed = fixed + '"';
+    }
+    
+    // Try parsing the fixed version
+    try {
+      JSON.parse(fixed);
+      console.log('Successfully fixed JSON formatting issues');
+      return fixed;
+    } catch (fixError) {
+      console.error('Could not fix JSON:', fixError);
+      throw new Error('Invalid JSON in response');
+    }
   }
 }
 
@@ -666,18 +740,18 @@ Respond ONLY with valid JSON:
   "cynical": <number 0-100>,
   "resigned": <number 0-100>,
   "neutral": <number 0-100>,
-  "summary": "<detailed analysis explaining the real emotional landscape, key themes, sarcasm patterns, threading context, and genuine vs surface sentiment>",
-  "sampleComments": {
-    "genuinePositive": ["<comment1>", "<comment2>", "<comment3>"],
-    "skeptical": ["<comment1>", "<comment2>", "<comment3>"],
-    "sarcastic": ["<comment1>", "<comment2>", "<comment3>"],
-    "critical": ["<comment1>", "<comment2>", "<comment3>"],
-    "frustrated": ["<comment1>", "<comment2>", "<comment3>"],
-    "fearful": ["<comment1>", "<comment2>", "<comment3>"],
-    "cynical": ["<comment1>", "<comment2>", "<comment3>"],
-    "resigned": ["<comment1>", "<comment2>", "<comment3>"],
-    "neutral": ["<comment1>", "<comment2>", "<comment3>"]
-  }
+  "summary": "<concise 2-3 sentence analysis of key themes and emotional patterns>",
+      "sampleComments": {
+      "genuinePositive": ["<comment1>", "<comment2>"],
+      "skeptical": ["<comment1>", "<comment2>"],
+      "sarcastic": ["<comment1>", "<comment2>"],
+      "critical": ["<comment1>", "<comment2>"],
+      "frustrated": ["<comment1>", "<comment2>"],
+      "fearful": ["<comment1>", "<comment2>"],
+      "cynical": ["<comment1>", "<comment2>"],
+      "resigned": ["<comment1>", "<comment2>"],
+      "neutral": ["<comment1>", "<comment2>"]
+    }
 }
 
 Ensure percentages sum to 100. Focus on REAL sentiment including threading context, not surface-level word analysis.`;
@@ -723,14 +797,14 @@ Ensure percentages sum to 100.`;
         messages: [
           {
             role: 'system',
-            content: `You are a sentiment analysis expert specializing in ${platform} content. Respond only with valid JSON as requested. Do not include any explanations or markdown formatting. Understand the cultural context and communication patterns specific to ${platform}.`
+            content: `You are a sentiment analysis expert specializing in ${platform} content. Respond only with valid JSON as requested. Do not include any explanations or markdown formatting. Understand the cultural context and communication patterns specific to ${platform}. Keep responses concise.`
           },
           {
             role: 'user',
             content: prompt
           }
         ],
-        max_tokens: 1000,
+        max_tokens: 1500, // Increased from 1000 to 1500 to prevent truncation
         temperature: 0.1, // Lower temperature for more consistent results
         top_p: 0.9,
       }),
