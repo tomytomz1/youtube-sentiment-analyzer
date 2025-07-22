@@ -299,20 +299,44 @@ async function resolveMobileShareUrl(url: string): Promise<string> {
   try {
     console.log('Resolving mobile share URL:', url);
     
-    // Follow the redirect to get the actual URL
+    // Use GET request with manual redirect handling to capture the final URL
     const response = await fetch(url, {
-      method: 'HEAD',
+      method: 'GET',
       redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; RedditAnalyzer/1.0)'
+      }
     });
     
     const resolvedUrl = response.url;
     console.log('Resolved URL:', resolvedUrl);
     
-    // Verify the resolved URL is a valid Reddit thread URL
-    if (isValidRedditUrl(resolvedUrl)) {
+    // Check if we actually got redirected to a different URL
+    if (resolvedUrl !== url && isValidRedditUrl(resolvedUrl)) {
+      console.log('Successfully resolved mobile share URL to:', resolvedUrl);
       return resolvedUrl;
     } else {
-      console.log('Resolved URL is not a valid Reddit thread URL, falling back to original');
+      console.log('Mobile share URL did not redirect properly, trying alternative method');
+      
+      // Alternative: Try to construct the URL from the response content
+      // Sometimes Reddit returns HTML with the actual URL in meta tags
+      const text = await response.text();
+      const canonicalMatch = text.match(/<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i);
+      
+      if (canonicalMatch && canonicalMatch[1] && isValidRedditUrl(canonicalMatch[1])) {
+        console.log('Found canonical URL in HTML:', canonicalMatch[1]);
+        return canonicalMatch[1];
+      }
+      
+      // Look for og:url meta tag as backup
+      const ogUrlMatch = text.match(/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i);
+      
+      if (ogUrlMatch && ogUrlMatch[1] && isValidRedditUrl(ogUrlMatch[1])) {
+        console.log('Found og:url in HTML:', ogUrlMatch[1]);
+        return ogUrlMatch[1];
+      }
+      
+      console.log('Could not resolve mobile share URL, falling back to original');
       return url;
     }
   } catch (error) {
