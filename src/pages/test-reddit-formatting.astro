@@ -1,0 +1,217 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <head>
+    <title>Reddit Comment Formatting Test</title>
+  </head>
+
+  <main class="min-h-screen bg-gradient-to-br from-orange-50 to-red-100 flex items-center justify-center px-4 py-8">
+    <div class="max-w-4xl w-full mx-auto">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        <div class="text-center mb-8">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            Reddit Comment Formatting Test
+          </h1>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            Testing the new Reddit-style comment formatting with links, markdown, and metadata.
+          </p>
+        </div>
+
+        <div id="test-comments" class="space-y-4">
+          <!-- Test comments will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script is:inline>
+  // Sample test comments with various formatting
+  const testComments = [
+    {
+      text: "This is a **bold comment** with *italic text* and a [link to Reddit](https://reddit.com/r/technology).",
+      score: 1234,
+      author: "TestUser1",
+      created: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
+      permalink: "/r/technology/comments/test1",
+      id: "test1",
+      depth: 0
+    },
+    {
+      text: "Check out this URL: https://www.example.com and this subreddit /r/programming. Also some `code` here.",
+      score: 567,
+      author: "TestUser2", 
+      created: Math.floor(Date.now() / 1000) - 7200, // 2 hours ago
+      permalink: "/r/technology/comments/test2",
+      id: "test2",
+      depth: 1
+    },
+    {
+      text: "This comment has **multiple** *formatting* elements and a user mention /u/someuser. Here's more text to make it longer.",
+      score: 89,
+      author: "TestUser3",
+      created: Math.floor(Date.now() / 1000) - 86400, // 1 day ago
+      permalink: "/r/technology/comments/test3", 
+      id: "test3",
+      depth: 2
+    }
+  ];
+
+  // Format timestamp to Reddit-style relative time
+  function formatRedditTime(timestamp) {
+    if (!timestamp || timestamp <= 0) return 'unknown';
+    
+    const now = Math.floor(Date.now() / 1000);
+    const diff = now - timestamp;
+    
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+    if (diff < 2592000) return `${Math.floor(diff / 86400)}d`;
+    if (diff < 31536000) return `${Math.floor(diff / 2592000)}mo`;
+    return `${Math.floor(diff / 31536000)}y`;
+  }
+
+  // Format score with Reddit-style formatting
+  function formatRedditScore(score) {
+    if (score >= 1000) {
+      return `${(score / 1000).toFixed(1)}k`;
+    }
+    return score.toString();
+  }
+
+  // Simple Reddit comment formatter
+  function formatRedditComment(text) {
+    if (!text || typeof text !== 'string') {
+      return { html: '', hasLinks: false, linkCount: 0 };
+    }
+
+    let html = text;
+    let linkCount = 0;
+
+    // Decode HTML entities first
+    html = html.replace(/&amp;/g, '&')
+               .replace(/&lt;/g, '<')
+               .replace(/&gt;/g, '>')
+               .replace(/&quot;/g, '"')
+               .replace(/&#39;/g, "'")
+               .replace(/&nbsp;/g, ' ');
+
+    // Convert markdown links [text](url) to HTML
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, linkText, url) => {
+      linkCount++;
+      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline break-all">${escapeHtml(linkText)}</a>`;
+    });
+
+    // Convert plain URLs to clickable links
+    // First, handle complete URLs
+    html = html.replace(/(https?:\/\/[^\s<>"']+)/g, (_match, url) => {
+      linkCount++;
+      // Clean up the URL by removing trailing punctuation that shouldn't be part of the URL
+      const cleanUrl = url.replace(/[.,;:!?]+$/, '');
+      return `<a href="${escapeHtml(cleanUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline break-all">${escapeHtml(cleanUrl)}</a>`;
+    });
+
+    // Then handle potentially truncated URLs that end with common patterns
+    html = html.replace(/(https?:\/\/[^\s<>"']*?)(?=\s|$|>|"|'|\)|,|\.|;|!|\?)/g, (_match, partialUrl) => {
+      // Only process if it looks like a real URL that might be truncated
+      if (partialUrl.startsWith('http') && partialUrl.length > 15 && !partialUrl.includes(' ') && !partialUrl.includes('<') && !partialUrl.includes('>')) {
+        return `<a href="${escapeHtml(partialUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline break-all">${escapeHtml(partialUrl)}</a>`;
+      }
+      return partialUrl;
+    });
+
+    // Special handling for common truncated URL patterns
+    // Look for "https://www.document" and similar patterns that might be incomplete
+    html = html.replace(/(https?:\/\/www\.document)(?=\s|$)/g, (_match, partialUrl) => {
+      // For now, just make the partial URL clickable
+      return `<a href="${escapeHtml(partialUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline break-all">${escapeHtml(partialUrl)}</a>`;
+    });
+
+    // Convert Reddit-style links /r/subreddit and /u/username
+    html = html.replace(/\/(r|u)\/([a-zA-Z0-9_-]+)/g, (_match, type, name) => {
+      const url = type === 'r' ? `https://reddit.com/r/${name}` : `https://reddit.com/u/${name}`;
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline break-all">${_match}</a>`;
+    });
+
+    // Convert **bold** text
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+    // Convert *italic* text
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+    // Convert `code` text
+    html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">$1</code>');
+
+          // Normalize line breaks - remove extra whitespace and handle line breaks properly
+      html = html.replace(/\r\n/g, '\n'); // Normalize Windows line endings
+      html = html.replace(/\r/g, '\n'); // Normalize Mac line endings
+      html = html.replace(/\n{3,}/g, '\n\n'); // Reduce 3+ consecutive line breaks to 2
+      html = html.replace(/\n\n/g, '<br><br>'); // Double line breaks become double <br>
+      html = html.replace(/\n/g, '<br>'); // Single line breaks become <br>
+
+    return {
+      html,
+      hasLinks: linkCount > 0,
+      linkCount
+    };
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Display test comments
+  function displayTestComments() {
+    const container = document.getElementById('test-comments');
+    if (!container) return;
+
+    testComments.forEach(comment => {
+      const commentDiv = document.createElement('div');
+      commentDiv.className = 'bg-white border-l-4 border-gray-200 p-4 mb-3 rounded-r-lg';
+      commentDiv.style.marginLeft = `${comment.depth * 20}px`;
+
+      const timeAgo = formatRedditTime(comment.created);
+      const scoreFormatted = formatRedditScore(comment.score);
+      const formattedComment = formatRedditComment(comment.text);
+
+      commentDiv.innerHTML = `
+        <div class="flex items-center space-x-2 mb-2 text-xs text-gray-500">
+          <span class="font-medium text-gray-700">${escapeHtml(comment.author)}</span>
+          <span>•</span>
+          <span>${timeAgo}</span>
+          <span>•</span>
+          <span class="flex items-center">
+            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            ${scoreFormatted}
+          </span>
+        </div>
+        <div class="text-gray-800 leading-relaxed">
+          ${formattedComment.html}
+        </div>
+        <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+          <a href="https://reddit.com${comment.permalink}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600">
+            View on Reddit
+          </a>
+          ${formattedComment.hasLinks ? `<span>• ${formattedComment.linkCount} link${formattedComment.linkCount !== 1 ? 's' : ''}</span>` : ''}
+        </div>
+      `;
+
+      container.appendChild(commentDiv);
+    });
+  }
+
+  // Initialize when page loads
+  document.addEventListener('DOMContentLoaded', displayTestComments);
+</script> 

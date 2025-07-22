@@ -1,10 +1,16 @@
+// Add this at the very top of the file
+// @ts-ignore
+// eslint-disable-next-line
+declare module 'vader-sentiment';
+
 import type { APIRoute } from 'astro';
+import vader from 'vader-sentiment';
 
 interface SentimentMeta {
   analyzedCount?: number;
   totalComments?: number;
   mostLiked?: { text: string; likeCount: number };
-  mostUpvoted?: { text: string; score: number };
+  mostUpvoted?: { text: string; score: number; sentiment?: string };
   videoInfo?: {
     title?: string;
     description?: string;
@@ -35,12 +41,15 @@ interface SentimentRequest {
   analyzedCount?: number;
   totalComments?: number;
   mostLiked?: { text: string; likeCount: number };
-  mostUpvoted?: { text: string; score: number };
+  mostUpvoted?: { text: string; score: number; sentiment?: string };
   videoInfo?: any;
   threadInfo?: any;
   channelInfo?: any;
   platform?: string;
 }
+
+// Add this at the top if using TypeScript and vader-sentiment has no types
+// declare module 'vader-sentiment';
 
 // Rate limiting (reuse from comments API)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -92,20 +101,17 @@ function validateComments(comments: unknown): string[] {
     throw new Error('Comments array cannot be empty');
   }
 
-  if (comments.length > 500) {
-    throw new Error('Too many comments provided');
-  }
-
+  // Remove upper bound for Reddit/VADER - allow longer comments for Reddit
   const validatedComments = comments
     .filter((comment): comment is string => typeof comment === 'string')
-    .map(comment => sanitizeString(comment, 1000))
-    .filter(comment => comment.length > 0 && comment.length <= 1000);
+    .map(comment => sanitizeString(comment, 10000)) // Increased from 1000 to 10000 for Reddit comments
+    .filter(comment => comment.length > 0 && comment.length <= 10000); // Increased filter limit too
 
   if (validatedComments.length === 0) {
     throw new Error('No valid comments found');
   }
 
-  return validatedComments.slice(0, 300); // Limit to 300 comments
+  return validatedComments;
 }
 
 function validateMetadata(meta: any): SentimentMeta {
@@ -122,6 +128,19 @@ function validateMetadata(meta: any): SentimentMeta {
     validated.totalComments = Math.min(meta.totalComments, 10000000);
   }
 
+  // Preserve comments with metadata for threading context
+  if (Array.isArray(meta.commentsWithMetadata)) {
+    validated.commentsWithMetadata = meta.commentsWithMetadata.map((comment: any) => ({
+      text: sanitizeString(comment.text || '', 10000),
+      id: sanitizeString(comment.id || '', 50),
+      parentId: sanitizeString(comment.parentId || '', 50),
+      author: sanitizeString(comment.author || '', 50),
+      score: Math.max(0, Number(comment.score) || 0),
+      created: Number(comment.created) || 0,
+      depth: Math.max(0, Math.min(10, Number(comment.depth) || 0))
+    }));
+  }
+
   // YouTube-specific validation
   if (meta.mostLiked && typeof meta.mostLiked === 'object') {
     validated.mostLiked = {
@@ -133,8 +152,10 @@ function validateMetadata(meta: any): SentimentMeta {
   // Reddit-specific validation
   if (meta.mostUpvoted && typeof meta.mostUpvoted === 'object') {
     validated.mostUpvoted = {
-      text: sanitizeString(meta.mostUpvoted.text || '', 500),
-      score: Math.max(0, Number(meta.mostUpvoted.score) || 0)
+      ...meta.mostUpvoted, // Preserve all original properties
+      text: sanitizeString(meta.mostUpvoted.text || '', 10000), // Increased from 500 to 10000 for Reddit comments
+      score: Math.max(0, Number(meta.mostUpvoted.score) || 0),
+      sentiment: meta.mostUpvoted.sentiment || undefined
     };
   }
 
@@ -200,6 +221,9 @@ function secureResponse(data: any, status = 200) {
     status,
     headers: {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
@@ -239,6 +263,28 @@ function createErrorResponse(message: string, status: number = 400) {
   return secureResponse({ error: safeMessage }, status);
 }
 
+// Add progress tracking interface
+interface ProgressCallback {
+  (stage: string, progress: number): void;
+}
+
+// Add progress update function
+async function updateProgress(sessionId: string, stage: string, progress: number) {
+  if (!sessionId) return;
+  
+  try {
+    await fetch('/api/sentiment-progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, stage, progress })
+    });
+    console.log(`Progress: ${stage} - ${progress}%`);
+  } catch (error) {
+    console.error('Failed to update progress:', error);
+  }
+}
+
+// Add progress updates to the main POST handler
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Rate limiting
@@ -254,15 +300,21 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Parse and validate request body
-    let body: SentimentRequest;
+    let body: SentimentRequest & { sessionId?: string };
     try {
       body = await request.json();
     } catch {
       return createErrorResponse('Invalid JSON', 400);
     }
 
+    const sessionId = body.sessionId || '';
+    console.log('Starting sentiment analysis with progress tracking...');
+    await updateProgress(sessionId, 'Starting analysis...', 5);
+
     // Validate comments
     const validatedComments = validateComments(body.comments);
+    console.log(`Progress: Validated ${validatedComments.length} comments`);
+    await updateProgress(sessionId, 'Validating comments...', 10);
 
     // Validate metadata
     const validatedMeta = validateMetadata({
@@ -274,24 +326,36 @@ export const POST: APIRoute = async ({ request }) => {
       threadInfo: body.threadInfo,
       channelInfo: body.channelInfo,
       platform: body.platform || 'youtube',
+      commentsWithMetadata: body.commentsWithMetadata, // Add this to preserve full comment objects
     });
+    console.log('Progress: Metadata validated');
+    await updateProgress(sessionId, 'Processing metadata...', 15);
 
+    // Detect platform context
+    const platformContext = detectPlatformContext(validatedMeta);
+    console.log('Progress: Platform context detected');
+    await updateProgress(sessionId, 'Analyzing platform context...', 20);
+
+    // Use OpenAI for all sentiment analysis to get detailed narrative paragraphs
+    // (Previously Reddit used VADER, but user wants detailed analysis)
+    
     // Validate API key
     const apiKey = import.meta.env.OPENAI_API_KEY;
     if (!apiKey || apiKey === 'your_openai_api_key_here' || !apiKey.startsWith('sk-')) {
       console.error('OpenAI API key not configured properly');
       return createErrorResponse('OpenAI API key not configured', 500);
     }
-
-    // Detect platform context
-    const platformContext = detectPlatformContext(validatedMeta);
+    console.log('Progress: API key validated');
+    await updateProgress(sessionId, 'Connecting to AI service...', 25);
 
     // Perform sentiment analysis with timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased from 30s to 60s for complex threading analysis
 
     let sentimentAnalysis;
     try {
+      await updateProgress(sessionId, 'Analyzing sentiment patterns...', 30);
+      
       sentimentAnalysis = await analyzeSentiment(
         validatedComments,
         apiKey,
@@ -301,35 +365,91 @@ export const POST: APIRoute = async ({ request }) => {
           channelInfo: validatedMeta.channelInfo,
           platformContext,
           platform: validatedMeta.platform,
+          commentsWithMetadata: validatedMeta.commentsWithMetadata, // Pass metadata
         },
-        controller.signal
+        controller.signal,
+        sessionId // Pass sessionId for progress updates
       );
+      
+      await updateProgress(sessionId, 'Processing results...', 85);
     } catch (error) {
       clearTimeout(timeoutId);
       
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          return createErrorResponse('Request timeout', 504);
-        }
-        if (error.message.includes('rate limit')) {
+          console.log('First attempt timed out, trying with fewer comments...');
+          // Retry with fewer comments if timeout occurred
+          const reducedComments = validatedComments.slice(0, Math.min(100, validatedComments.length));
+          const retryController = new AbortController();
+          const retryTimeoutId = setTimeout(() => retryController.abort(), 45000); // 45s for retry
+          
+          try {
+            sentimentAnalysis = await analyzeSentiment(
+              reducedComments,
+              apiKey,
+              {
+                videoInfo: validatedMeta.videoInfo,
+                threadInfo: validatedMeta.threadInfo,
+                channelInfo: validatedMeta.channelInfo,
+                platformContext,
+                platform: validatedMeta.platform,
+                commentsWithMetadata: validatedMeta.commentsWithMetadata,
+              },
+              retryController.signal
+            );
+            clearTimeout(retryTimeoutId);
+            console.log(`Retry succeeded with ${reducedComments.length} comments`);
+          } catch (retryError) {
+            clearTimeout(retryTimeoutId);
+            console.error('Retry also failed:', retryError);
+            return createErrorResponse('Analysis timeout - please try again with a smaller thread', 504);
+          }
+        } else if (error.message.includes('rate limit')) {
           return createErrorResponse('OpenAI API rate limit exceeded', 429);
-        }
-        if (error.message.includes('API key')) {
+        } else if (error.message.includes('API key')) {
           return createErrorResponse('Invalid OpenAI API key', 500);
-        }
-        if (error.message.includes('OpenAI')) {
+        } else if (error.message.includes('OpenAI')) {
           return createErrorResponse('OpenAI API error', 500);
+        } else {
+          console.error('Sentiment analysis error:', error);
+          return createErrorResponse('Service temporarily unavailable', 500);
         }
+      } else {
+        console.error('Sentiment analysis error:', error);
+        return createErrorResponse('Service temporarily unavailable', 500);
       }
-      
-      console.error('Sentiment analysis error:', error);
-      return createErrorResponse('Service temporarily unavailable', 500);
     }
     clearTimeout(timeoutId);
 
+    // Update most upvoted comment with sentiment if it's Reddit
+    let finalSentimentAnalysis = sentimentAnalysis;
+    if ((validatedMeta.platform || '').toLowerCase() === 'reddit' && validatedMeta.mostUpvoted?.text) {
+      // Use VADER just for the most upvoted comment sentiment classification
+      try {
+        const mostUpvotedResult = vader.SentimentIntensityAnalyzer.polarity_scores(validatedMeta.mostUpvoted.text);
+        let mostUpvotedSentiment = 'neutral';
+        if (mostUpvotedResult.compound >= 0.05) {
+          mostUpvotedSentiment = 'positive';
+        } else if (mostUpvotedResult.compound <= -0.05) {
+          mostUpvotedSentiment = 'negative';
+        }
+        
+        finalSentimentAnalysis = {
+          ...sentimentAnalysis,
+          mostUpvoted: {
+            ...validatedMeta.mostUpvoted,
+            sentiment: mostUpvotedSentiment
+          }
+        };
+      } catch (vaderError) {
+        console.error('VADER error for most upvoted comment:', vaderError);
+        // Continue without sentiment classification for most upvoted
+      }
+    }
+
     // Combine results with metadata
     const result = {
-      ...sentimentAnalysis,
+      ...finalSentimentAnalysis,
       ...validatedMeta,
       ...(platformContext && { platformContext }),
     };
@@ -361,20 +481,31 @@ export const OPTIONS: APIRoute = async () => {
  * Helper: Extract JSON object from GPT output with validation
  */
 function extractJSON(str: string): string {
-  // Remove markdown code blocks if present
-  const cleaned = str.replace(/```json\s*|\s*```/g, '');
+  console.log('DEBUG: Raw OpenAI response:', str);
   
-  // Find JSON object
-  const match = cleaned.match(/{[\s\S]*}/);
-  if (!match) {
+  // Remove markdown code blocks if present
+  let cleaned = str.replace(/```json\s*|\s*```/g, '');
+  
+  // Remove any text before the first { and after the last }
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  
+  if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
+    console.error('DEBUG: No valid JSON braces found in:', cleaned);
     throw new Error('No JSON object found in response');
   }
   
+  cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+  console.log('DEBUG: Extracted JSON:', cleaned);
+  
   // Validate it's actually JSON
   try {
-    JSON.parse(match[0]);
-    return match[0];
-  } catch {
+    const parsed = JSON.parse(cleaned);
+    console.log('DEBUG: Successfully parsed JSON:', parsed);
+    return cleaned;
+  } catch (parseError) {
+    console.error('DEBUG: JSON parse error:', parseError);
+    console.error('DEBUG: Failed to parse:', cleaned);
     throw new Error('Invalid JSON in response');
   }
 }
@@ -434,8 +565,10 @@ async function analyzeSentiment(
     channelInfo?: SentimentMeta['channelInfo'],
     platformContext?: string,
     platform?: string,
+    commentsWithMetadata?: any[], // Add metadata for threading context
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  sessionId?: string // Add sessionId parameter
 ) {
   const platform = meta.platform || 'youtube';
   
@@ -454,40 +587,109 @@ async function analyzeSentiment(
     platformSpecificContext = sanitizeString(meta.platformContext || 'Reddit discussion', 100);
   }
 
-  // Limit comments for prompt to prevent prompt injection
-  const limitedComments = comments.slice(0, 200);
+  // Limit comments for prompt to prevent prompt injection and reduce timeout issues
+  const limitedComments = comments.slice(0, 150); // Reduced from 200 to 150 for better performance
+  const commentsMetadata = meta.commentsWithMetadata || [];
+
+  // Build comment lookup for parent context
+  const commentLookup = new Map();
+  commentsMetadata.forEach(comment => {
+    if (comment.id) {
+      commentLookup.set(comment.text, comment);
+    }
+  });
 
   // Create a platform-specific prompt
   let prompt = '';
   
   if (platform === 'reddit') {
+    // Build threaded comment structure for Reddit
+    let threadedComments = '';
+    limitedComments.forEach((comment, index) => {
+      const metadata = commentLookup.get(comment);
+      if (metadata && metadata.parentId && metadata.depth > 0) {
+        // Find parent comment
+        const parentComment = commentsMetadata.find(c => c.id === metadata.parentId);
+        if (parentComment) {
+          const parentPreview = parentComment.text.length > 100 // Reduced from 150 to 100 chars
+            ? parentComment.text.substring(0, 100) + '...' 
+            : parentComment.text;
+          threadedComments += `${index + 1}. [REPLY to: "${parentPreview}"] → ${comment}\n`;
+        } else {
+          threadedComments += `${index + 1}. [REPLY] → ${comment}\n`;
+        }
+      } else {
+        threadedComments += `${index + 1}. [TOP-LEVEL] ${comment}\n`;
+      }
+    });
+
     prompt = `Analyze the sentiment of these Reddit comments for a thread titled "${contentTitle}" posted by u/${contentCreator} in ${platformSpecificContext}.
 
-Reddit Comments to analyze:
-${limitedComments.map((comment, index) => `${index + 1}. ${comment.slice(0, 200)}`).join('\n')}
+IMPORTANT: These comments include REPLIES with their parent context. A reply's sentiment depends heavily on what it's replying to:
+- "Yeah, exactly!" is positive if replying to praise, negative if agreeing with criticism
+- "I disagree" context matters - disagreeing with good vs bad points
+- "That's ridiculous" could be defending or attacking depending on parent
 
-Consider Reddit culture, upvote/downvote patterns, and community discussion dynamics in your analysis.
+Reddit Comments with Threading Context:
+${threadedComments}
 
-Respond ONLY with valid JSON. No markdown, no explanation, just JSON:
+You are an expert in human psychology and communication patterns. Analyze these comments with deep understanding of:
+- Sarcasm and irony
+- Contextual meaning and subtext  
+- How replies relate to their parent comments
+- Social dynamics and implied criticism
+- Emotional undertones beyond surface words
+
+Classify each comment into these sophisticated sentiment categories:
+- GENUINE_POSITIVE: Authentic support, enthusiasm, agreement
+- SKEPTICAL: Doubt, questioning, "I'm not convinced"
+- SARCASTIC: Irony, mocking, saying opposite of what they mean
+- CRITICAL: Direct criticism, disagreement, calling out problems
+- FRUSTRATED: Anger, annoyance, fed up with situation
+- FEARFUL: Anxiety about consequences, worried about future
+- CYNICAL: Pessimistic worldview, "nothing will change"
+- RESIGNED: Accepting negative reality, giving up hope
+- NEUTRAL: Pure information sharing, factual statements
+
+Pay special attention to:
+- Comments that sound positive but are actually sarcastic
+- Replies that change meaning based on parent context
+- Ironic statements that flip the narrative
+- Contextual criticism disguised as questions
+- How agreement/disagreement works in context
+
+Respond ONLY with valid JSON:
 
 {
-  "positive": <number 0-100>,
-  "neutral": <number 0-100>, 
-  "negative": <number 0-100>,
-  "summary": "<professional 2-3 sentence summary considering Reddit community context>",
+  "genuinePositive": <number 0-100>,
+  "skeptical": <number 0-100>,
+  "sarcastic": <number 0-100>,
+  "critical": <number 0-100>,
+  "frustrated": <number 0-100>,
+  "fearful": <number 0-100>,
+  "cynical": <number 0-100>,
+  "resigned": <number 0-100>,
+  "neutral": <number 0-100>,
+  "summary": "<detailed analysis explaining the real emotional landscape, key themes, sarcasm patterns, threading context, and genuine vs surface sentiment>",
   "sampleComments": {
-    "positive": ["<comment1>", "<comment2>", "<comment3>"],
-    "neutral": ["<comment1>", "<comment2>", "<comment3>"],
-    "negative": ["<comment1>", "<comment2>", "<comment3>"]
+    "genuinePositive": ["<comment1>", "<comment2>", "<comment3>"],
+    "skeptical": ["<comment1>", "<comment2>", "<comment3>"],
+    "sarcastic": ["<comment1>", "<comment2>", "<comment3>"],
+    "critical": ["<comment1>", "<comment2>", "<comment3>"],
+    "frustrated": ["<comment1>", "<comment2>", "<comment3>"],
+    "fearful": ["<comment1>", "<comment2>", "<comment3>"],
+    "cynical": ["<comment1>", "<comment2>", "<comment3>"],
+    "resigned": ["<comment1>", "<comment2>", "<comment3>"],
+    "neutral": ["<comment1>", "<comment2>", "<comment3>"]
   }
 }
 
-Ensure percentages sum to 100.`;
+Ensure percentages sum to 100. Focus on REAL sentiment including threading context, not surface-level word analysis.`;
   } else {
     prompt = `Analyze the sentiment of these YouTube comments for a video titled "${contentTitle}" from channel "${contentCreator}" in the ${platformSpecificContext} category.
 
 Comments to analyze:
-${limitedComments.map((comment, index) => `${index + 1}. ${comment.slice(0, 200)}`).join('\n')}
+${limitedComments.map((comment, index) => `${index + 1}. ${comment}`).join('\n')}
 
 Respond ONLY with valid JSON. No markdown, no explanation, just JSON:
 
@@ -507,6 +709,11 @@ Ensure percentages sum to 100.`;
   }
 
   try {
+    console.log(`Making OpenAI API request for ${platform} with ${limitedComments.length} comments...`);
+    await updateProgress(sessionId || '', 'Sending request to AI...', 40);
+    
+    const startTime = Date.now();
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       signal,
@@ -533,7 +740,14 @@ Ensure percentages sum to 100.`;
       }),
     });
 
+    const responseTime = Date.now() - startTime;
+    console.log(`OpenAI API response received in ${responseTime}ms, status: ${response.status}`);
+    await updateProgress(sessionId || '', 'AI analysis complete, processing...', 60);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`OpenAI API error (${response.status}):`, errorText);
+      
       if (response.status === 401) {
         throw new Error('Invalid OpenAI API key');
       } else if (response.status === 429) {
@@ -541,12 +755,13 @@ Ensure percentages sum to 100.`;
       } else if (response.status === 400) {
         throw new Error('OpenAI API bad request');
       } else {
-        throw new Error(`OpenAI API error: ${response.status}`);
+        throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
       }
     }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
+    await updateProgress(sessionId || '', 'Parsing AI response...', 70);
 
     if (!content) {
       throw new Error('No response from OpenAI');
@@ -556,61 +771,111 @@ Ensure percentages sum to 100.`;
     let cleanJSON: string;
     try {
       cleanJSON = extractJSON(content);
-    } catch {
-      console.error('Failed to extract JSON from OpenAI response:', content);
+      await updateProgress(sessionId || '', 'Validating results...', 75);
+    } catch (extractError) {
+      console.error('Failed to extract JSON from OpenAI response. Error:', extractError);
+      console.error('Full OpenAI response content:', content);
       throw new Error('Invalid response format from AI');
     }
 
     let sentimentData;
     try {
       sentimentData = JSON.parse(cleanJSON);
-    } catch {
-      console.error('Failed to parse extracted JSON:', cleanJSON);
+      await updateProgress(sessionId || '', 'Formatting results...', 80);
+    } catch (parseError) {
+      console.error('Failed to parse extracted JSON. Error:', parseError);
+      console.error('Extracted JSON string:', cleanJSON);
       throw new Error('Invalid response format from AI');
     }
 
     // Validate the response structure
     if (
-      typeof sentimentData.positive !== 'number' ||
+      typeof sentimentData.genuinePositive !== 'number' ||
+      typeof sentimentData.skeptical !== 'number' ||
+      typeof sentimentData.sarcastic !== 'number' ||
+      typeof sentimentData.critical !== 'number' ||
+      typeof sentimentData.frustrated !== 'number' ||
+      typeof sentimentData.fearful !== 'number' ||
+      typeof sentimentData.cynical !== 'number' ||
+      typeof sentimentData.resigned !== 'number' ||
       typeof sentimentData.neutral !== 'number' ||
-      typeof sentimentData.negative !== 'number' ||
       typeof sentimentData.summary !== 'string' ||
       !sentimentData.sampleComments ||
-      !Array.isArray(sentimentData.sampleComments.positive) ||
-      !Array.isArray(sentimentData.sampleComments.neutral) ||
-      !Array.isArray(sentimentData.sampleComments.negative)
+      !Array.isArray(sentimentData.sampleComments.genuinePositive) ||
+      !Array.isArray(sentimentData.sampleComments.skeptical) ||
+      !Array.isArray(sentimentData.sampleComments.sarcastic) ||
+      !Array.isArray(sentimentData.sampleComments.critical) ||
+      !Array.isArray(sentimentData.sampleComments.frustrated) ||
+      !Array.isArray(sentimentData.sampleComments.fearful) ||
+      !Array.isArray(sentimentData.sampleComments.cynical) ||
+      !Array.isArray(sentimentData.sampleComments.resigned) ||
+      !Array.isArray(sentimentData.sampleComments.neutral)
     ) {
       throw new Error('Invalid response structure from AI');
     }
 
     // Sanitize and validate the response
     const sanitizedResponse = {
-      positive: Math.max(0, Math.min(100, Math.round(sentimentData.positive))),
+      genuinePositive: Math.max(0, Math.min(100, Math.round(sentimentData.genuinePositive))),
+      skeptical: Math.max(0, Math.min(100, Math.round(sentimentData.skeptical))),
+      sarcastic: Math.max(0, Math.min(100, Math.round(sentimentData.sarcastic))),
+      critical: Math.max(0, Math.min(100, Math.round(sentimentData.critical))),
+      frustrated: Math.max(0, Math.min(100, Math.round(sentimentData.frustrated))),
+      fearful: Math.max(0, Math.min(100, Math.round(sentimentData.fearful))),
+      cynical: Math.max(0, Math.min(100, Math.round(sentimentData.cynical))),
+      resigned: Math.max(0, Math.min(100, Math.round(sentimentData.resigned))),
       neutral: Math.max(0, Math.min(100, Math.round(sentimentData.neutral))),
-      negative: Math.max(0, Math.min(100, Math.round(sentimentData.negative))),
       summary: sanitizeString(sentimentData.summary, 2000),
       sampleComments: {
-        positive: sentimentData.sampleComments.positive
+        genuinePositive: sentimentData.sampleComments.genuinePositive
           .slice(0, 5)
-          .map((comment: any) => sanitizeString(comment, 300))
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        skeptical: sentimentData.sampleComments.skeptical
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        sarcastic: sentimentData.sampleComments.sarcastic
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        critical: sentimentData.sampleComments.critical
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        frustrated: sentimentData.sampleComments.frustrated
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        fearful: sentimentData.sampleComments.fearful
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        cynical: sentimentData.sampleComments.cynical
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
+          .filter((comment: string) => comment.length > 0),
+        resigned: sentimentData.sampleComments.resigned
+          .slice(0, 5)
+          .map((comment: any) => sanitizeString(comment, 2000))
           .filter((comment: string) => comment.length > 0),
         neutral: sentimentData.sampleComments.neutral
           .slice(0, 5)
-          .map((comment: any) => sanitizeString(comment, 300))
-          .filter((comment: string) => comment.length > 0),
-        negative: sentimentData.sampleComments.negative
-          .slice(0, 5)
-          .map((comment: any) => sanitizeString(comment, 300))
+          .map((comment: any) => sanitizeString(comment, 2000))
           .filter((comment: string) => comment.length > 0),
       }
     };
 
     // Ensure percentages sum to 100
-    const total = sanitizedResponse.positive + sanitizedResponse.neutral + sanitizedResponse.negative;
+    const total = sanitizedResponse.genuinePositive + sanitizedResponse.skeptical + 
+                  sanitizedResponse.sarcastic + sanitizedResponse.critical + 
+                  sanitizedResponse.frustrated + sanitizedResponse.fearful + 
+                  sanitizedResponse.cynical + sanitizedResponse.resigned + 
+                  sanitizedResponse.neutral;
     if (total !== 100) {
       const diff = 100 - total;
-      sanitizedResponse.positive += diff; // Adjust positive to make it sum to 100
-      sanitizedResponse.positive = Math.max(0, Math.min(100, sanitizedResponse.positive));
+      sanitizedResponse.genuinePositive += diff; // Adjust genuinePositive to make it sum to 100
+      sanitizedResponse.genuinePositive = Math.max(0, Math.min(100, sanitizedResponse.genuinePositive));
     }
 
     return sanitizedResponse;

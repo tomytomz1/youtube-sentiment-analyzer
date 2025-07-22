@@ -1,3 +1,5 @@
+// Import vi for mocking in Vitest tests
+import { vi } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Mock window.location for tests

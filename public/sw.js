@@ -1,7 +1,7 @@
 // Service Worker for YouTube Sentiment Analyzer PWA
-const CACHE_NAME = 'youtube-sentiment-analyzer-v1';
-const STATIC_CACHE_NAME = 'static-v1';
-const DYNAMIC_CACHE_NAME = 'dynamic-v1';
+const CACHE_NAME = 'youtube-sentiment-analyzer-v2';
+const STATIC_CACHE_NAME = 'static-v2';
+const DYNAMIC_CACHE_NAME = 'dynamic-v2';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
@@ -16,8 +16,8 @@ const STATIC_ASSETS = [
 
 // API endpoints that can be cached
 const CACHEABLE_APIS = [
-  '/api/youtube-comments',
-  '/api/sentiment'
+  '/api/youtube-comments'
+  // Removed '/api/sentiment' to prevent caching issues with comment truncation
 ];
 
 // Install event - cache static assets

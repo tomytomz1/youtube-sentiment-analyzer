@@ -3,7 +3,16 @@ import type { APIRoute } from 'astro';
 const clientId = import.meta.env.REDDIT_CLIENT_ID;
 const clientSecret = import.meta.env.REDDIT_CLIENT_SECRET;
 
-type RedditCommentObj = { text: string, score: number };
+type RedditCommentObj = { 
+  text: string, 
+  score: number,
+  author: string,
+  created: number,
+  permalink: string,
+  id: string,
+  parentId?: string,
+  depth: number
+};
 
 // Rate limiting (simple in-memory implementation)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -83,6 +92,15 @@ function isValidRedditUrl(url: string): boolean {
   ];
   
   return patterns.some(pattern => pattern.test(url.trim()));
+}
+
+function decodeHtmlEntities(str: string): string {
+  if (typeof str !== 'string') return '';
+  return str.replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '\"')
+            .replace(/&#39;/g, '\'');
 }
 
 // Main API Route
@@ -176,12 +194,26 @@ export const POST: APIRoute = async ({ request }) => {
 
       // Sanitize and prepare response
       const response = {
-        comments: redditData.comments.map(c => sanitizeString(c.text, 500)),
+        comments: redditData.comments.map(c => ({
+          text: c.text, // Keep raw text for frontend processing
+          score: Math.max(0, c.score),
+          author: c.author,
+          created: c.created,
+          permalink: c.permalink,
+          id: c.id,
+          parentId: c.parentId,
+          depth: c.depth
+        })),
         totalComments: Math.min(redditData.totalComments || redditData.comments.length, 1000000),
         analyzedCount: redditData.comments.length,
         mostUpvoted: {
-          text: sanitizeString(mostUpvotedComment.text, 500),
-          score: Math.max(0, mostUpvotedComment.score)
+          text: mostUpvotedComment.text, // Keep raw text for frontend processing
+          score: Math.max(0, mostUpvotedComment.score),
+          author: mostUpvotedComment.author,
+          created: mostUpvotedComment.created,
+          permalink: mostUpvotedComment.permalink,
+          id: mostUpvotedComment.id,
+          depth: mostUpvotedComment.depth
         },
         threadInfo: {
           title: sanitizeString(redditData.threadData?.title || '', 200),
@@ -422,7 +454,7 @@ async function fetchRedditData(threadInfo: { subreddit: string; threadId: string
   const commentsData = data[1]?.data?.children || [];
   const comments: RedditCommentObj[] = [];
   
-  function extractComments(commentsList: any[], depth = 0) {
+  function extractComments(commentsList: any[], depth = 0, parentId?: string) {
     if (depth > 5) return; // Prevent infinite recursion
     
     for (const comment of commentsList) {
@@ -437,26 +469,30 @@ async function fetchRedditData(threadInfo: { subreddit: string; threadId: string
             commentData.body.trim().length > 0) {
           
           comments.push({
-            text: sanitizeString(commentData.body, 1000),
-            score: Math.max(0, commentData.score || 0)
+            text: commentData.body, // Keep raw text for frontend processing
+            score: Math.max(0, commentData.score || 0),
+            author: commentData.author || '[deleted]',
+            created: commentData.created_utc || 0,
+            permalink: commentData.permalink || '',
+            id: commentData.id || '',
+            parentId: parentId,
+            depth: depth
           });
         }
         
         // Recursively extract replies
         if (commentData.replies?.data?.children) {
-          extractComments(commentData.replies.data.children, depth + 1);
+          extractComments(commentData.replies.data.children, depth + 1, commentData.id);
         }
       }
     }
   }
   
   extractComments(commentsData);
-  
   console.log(`Extracted ${comments.length} comments from Reddit thread`);
-  
   return {
     threadData,
-    comments: comments.slice(0, 300), // Limit to 300 comments
+    comments, // Return all comments
     totalComments: threadData.numComments || comments.length
   };
 }
