@@ -35,3 +35,4 @@ pnpm-debug.log*
 # API Keys and Secrets
 config/secrets.json
 credentials.json".env.development.local" 
+.vercel
