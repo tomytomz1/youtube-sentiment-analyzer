@@ -2,30 +2,50 @@
 import Layout from '../layouts/Layout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 
-const title = 'Reddit Sentiment Analyzer - Free AI-Powered Comment Analysis';
-const description = 'Analyze Reddit thread sentiment with VADER. Get instant insights into community opinions, emotions, and reactions. Free, no registration required.';
+const title = 'Advanced Reddit Sentiment Analyzer - ChatGPT-4o Powered Emotional Analysis';
+const description = 'Advanced Reddit sentiment analysis with ChatGPT-4o AI. Detect sarcasm, understand context, analyze 9 emotion categories. Free tool for researchers, marketers, and analysts.';
 const url = 'https://senti-meter.com/reddit-sentiment-analyzer';
 
 const faqs = [
   {
-    question: 'How does Reddit sentiment analysis work?',
-    answer: `Our Reddit sentiment analyzer uses VADER, a free and open-source sentiment analysis engine designed for social media text. When you paste a Reddit URL, our system fetches all available comments using Reddit's public API, then processes them with VADER to determine the emotional tone. The analyzer categorizes each comment as positive, neutral, or negative, and provides percentage breakdowns, a summary, and sample comments from each category. For YouTube and premium features, we use advanced AI models.`
+    question: 'How does our advanced Reddit sentiment analysis work?',
+    answer: `Our Reddit sentiment analyzer uses cutting-edge ChatGPT-4o AI technology to provide sophisticated emotional analysis far beyond basic positive/negative classification. When you paste a Reddit URL, our system fetches all available comments using Reddit's public API, then processes them through our advanced AI model that understands context, sarcasm, irony, and complex human emotions. The analyzer categorizes each comment into 9 sophisticated sentiment categories: Genuine Positive, Skeptical, Sarcastic, Critical, Frustrated, Fearful, Cynical, Resigned, and Neutral. It also provides contextual analysis for replies by considering parent comments, ensuring accurate sentiment classification even for complex conversational threads.`
   },
   {
-    question: 'Is this Reddit analyzer free to use?',
-    answer: `Yes! Our Reddit sentiment analyzer is completely free to use with no subscription fees, hidden charges, or usage limits. You can analyze as many Reddit threads as you need without any cost barriers. The free version is powered by VADER sentiment analysis.`
+    question: 'What makes this Reddit analyzer different from basic sentiment tools?',
+    answer: `Unlike basic sentiment analyzers that only provide positive/negative/neutral classifications, our tool offers 9 sophisticated emotional categories that capture the nuanced nature of Reddit discussions. Our ChatGPT-powered analysis understands sarcasm, detects cynicism, identifies genuine enthusiasm versus skeptical optimism, and recognizes complex emotional states like resignation or fear. The AI also considers conversation context - when analyzing replies, it takes into account the parent comment to ensure accurate sentiment classification. This results in far more accurate and insightful analysis of Reddit community sentiment.`
   },
   {
-    question: 'What types of Reddit threads can I analyze?',
-    answer: `You can analyze any public Reddit thread from any subreddit as long as it has comments. The thread must be accessible without login and have at least a few comments for meaningful analysis.`
+    question: 'Is this advanced Reddit sentiment analyzer free to use?',
+    answer: `Yes! Our state-of-the-art Reddit sentiment analyzer powered by ChatGPT-4o is completely free to use with no subscription fees, hidden charges, or usage limits. You can analyze as many Reddit threads as you need without any cost barriers. We believe powerful sentiment analysis tools should be accessible to everyone - from researchers and marketers to content creators and business analysts.`
   },
   {
-    question: 'How many Reddit comments does the tool analyze?',
-    answer: `Our tool analyzes all available comments from each Reddit thread (up to Reddit API limits), focusing on both top-level comments and highly-rated replies to provide a balanced view of community sentiment. This includes both top-level comments and replies. For very large threads, analysis is powered by VADER for speed and scalability.`
+    question: 'What types of Reddit content can I analyze for sentiment?',
+    answer: `You can analyze any public Reddit thread from any subreddit - from r/technology discussions about AI to r/movies reviews, from r/politics debates to r/AskReddit conversations. Our tool works with threads of any size, from intimate discussions with a few dozen comments to viral threads with thousands of responses. The AI excels at analyzing complex discussions including heated debates, product reviews, news discussions, AMA sessions, and community conversations across all topics and subreddits.`
   },
   {
-    question: 'Do you store Reddit data or track users?',
-    answer: `No, we do not store any Reddit data, URLs, or analysis results. Our sentiment analyzer processes everything in real-time and immediately discards the data once the analysis is complete. We prioritize your privacy and do not track user activity or store any personal information.`
+    question: 'How many Reddit comments does the AI analyze and how long does it take?',
+    answer: `Our AI analyzes up to 300 of the most relevant comments from each Reddit thread, including both top-level comments and highly-rated replies. The system intelligently selects comments to provide a balanced view of community sentiment across different engagement levels. Analysis typically takes 15-45 seconds depending on thread size and complexity. The AI processes comments in real-time, providing detailed breakdowns, sample comments for each sentiment category, contextual analysis summaries, and highlighting the most upvoted comment with its sentiment classification.`
+  },
+  {
+    question: 'How does the contextual analysis work for Reddit comment threads?',
+    answer: `Our advanced AI understands that Reddit comments exist in conversational context. When analyzing replies, the system considers the parent comment to accurately determine sentiment. For example, a reply saying "Great idea!" might be sarcastic if responding to a controversial suggestion, but genuine if responding to a helpful tip. This contextual awareness ensures much more accurate sentiment classification than tools that analyze comments in isolation, making it perfect for understanding complex Reddit discussions and debates.`
+  },
+  {
+    question: 'What are the 9 sentiment categories and why are they better?',
+    answer: `Our 9 sophisticated sentiment categories capture the full spectrum of human emotion in Reddit discussions: 1) Genuine Positive - authentic enthusiasm and support, 2) Skeptical - questioning but open-minded, 3) Sarcastic - ironic or mocking tone, 4) Critical - constructive or harsh criticism, 5) Frustrated - irritation and annoyance, 6) Fearful - anxiety and concern, 7) Cynical - pessimistic and distrustful, 8) Resigned - acceptance with disappointment, 9) Neutral - factual or balanced statements. This nuanced approach provides insights that basic positive/negative analysis completely misses, helping you understand the true emotional landscape of Reddit communities.`
+  },
+  {
+    question: 'Do you store Reddit data, analysis results, or track users?',
+    answer: `Absolutely not. We prioritize your privacy and data security. Our sentiment analyzer processes everything in real-time and immediately discards all data once analysis is complete. We do not store Reddit URLs, comment content, analysis results, or any user information. No login is required, no cookies track your usage, and no data is retained on our servers. Each analysis is completely independent and private, ensuring your research and analysis activities remain confidential.`
+  },
+  {
+    question: 'Who can benefit from advanced Reddit sentiment analysis?',
+    answer: `Our tool serves a wide range of professionals: Market researchers tracking brand perception and consumer sentiment, social media managers monitoring community discussions, product managers gathering user feedback, academic researchers studying online behavior, content creators understanding audience reactions, business analysts monitoring industry trends, PR professionals managing reputation, investors researching public opinion on companies, and journalists analyzing public discourse. The sophisticated emotional insights help make better data-driven decisions across all these fields.`
+  },
+  {
+    question: 'How accurate is the ChatGPT-powered sentiment analysis?',
+    answer: `Our ChatGPT-4o powered analysis achieves significantly higher accuracy than traditional sentiment tools by understanding context, sarcasm, and nuanced human emotions. The AI has been trained on vast amounts of conversational data and excels at interpreting the informal, often ironic nature of Reddit discussions. While no automated tool is 100% perfect, our advanced analysis provides highly reliable insights that closely match human interpretation of sentiment. The 9-category system captures emotional nuances that binary positive/negative tools completely miss, resulting in much more actionable and accurate sentiment insights.`
   }
 ];
 ---
@@ -48,7 +68,7 @@ const faqs = [
     <!-- Additional SEO -->
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Reddit Sentiment Analyzer" />
-    <meta name="keywords" content="reddit, sentiment analysis, comment analysis, thread sentiment, ai analysis, free tool" />
+    <meta name="keywords" content="reddit sentiment analysis, chatgpt sentiment analysis, advanced emotion detection, sarcasm detection ai, contextual sentiment analysis, 9 emotion categories, cynical sentiment, skeptical analysis, frustrated sentiment, reddit comment analyzer, social media intelligence, market research tool, brand perception analysis" />
     <link rel="canonical" href={url} />
   </head>
 
@@ -72,11 +92,10 @@ const faqs = [
         <div class="relative z-10">
           <div class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-800 via-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
-              Reddit Sentiment Analyzer
+              Advanced Reddit Sentiment Analyzer
             </h1>
             <p class="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-              Paste any Reddit thread link below to get instant sentiment analysis of the comments.
-              Discover what the Reddit community really thinks about the discussion with AI-powered insights.
+              Powered by ChatGPT-4o AI for sophisticated emotional analysis beyond basic sentiment. Paste any Reddit thread link below to discover the true emotional landscape of community discussions with contextual understanding, sarcasm detection, and 9 nuanced sentiment categories.
             </p>
           </div>
 
@@ -622,35 +641,78 @@ const faqs = [
 
   <!-- How It Works Section -->
   <section id="how-it-works" class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our Reddit Sentiment Analyzer Works</h2>
-        <p class="text-lg text-gray-600">Get instant sentiment insights in just three simple steps</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Our Advanced Reddit Sentiment Analyzer Works</h2>
+        <p class="text-lg text-gray-600">Powered by ChatGPT-4o AI for sophisticated emotional analysis beyond basic sentiment</p>
       </div>
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-12">
         <!-- Step 1 -->
         <div class="text-center">
           <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span class="text-2xl font-bold text-orange-600">1</span>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Paste Reddit URL</h3>
-          <p class="text-gray-600">Simply copy any Reddit thread link and paste it into our analyzer. We support all standard Reddit URL formats.</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Paste Reddit Thread URL</h3>
+          <p class="text-gray-600">Copy any Reddit thread link from any subreddit and paste it into our analyzer. We support all Reddit URL formats including old.reddit.com, new.reddit.com, and mobile links.</p>
         </div>
         <!-- Step 2 -->
         <div class="text-center">
           <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span class="text-2xl font-bold text-purple-600">2</span>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">AI Analysis</h3>
-          <p class="text-gray-600">Our advanced AI analyzes up to 300 comments, understanding context, sarcasm, and emotional nuances. The process takes just 10-30 seconds.</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Advanced AI Processing</h3>
+          <p class="text-gray-600">Our ChatGPT-4o AI analyzes up to 300 comments with contextual understanding, detecting sarcasm, irony, and complex emotions. Replies are analyzed considering their parent comments for accurate sentiment classification.</p>
         </div>
         <!-- Step 3 -->
         <div class="text-center">
           <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span class="text-2xl font-bold text-green-600">3</span>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-3">Get Insights</h3>
-          <p class="text-gray-600">Receive detailed sentiment breakdowns, percentage analysis, sample comments, and a comprehensive summary of community opinions.</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Sophisticated Insights</h3>
+          <p class="text-gray-600">Get detailed breakdowns across 9 emotional categories, sample comments with context, narrative analysis summaries, and most upvoted comment sentiment - all in 15-45 seconds.</p>
+        </div>
+      </div>
+      
+      <!-- Advanced Features -->
+      <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">What Makes Our Analysis Advanced</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">9 Emotion Categories</h4>
+            <p class="text-sm text-gray-600">Genuine Positive, Skeptical, Sarcastic, Critical, Frustrated, Fearful, Cynical, Resigned, Neutral</p>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Contextual Understanding</h4>
+            <p class="text-sm text-gray-600">Analyzes replies considering parent comments for accurate sentiment in conversational threads</p>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Sarcasm Detection</h4>
+            <p class="text-sm text-gray-600">Advanced AI understands irony, sarcasm, and subtle emotional cues that basic tools miss</p>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Narrative Summaries</h4>
+            <p class="text-sm text-gray-600">Get detailed written analysis explaining the overall emotional tone and community sentiment</p>
+          </div>
         </div>
       </div>
     </div>
@@ -660,8 +722,8 @@ const faqs = [
   <section class="py-16 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Who Uses Reddit Sentiment Analysis?</h2>
-        <p class="text-lg text-gray-600">Discover how different professionals leverage Reddit sentiment insights</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Who Benefits from Advanced Reddit Sentiment Analysis?</h2>
+        <p class="text-lg text-gray-600">Professional-grade emotional intelligence for data-driven decision making across industries</p>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Market Researchers -->
@@ -672,12 +734,13 @@ const faqs = [
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">Market Researchers</h3>
-          <p class="text-gray-600 mb-4">Analyze public opinion on products, brands, and trends by studying Reddit community discussions and sentiment patterns.</p>
+          <p class="text-gray-600 mb-4">Leverage sophisticated emotional analysis to understand brand perception, consumer sentiment, and market trends through authentic Reddit community discussions. Our 9-category analysis reveals nuanced emotions that traditional surveys miss.</p>
           <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Track brand perception across communities</li>
-            <li>• Identify emerging trends and opinions</li>
-            <li>• Analyze competitor discussions</li>
-            <li>• Study consumer behavior patterns</li>
+            <li>• Detect sarcastic vs. genuine product endorsements</li>
+            <li>• Identify cynicism and skepticism patterns</li>
+            <li>• Track emotional evolution in brand discussions</li>
+            <li>• Analyze competitor sentiment with context</li>
+            <li>• Understand consumer frustrations and fears</li>
           </ul>
         </div>
         
@@ -689,12 +752,13 @@ const faqs = [
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">Social Media Managers</h3>
-          <p class="text-gray-600 mb-4">Monitor brand mentions and community discussions to understand audience sentiment and improve engagement strategies.</p>
+          <p class="text-gray-600 mb-4">Go beyond basic sentiment monitoring with advanced emotional intelligence. Understand when communities are being sarcastic, identify genuine concerns versus trolling, and detect early warning signs of reputation issues.</p>
           <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Monitor brand mentions</li>
-            <li>• Track campaign performance</li>
-            <li>• Identify community hot topics</li>
-            <li>• Measure audience engagement</li>
+            <li>• Distinguish sarcastic from genuine praise</li>
+            <li>• Identify frustrated vs. constructively critical users</li>
+            <li>• Track emotional tone shifts in real-time</li>
+            <li>• Detect coordinated negative sentiment campaigns</li>
+            <li>• Understand community fears and concerns</li>
           </ul>
         </div>
         
@@ -706,12 +770,13 @@ const faqs = [
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">Product Managers</h3>
-          <p class="text-gray-600 mb-4">Gather user feedback and feature requests from Reddit communities to inform product development decisions.</p>
+          <p class="text-gray-600 mb-4">Extract nuanced user insights that inform product strategy. Understand the difference between frustrated users who need support versus resigned users considering alternatives. Identify genuine excitement versus skeptical adoption.</p>
           <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Analyze user feedback</li>
-            <li>• Identify feature requests</li>
-            <li>• Monitor product discussions</li>
-            <li>• Track user satisfaction</li>
+            <li>• Separate constructive criticism from venting</li>
+            <li>• Identify user resignation before churn</li>
+            <li>• Detect genuine vs. skeptical feature adoption</li>
+            <li>• Understand emotional drivers behind feedback</li>
+            <li>• Track sentiment evolution through product cycles</li>
           </ul>
         </div>
         
@@ -723,12 +788,13 @@ const faqs = [
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">Academic Researchers</h3>
-          <p class="text-gray-600 mb-4">Study social phenomena, public opinion, and community behavior through Reddit sentiment analysis for academic research.</p>
+          <p class="text-gray-600 mb-4">Conduct sophisticated social science research with granular emotional analysis. Study how communities express complex emotions like cynicism, resignation, and fear. Analyze conversational context and emotional contagion in online discussions.</p>
           <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Social behavior analysis</li>
-            <li>• Public opinion studies</li>
-            <li>• Community research</li>
-            <li>• Trend identification</li>
+            <li>• Map emotional landscapes of online communities</li>
+            <li>• Study sarcasm and irony in digital communication</li>
+            <li>• Analyze contextual sentiment in threaded discussions</li>
+            <li>• Research emotional contagion and influence</li>
+            <li>• Track sentiment evolution in social movements</li>
           </ul>
         </div>
         
@@ -740,12 +806,13 @@ const faqs = [
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">Content Creators</h3>
-          <p class="text-gray-600 mb-4">Understand audience reactions to content ideas and topics by analyzing relevant Reddit discussions and community sentiment.</p>
+          <p class="text-gray-600 mb-4">Understand the true emotional response to content topics. Identify when audiences are genuinely excited versus skeptically interested. Detect sarcasm in discussions about trending topics and understand community fears or concerns.</p>
           <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Content idea validation</li>
-            <li>• Audience interest analysis</li>
-            <li>• Topic research</li>
-            <li>• Community engagement tracking</li>
+            <li>• Detect genuine vs. ironic enthusiasm for topics</li>
+            <li>• Identify audience skepticism and concerns</li>
+            <li>• Understand emotional triggers in communities</li>
+            <li>• Track sentiment around controversial subjects</li>
+            <li>• Gauge authentic interest vs. hate-watching</li>
           </ul>
         </div>
         
@@ -757,12 +824,13 @@ const faqs = [
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-3">Business Analysts</h3>
-          <p class="text-gray-600 mb-4">Analyze market sentiment, competitor discussions, and industry trends through Reddit community conversations.</p>
+          <p class="text-gray-600 mb-4">Extract sophisticated business intelligence from community discussions. Understand market fears, identify emerging cynicism toward industry practices, and detect genuine versus manufactured enthusiasm for new initiatives.</p>
           <ul class="text-sm text-gray-500 space-y-1">
-            <li>• Market sentiment analysis</li>
-            <li>• Competitive intelligence</li>
-            <li>• Industry trend monitoring</li>
-            <li>• Consumer insight gathering</li>
+            <li>• Identify market anxiety and fear indicators</li>
+            <li>• Detect cynicism toward industry practices</li>
+            <li>• Analyze competitive sentiment with context</li>
+            <li>• Track regulatory and policy discussion sentiment</li>
+            <li>• Understand investor and consumer confidence levels</li>
           </ul>
         </div>
       </div>
@@ -802,8 +870,8 @@ const faqs = [
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Reddit Sentiment Analyzer",
-      "description": "Free AI-powered tool to analyze Reddit thread comment sentiment instantly. Get percentage breakdowns, sentiment summaries, and community insights in seconds.",
+      "name": "Advanced Reddit Sentiment Analyzer",
+      "description": "Advanced ChatGPT-4o powered Reddit sentiment analysis tool with contextual understanding, sarcasm detection, and 9 sophisticated emotion categories. Free for researchers, marketers, and analysts.",
       "url": "https://www.senti-meter.com/reddit-sentiment-analyzer",
       "applicationCategory": "AnalyticsApplication",
       "operatingSystem": "Any",
@@ -815,14 +883,18 @@ const faqs = [
         "availability": "https://schema.org/InStock"
       },
       "featureList": [
-        "AI-powered sentiment analysis using GPT-4o",
-        "Analyzes up to 300 Reddit comments",
-        "Real-time processing with instant results",
+        "ChatGPT-4o powered advanced sentiment analysis",
+        "9 sophisticated emotion categories: Genuine Positive, Skeptical, Sarcastic, Critical, Frustrated, Fearful, Cynical, Resigned, Neutral",
+        "Contextual analysis considering parent comments for replies",
+        "Advanced sarcasm and irony detection",
+        "Analyzes up to 300 Reddit comments intelligently selected",
+        "Real-time processing in 15-45 seconds",
+        "Detailed narrative analysis summaries",
         "Privacy-focused with no data storage",
-        "Supports all Reddit URL formats",
-        "Percentage breakdowns by sentiment",
-        "Sample comments for each sentiment category",
-        "Most upvoted comment highlighting"
+        "Supports all Reddit URL formats and subreddits",
+        "Sample comments with contextual understanding",
+        "Most upvoted comment sentiment classification",
+        "Professional insights for researchers and analysts"
       ]
     }
   </script>
