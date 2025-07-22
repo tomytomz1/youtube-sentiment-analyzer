@@ -94,14 +94,7 @@ function isValidRedditUrl(url: string): boolean {
   return patterns.some(pattern => pattern.test(url.trim()));
 }
 
-function decodeHtmlEntities(str: string): string {
-  if (typeof str !== 'string') return '';
-  return str.replace(/&amp;/g, '&')
-            .replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&quot;/g, '\"')
-            .replace(/&#39;/g, '\'');
-}
+
 
 // Main API Route
 export const POST: APIRoute = async ({ request }) => {

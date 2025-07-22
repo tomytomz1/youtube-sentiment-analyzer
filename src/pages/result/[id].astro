@@ -92,7 +92,7 @@ const twitterTitle = title;
 const twitterDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
 
 // Create a simple image URL (you could generate a more complex one)
-const imageUrl = `${Astro.url.origin}/api/og-png?id=${id}`;
+
 
 // Extract video ID for thumbnail
 function extractVideoId(url: string): string | null {
@@ -436,16 +436,15 @@ const videoThumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefaul
 
 <script is:inline>
 // --- Share Modal Logic (copied from index.astro, adapted for result page) ---
-function copyToClipboard(text) {
+async function copyToClipboard(text) {
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+    }
   } else {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+    console.warn('Clipboard API not supported in this browser');
   }
 }
 

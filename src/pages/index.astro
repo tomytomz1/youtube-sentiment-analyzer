@@ -388,16 +388,13 @@ const faqs = [
   </script>
 
   <!-- Import modular JavaScript -->
-  <script type="module">
+  <script type="module" is:inline>
     import { SecurityUtils } from '/src/scripts/security.js';
     import { UIManager } from '/src/scripts/ui.js';
     import { APIManager } from '/src/scripts/api.js';
     import { ShareManager } from '/src/scripts/share.js';
     import { StorageManager } from '/src/scripts/storage.js';
-    import { errorHandler } from '/src/scripts/errorHandler.js';
-    import { accessibilityManager } from '/src/scripts/accessibility.js';
-    import { monitoringManager } from '/src/scripts/monitoring.js';
-    import { pwaManager } from '/src/scripts/pwa.js';
+
 
     // Initialize the YouTube Sentiment Analyzer
     document.addEventListener('DOMContentLoaded', () => {
