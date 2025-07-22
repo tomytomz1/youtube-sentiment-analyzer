@@ -1891,7 +1891,7 @@ const faqs = [
         if (isAnalyzing) return;
         if (!elements.urlInput) return;
         
-        const redditUrl = (elements.urlInput as HTMLInputElement).value.trim();
+        let redditUrl = (elements.urlInput as HTMLInputElement).value.trim();
         
         // Input validation
         if (!redditUrl) {
@@ -1900,7 +1900,15 @@ const faqs = [
           return;
         }
 
-        if (redditUrl.length > 2048) {
+        // Check for mobile share URLs and show helpful guidance
+        const shareUrlMatch = redditUrl.match(/\/r\/([^\/]+)\/s\/([a-zA-Z0-9]+)/);
+        if (shareUrlMatch) {
+          const subreddit = shareUrlMatch[1];
+          SecurityUtils.safeSetText(elements.urlError, `Reddit share link detected! Please: 1) Open ${redditUrl} in your browser, 2) Wait for redirect, 3) Copy the full URL (should look like reddit.com/r/${subreddit}/comments/...), 4) Paste it here.`);
+          (elements.urlError as HTMLElement).classList.remove('hidden');
+          return;
+        }
+          if (redditUrl.length > 2048) {
           SecurityUtils.safeSetText(elements.urlError, 'URL is too long');
           (elements.urlError as HTMLElement).classList.remove('hidden');
           return;
