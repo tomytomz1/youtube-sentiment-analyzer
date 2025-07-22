@@ -122,7 +122,7 @@ describe('SecurityUtils', () => {
             const now = Date.now();
             const windowStart = now - WINDOW_MS;
             
-            for (const [time, count] of requests.entries()) {
+            for (const [time] of requests.entries()) {
               if (time < windowStart) {
                 requests.delete(time);
               }

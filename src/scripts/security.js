@@ -12,7 +12,7 @@ export const SecurityUtils = {
     try {
       const url = new URL(string);
       return ['http:', 'https:'].includes(url.protocol);
-    } catch (_) {
+    } catch {
       return false;
     }
   },
@@ -67,7 +67,7 @@ export const SecurityUtils = {
         const windowStart = now - WINDOW_MS;
         
         // Clean old requests
-        for (const [time, count] of requests.entries()) {
+        for (const [time] of requests.entries()) {
           if (time < windowStart) {
             requests.delete(time);
           }
