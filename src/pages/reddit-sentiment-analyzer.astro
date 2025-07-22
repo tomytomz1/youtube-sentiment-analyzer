@@ -872,7 +872,7 @@ const faqs = [
           isAllowed: () => {
             const now = Date.now();
             const windowStart = now - WINDOW_MS;
-            for (const [time, count] of requests.entries()) {
+            for (const [time] of requests.entries()) {
               if (time < windowStart) {
                 requests.delete(time);
               }
@@ -985,19 +985,7 @@ const faqs = [
     let currentRedditUrl = '';
     let currentSummary = '';
     let currentCommentsMetadata: any[] = []; // Store comments metadata for threading context
-    let progressInterval: ReturnType<typeof setInterval> | null = null;
-    let progressStage = 0;
-    let currentSessionId = ''; // Add session ID for progress tracking
     let progressEventSource: EventSource | null = null; // Add EventSource for real-time progress
-
-    const progressMessages = [
-      'Validating URL...',
-      'Connecting to Reddit...',
-      'Fetching comments...',
-      'Preparing for analysis...',
-      'Analyzing sentiment with AI...',
-      'Generating results...'
-    ];
 
     // Results cache
     const analysisCache = new Map();
@@ -1021,33 +1009,7 @@ const faqs = [
       SecurityUtils.safeSetText(elements.errorSuggestions, suggestion);
     }
 
-    function startProgress() {
-      progressStage = 0;
-      if (elements.progressFill) {
-        (elements.progressFill as HTMLElement).style.width = '0%';
-      }
-      updateProgress();
-      progressInterval = setInterval(updateProgress, 1000);
-    }
 
-    function updateProgress() {
-      if (progressStage < progressMessages.length) {
-        SecurityUtils.safeSetText(elements.loadingTitle, progressMessages[progressStage]);
-        const progress = ((progressStage + 1) / progressMessages.length) * 90;
-        if (elements.progressFill) {
-          (elements.progressFill as HTMLElement).style.width = `${progress}%`;
-        }
-        progressStage++;
-      }
-    }
-
-    function clearProgress() {
-      if (progressInterval) {
-        clearInterval(progressInterval);
-        progressInterval = null;
-      }
-      progressStage = 0;
-    }
 
     function showResults(data: any, meta: any) {
       hideAllStates();
@@ -2010,166 +1972,11 @@ const faqs = [
     // Initialize tab navigation
     initializeTabNavigation();
 
-    // Clean up intervals on page unload
-    window.addEventListener('beforeunload', () => {
-      clearProgress();
-    });
 
-    // Generate unique session ID
-    function generateSessionId(): string {
-      return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
 
-    // Setup real-time progress tracking
-    function setupProgressTracking(sessionId: string) {
-      if (progressEventSource) {
-        progressEventSource.close();
-      }
-      
-      progressEventSource = new EventSource(`/api/sentiment-progress?sessionId=${sessionId}`);
-      
-      progressEventSource.onmessage = function(event) {
-        try {
-          const data = JSON.parse(event.data);
-          
-          if (data.type === 'progress') {
-            updateProgressUI(data.stage, data.progress);
-          } else if (data.type === 'complete') {
-            progressEventSource?.close();
-            progressEventSource = null;
-          }
-        } catch (error) {
-          console.error('Error parsing progress data:', error);
-        }
-      };
-      
-      progressEventSource.onerror = function(error) {
-        console.error('Progress EventSource error:', error);
-        progressEventSource?.close();
-        progressEventSource = null;
-      };
-    }
 
-    // Update progress UI with real data
-    function updateProgressUI(stage: string, progress: number) {
-      const progressFill = elements.progressFill as HTMLElement;
-      const progressText = document.getElementById('progress-text');
-      
-      if (progressFill) {
-        progressFill.style.width = `${progress}%`;
-      }
-      
-      if (progressText) {
-        progressText.textContent = stage;
-      }
-      
-      console.log(`Progress: ${stage} - ${progress}%`);
-    }
 
-    async function analyze() {
-      if (isAnalyzing) return;
-      
-      const url = (elements.urlInput as HTMLInputElement)?.value?.trim();
-      if (!url) {
-        showError('Please enter a Reddit URL');
-        return;
-      }
 
-      // Generate session ID and setup progress tracking
-      currentSessionId = generateSessionId();
-      setupProgressTracking(currentSessionId);
-
-      isAnalyzing = true;
-      currentRedditUrl = url;
-      hideAllStates();
-      
-      if (elements.analyzeButton) {
-        (elements.analyzeButton as HTMLButtonElement).disabled = true;
-      }
-
-      try {
-        // Fetch Reddit comments
-        showLoading('Fetching Reddit comments...');
-        updateProgressUI('Connecting to Reddit...', 0);
-        
-        console.log('Fetching Reddit comments for:', url);
-        
-        const commentsResponse = await secureFetch('/api/reddit-comments', {
-          method: 'POST',
-          body: JSON.stringify({ redditUrl: url })
-        });
-
-        if (!commentsResponse.ok) {
-          const errorData = await commentsResponse.json().catch(() => ({ error: 'Unknown error' }));
-          throw new Error(errorData.error || `HTTP ${commentsResponse.status}`);
-        }
-
-        const commentsData = await commentsResponse.json();
-        console.log('Reddit comments received:', commentsData);
-
-        if (!commentsData.comments || commentsData.comments.length === 0) {
-          throw new Error('No comments found on this Reddit thread');
-        }
-
-        // Analyze sentiment
-        showLoading('Analyzing sentiment...');
-        
-        // Extract just the text from comment objects for sentiment analysis
-        const commentTexts = commentsData.comments.map((comment: any) => 
-          typeof comment === 'object' && comment.text ? comment.text : comment
-        );
-
-        console.log('Sending to sentiment API:', {
-          commentCount: commentTexts.length,
-          mostUpvoted: commentsData.mostUpvoted,
-          platform: 'reddit',
-          sessionId: currentSessionId
-        });
-
-        const sentimentResponse = await secureFetch('/api/sentiment', {
-          method: 'POST',
-          body: JSON.stringify({
-            comments: commentTexts,
-            analyzedCount: commentsData.analyzedCount,
-            totalComments: commentsData.totalComments,
-            mostUpvoted: commentsData.mostUpvoted,
-            videoInfo: commentsData.threadInfo,
-            channelInfo: {},
-            platform: 'reddit',
-            commentsWithMetadata: commentsData.comments, // Send full comment objects for threading
-            sessionId: currentSessionId // Send session ID for progress tracking
-          })
-        });
-
-        if (!sentimentResponse.ok) {
-          const errorData = await sentimentResponse.json().catch(() => ({ error: 'Analysis failed' }));
-          throw new Error(errorData.error || `Analysis failed: ${sentimentResponse.status}`);
-        }
-
-        const sentimentData = await sentimentResponse.json();
-        console.log('Sentiment data received:', sentimentData);
-
-        // Final progress update
-        updateProgressUI('Analysis complete!', 100);
-        
-        // Show results
-        showResults(sentimentData, commentsData);
-        
-      } catch (error: any) {
-        console.error('Analysis error:', error);
-        showError(error.message || 'An unexpected error occurred');
-      } finally {
-        isAnalyzing = false;
-        if (elements.analyzeButton) {
-          (elements.analyzeButton as HTMLButtonElement).disabled = false;
-        }
-        // Close progress tracking
-        if (progressEventSource) {
-          progressEventSource.close();
-          progressEventSource = null;
-        }
-      }
-    }
 
     // Initialize tab navigation
     function initializeTabNavigation() {
@@ -2254,7 +2061,7 @@ const faqs = [
   </script>
 
   <!-- FAQ Schema Markup -->
-  <script type="application/ld+json">
+  <script type="application/ld+json" is:inline>
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",

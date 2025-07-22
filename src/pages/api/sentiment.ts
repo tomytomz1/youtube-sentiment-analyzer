@@ -34,6 +34,7 @@ interface SentimentMeta {
     channelTopics?: string[];
   };
   platform?: string;
+  commentsWithMetadata?: any[];
 }
 
 interface SentimentRequest {
@@ -46,6 +47,7 @@ interface SentimentRequest {
   threadInfo?: any;
   channelInfo?: any;
   platform?: string;
+  commentsWithMetadata?: any[];
 }
 
 // Add this at the top if using TypeScript and vader-sentiment has no types
@@ -263,10 +265,7 @@ function createErrorResponse(message: string, status: number = 400) {
   return secureResponse({ error: safeMessage }, status);
 }
 
-// Add progress tracking interface
-interface ProgressCallback {
-  (stage: string, progress: number): void;
-}
+
 
 // Add progress update function
 async function updateProgress(sessionId: string, stage: string, progress: number) {
@@ -434,13 +433,12 @@ export const POST: APIRoute = async ({ request }) => {
           mostUpvotedSentiment = 'negative';
         }
         
-        finalSentimentAnalysis = {
-          ...sentimentAnalysis,
-          mostUpvoted: {
-            ...validatedMeta.mostUpvoted,
-            sentiment: mostUpvotedSentiment
-          }
+        // Update the metadata with sentiment instead of the analysis
+        validatedMeta.mostUpvoted = {
+          ...validatedMeta.mostUpvoted,
+          sentiment: mostUpvotedSentiment
         };
+        finalSentimentAnalysis = sentimentAnalysis;
       } catch (vaderError) {
         console.error('VADER error for most upvoted comment:', vaderError);
         // Continue without sentiment classification for most upvoted

@@ -112,8 +112,8 @@ function sanitizeThumbnails(thumbnails: any) {
 // HTML entity decoder (safe, no dependencies)
 function decodeHtmlEntities(str: string): string {
   if (!str || typeof str !== 'string') return '';
-  return str.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
-            .replace(/&#x([\da-fA-F]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
+  return str.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
+            .replace(/&#x([\da-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
             .replace(/&quot;/g, '"')
             .replace(/&apos;/g, '\'')
             .replace(/&amp;/g, '&')
