@@ -481,8 +481,6 @@ export const OPTIONS: APIRoute = async () => {
  * Helper: Extract JSON object from GPT output with validation
  */
 function extractJSON(str: string): string {
-  console.log('DEBUG: Raw OpenAI response:', str);
-  
   // Remove markdown code blocks if present
   let cleaned = str.replace(/```json\s*|\s*```/g, '');
   
@@ -491,21 +489,17 @@ function extractJSON(str: string): string {
   const lastBrace = cleaned.lastIndexOf('}');
   
   if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
-    console.error('DEBUG: No valid JSON braces found in:', cleaned);
     throw new Error('No JSON object found in response');
   }
   
   cleaned = cleaned.substring(firstBrace, lastBrace + 1);
-  console.log('DEBUG: Extracted JSON:', cleaned);
   
   // Validate it's actually JSON
   try {
-    const parsed = JSON.parse(cleaned);
-    console.log('DEBUG: Successfully parsed JSON:', parsed);
+    JSON.parse(cleaned);
     return cleaned;
   } catch (parseError) {
-    console.error('DEBUG: JSON parse error:', parseError);
-    console.error('DEBUG: Failed to parse:', cleaned);
+    console.error('JSON parse error:', parseError);
     throw new Error('Invalid JSON in response');
   }
 }
